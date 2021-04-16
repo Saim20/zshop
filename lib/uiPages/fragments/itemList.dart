@@ -26,7 +26,7 @@ class ItemListFragment extends StatelessWidget {
           if (snapshot.hasData) {
             return ListView(
                 children: snapshot.data!.docs
-                    .map((e) => ProductCard(product: e,))
+                    .map((e) => ProductCard(product: e,onSelectProduct: onSelectProduct,))
                     .toList());
           } else {
             return Center(child: Text('Nothing found'));

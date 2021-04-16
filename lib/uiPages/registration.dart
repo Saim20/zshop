@@ -1,47 +1,37 @@
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
-
-  LoginPage({this.onRegistrationClick});
-
-  final ValueChanged<bool>? onRegistrationClick;
-
+class RegistrationPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _RegistrationPageState createState() => _RegistrationPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       body: SafeArea(
           child: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(50.0, 100.0, 50.0, 100.0),
-            child: Text(
-              'Login',
-              style: TextStyle(
-                  fontSize: 50.0,
-                  fontWeight: FontWeight.w200,
-                  color: Colors.blue[500]),
-            ),
-          ),
-          MyCustomForm(onRegistrationClick: widget.onRegistrationClick,),
-        ],
-      )),
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(50.0, 100.0, 50.0, 100.0),
+                child: Text(
+                  'Register',
+                  style: TextStyle(
+                      fontSize: 50.0,
+                      fontWeight: FontWeight.w200,
+                      color: Colors.blue[500]),
+                ),
+              ),
+              MyCustomForm(),
+            ],
+          )),
     );
   }
 }
 
+
 class MyCustomForm extends StatefulWidget {
-
-  MyCustomForm({this.onRegistrationClick});
-
-  final ValueChanged<bool>? onRegistrationClick;
-
-
   @override
   MyCustomFormState createState() {
     return MyCustomFormState();
@@ -115,27 +105,13 @@ class MyCustomFormState extends State<MyCustomForm> {
                     }
                   },
                   child: Text(
-                    'Login',
+                    'Register',
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 0.0),
-                child: TextButton(
-                  child: Text(
-                    'Or Register',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  onPressed: () {
-                    widget.onRegistrationClick!(true);
-                  },
-                ),
-              )
             ],
           )
         ],

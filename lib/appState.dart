@@ -5,6 +5,7 @@ import 'package:z_shop/uiPages/error.dart';
 import 'package:z_shop/uiPages/home.dart';
 import 'package:z_shop/uiPages/login.dart';
 import 'package:z_shop/uiPages/product.dart';
+import 'package:z_shop/uiPages/registration.dart';
 import 'package:z_shop/uiPages/splash.dart';
 
 class AppState extends StatefulWidget {
@@ -15,7 +16,9 @@ class AppState extends StatefulWidget {
 class _AppStateState extends State<AppState> {
 
   QueryDocumentSnapshot? selectedProduct;
-  bool inAccount = false;
+  List<QueryDocumentSnapshot> cartProducts = [];
+  bool accountClicked = false;
+  bool registrationClicked = false;
 
   void onSelectProduct(product){
     setState(() {
@@ -24,7 +27,18 @@ class _AppStateState extends State<AppState> {
   }
   void onAccountIconClick(accountCheck){
     setState(() {
-      inAccount = accountCheck;
+      accountClicked = accountCheck;
+    });
+  }
+  void addProductToCart(product){
+    setState(() {
+      if(!cartProducts.contains(product))
+        cartProducts.add(product);
+    });
+  }
+  void onRegistrationClick(really){
+    setState(() {
+      registrationClicked = really;
     });
   }
 
@@ -60,31 +74,14 @@ class _AppStateState extends State<AppState> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Zshop',
-      // routeInformationParser: VxInformationParser(),
-      // routerDelegate: VxNavigator(
-      //     notFoundPage: (uri, params) => MaterialPage(
-      //       key: ValueKey('not-found-page'),
-      //       child: Builder(
-      //         builder: (context) => Scaffold(
-      //           body: Center(
-      //             child: Text('Page ${uri.path} not found'),
-      //           ),
-      //         ),
-      //       ),
-      //     ),
-      //   routes: {
-      //     '/' : (_,__) => !_initialized ? MaterialPage(child: SplashPage()) : MaterialPage(child: HomePage()),
-      //     DetailsPath : (_, params) => MaterialPage(child: ProductDetailsPage(product: params,)),
-      //     LoginPath : (_, __ ) => MaterialPage(child: LoginPage())
-      //   }
-      // ),
       home: WillPopScope(
         onWillPop: () async => !await _navigatorKey.currentState!.maybePop(),
         child: Navigator(
           key: _navigatorKey,
           onPopPage: (route, result) {
             if (!route.didPop(result)) return false;
-            if(inAccount) inAccount = false;
+            if(accountClicked) accountClicked = false;
+            else if(registrationClicked) registrationClicked = false;
             else if(selectedProduct != null) selectedProduct = null;
             return true;
           },
@@ -94,11 +91,13 @@ class _AppStateState extends State<AppState> {
             if(_error)
               MaterialPage(key: ValueKey('error'),child: ErrorPage()),
             if(_initialized)
-              MaterialPage(key: ValueKey('home'), child: HomePage(onSelectProduct: onSelectProduct,onAccountIconClick: onAccountIconClick,)),
+              MaterialPage(key: ValueKey('home'), child: HomePage(onSelectProduct: onSelectProduct,onAccountIconClick: onAccountIconClick,cartProducts: cartProducts,)),
             if(selectedProduct != null)
-              MaterialPage(key: ValueKey('product'), child: ProductDetailsPage(product: selectedProduct,)),
-            if(inAccount)
-              MaterialPage(key: ValueKey('login'),child: LoginPage()),
+              MaterialPage(key: ValueKey(selectedProduct!.id), child: ProductDetailsPage(product: selectedProduct,addProduct: addProductToCart,)),
+            if(accountClicked)
+              MaterialPage(key: ValueKey('login'),child: LoginPage(onRegistrationClick: onRegistrationClick,)),
+            if(registrationClicked)
+              MaterialPage(key: ValueKey('registration'),child: RegistrationPage())
           ],
         ),
       ),

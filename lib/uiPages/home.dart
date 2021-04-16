@@ -1,15 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:z_shop/services/fragmentInitialization.dart';
+import 'package:z_shop/uiPages/fragments/cart.dart';
 import 'package:z_shop/uiPages/fragments/itemList.dart';
 
 class HomePage extends StatefulWidget {
 
-  HomePage({this.onSelectProduct,this.onAccountIconClick});
+  HomePage({this.onSelectProduct,this.onAccountIconClick,this.cartProducts});
 
   final ValueChanged<bool?>? onAccountIconClick;
   final ValueChanged<QueryDocumentSnapshot?>? onSelectProduct;
+  final List<QueryDocumentSnapshot>? cartProducts;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -54,7 +55,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       backgroundColor: Colors.grey[100],
-      body: selectedItem == 0 ? ItemListFragment(onSelectProduct: widget.onSelectProduct) : fragments.elementAt(selectedItem),
+      body: selectedItem == 0 ? ItemListFragment(onSelectProduct: widget.onSelectProduct) : CartFragment(cartProducts: widget.cartProducts,onSelectProduct: widget.onSelectProduct,),
       bottomNavigationBar: BottomNavigationBar(
           items: [
             BottomNavigationBarItem(
