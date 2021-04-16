@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "742723823801",
+    "project_id": "zshop-ccbed",
+    "storage_bucket": "zshop-ccbed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742723823801:android:ced5f31718d3ab0a825368",
+        "android_client_info": {
+          "package_name": "com.zayan.eshop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "742723823801-ril6ass2onvmqmfblkrlhovkk46i2ato.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zayan.eshop",
+            "certificate_hash": "c4b8b9d997985801f90a02d4fd7bad972be51405"
+          }
+        },
+        {
+          "client_id": "742723823801-h75l4vpvim747186bsoqaspsluja1h94.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzrXJex6ePQNT8Yeg57bVCebvMrkLMZ58"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "742723823801-h75l4vpvim747186bsoqaspsluja1h94.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
