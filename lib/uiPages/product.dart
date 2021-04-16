@@ -2,9 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ProductDetailsPage extends StatelessWidget {
-  ProductDetailsPage({this.product});
+  ProductDetailsPage({this.product,this.addProduct});
 
   final QueryDocumentSnapshot? product;
+  final ValueChanged<QueryDocumentSnapshot?>? addProduct;
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +105,9 @@ class ProductDetailsPage extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: (){},
+        onPressed: (){
+
+        },
         label: Text('Add to cart'),
         icon: Icon(Icons.add_shopping_cart),
         splashColor: Colors.blue[900],
