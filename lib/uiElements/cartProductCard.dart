@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 
 
 class CartProductCard extends StatefulWidget {
-  CartProductCard({this.product,this.onSelectProduct});
+  CartProductCard({this.product});
 
   final QueryDocumentSnapshot? product;
-  final ValueChanged<QueryDocumentSnapshot?>? onSelectProduct;
 
   @override
   _CartProductCardState createState() => _CartProductCardState();
@@ -21,7 +20,10 @@ class _CartProductCardState extends State<CartProductCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        widget.onSelectProduct!(widget.product);
+        Navigator.of(context).pushNamed('/details',arguments: {
+          'product' : widget.product,
+          'cart' : true
+        });
       },
       splashColor: Colors.purpleAccent,
       focusColor: Colors.blue[100],
@@ -39,13 +41,16 @@ class _CartProductCardState extends State<CartProductCard> {
             children: [
               Container(
                 margin: EdgeInsets.all(10.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20.0),
-                  child: Image.network(
-                    widget.product!.data()['image'],
-                    height: 80,
-                    width: 100,
-                    fit: BoxFit.cover,
+                child: Hero(
+                  tag: widget.product!.id,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20.0),
+                    child: Image.network(
+                      widget.product!.data()['image'],
+                      height: 80,
+                      width: 100,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 decoration: BoxDecoration(

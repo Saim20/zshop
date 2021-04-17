@@ -126,7 +126,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                 padding: const EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 0.0),
                 child: TextButton(
                   child: Text(
-                    'Or Register',
+                    'Or Sign Up',
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
                     ),

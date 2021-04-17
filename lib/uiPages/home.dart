@@ -6,12 +6,6 @@ import 'package:z_shop/uiPages/fragments/itemList.dart';
 
 class HomePage extends StatefulWidget {
 
-  HomePage({this.onSelectProduct,this.onAccountIconClick,this.cartProducts});
-
-  final ValueChanged<bool?>? onAccountIconClick;
-  final ValueChanged<QueryDocumentSnapshot?>? onSelectProduct;
-  final List<QueryDocumentSnapshot>? cartProducts;
-
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -42,20 +36,23 @@ class _HomePageState extends State<HomePage> {
             Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 15.0, 20.0, 0.0),
               child: IconButton(
-                  icon: Icon(
-                    Icons.account_circle,
-                    color: Colors.blue,
-                    size: 30.0,
+                  icon: Hero(
+                    tag: 'accountHero',
+                    child: Icon(
+                      Icons.account_circle,
+                      color: Colors.blue,
+                      size: 30.0,
+                    ),
                   ),
                   onPressed: () {
-                    widget.onAccountIconClick!(true);
+                    Navigator.of(context).pushNamed('/account');
                   }),
             )
           ],
         ),
       ),
       backgroundColor: Colors.grey[100],
-      body: selectedItem == 0 ? ItemListFragment(onSelectProduct: widget.onSelectProduct) : CartFragment(cartProducts: widget.cartProducts,onSelectProduct: widget.onSelectProduct,),
+      body: selectedItem == 0 ? ItemListFragment() : CartFragment(),
       bottomNavigationBar: BottomNavigationBar(
           items: [
             BottomNavigationBarItem(

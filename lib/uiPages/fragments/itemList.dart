@@ -5,10 +5,6 @@ import 'package:z_shop/uiElements/productCard.dart';
 
 class ItemListFragment extends StatelessWidget {
 
-  ItemListFragment({this.onSelectProduct});
-
-  final ValueChanged<QueryDocumentSnapshot?>? onSelectProduct;
-
   @override
   Widget build(BuildContext context) {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -26,7 +22,7 @@ class ItemListFragment extends StatelessWidget {
           if (snapshot.hasData) {
             return ListView(
                 children: snapshot.data!.docs
-                    .map((e) => ProductCard(product: e,onSelectProduct: onSelectProduct,))
+                    .map((e) => ProductCard(product: e,))
                     .toList());
           } else {
             return Center(child: Text('Nothing found'));

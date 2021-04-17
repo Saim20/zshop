@@ -6,6 +6,6 @@ import '';
 void main() {
   setPathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(AppState());
+  runApp(App());
 }
 

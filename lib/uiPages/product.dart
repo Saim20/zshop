@@ -1,15 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:z_shop/appState.dart';
 
-class ProductDetailsPage extends StatelessWidget {
-  ProductDetailsPage({this.product, this.addProduct});
+class ProductDetailsPage extends StatefulWidget {
 
-  final QueryDocumentSnapshot? product;
-  final ValueChanged<QueryDocumentSnapshot>? addProduct;
+  @override
+  _ProductDetailsPageState createState() => _ProductDetailsPageState();
+}
+
+class _ProductDetailsPageState extends State<ProductDetailsPage> {
+
+  QueryDocumentSnapshot? product;
 
   @override
   Widget build(BuildContext context) {
+
+    bool fromCart;
+    Map data = {};
+    data = ModalRoute.of(context)!.settings.arguments! as Map<String,dynamic>;
+    product = data['product'];
+    fromCart = data['cart'];
+
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70.0),
@@ -36,16 +49,22 @@ class ProductDetailsPage extends StatelessWidget {
           Center(
             child: Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Image.network(
-                product!.data()['image'],
-                height: MediaQuery.of(context).size.height / 3,
+              child: Hero(
+                tag: product!.id,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: Image.network(
+                    product!.data()['image'],
+                    width: MediaQuery.of(context).size.width,
+                  ),
+                ),
               ),
             ),
           ),
           Divider(
             height: 15.0,
-            indent: 10.0,
-            endIndent: 10.0,
+            indent: 15.0,
+            endIndent: 15.0,
             color: Theme.of(context).accentColor,
             thickness: 1.0,
           ),
@@ -124,9 +143,12 @@ class ProductDetailsPage extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: fromCart ? null : FloatingActionButton.extended(
         onPressed: () {
-          addProduct!(product!);
+          if(App.addToCart(product)){
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Product added to cart')));
+          } else
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Product already added to cart')));
         },
         label: Text('Add to cart'),
         icon: Icon(Icons.add_shopping_cart),
