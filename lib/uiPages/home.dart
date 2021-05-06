@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:z_shop/uiPages/fragments/cart.dart';
-import 'package:z_shop/uiPages/fragments/itemList.dart';
+import 'package:z_shop/uiPages/fragments/categories.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -52,7 +51,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       backgroundColor: Colors.grey[100],
-      body: selectedItem == 0 ? ItemListFragment() : CartFragment(),
+      body: selectedItem == 0 ? CategoryFragment() : CartFragment(),
       bottomNavigationBar: BottomNavigationBar(
           items: [
             BottomNavigationBarItem(

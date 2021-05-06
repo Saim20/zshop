@@ -1,11 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignupPage extends StatefulWidget {
-
-  SignupPage({this.onLoginClick});
-
-  final ValueChanged<bool>? onLoginClick;
-
   @override
   _SignupPageState createState() => _SignupPageState();
 }
@@ -18,32 +15,25 @@ class _SignupPageState extends State<SignupPage> {
       backgroundColor: Colors.grey[100],
       body: SafeArea(
           child: ListView(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(50.0, 100.0, 50.0, 100.0),
-                child: Text(
-                  'Sign Up',
-                  style: TextStyle(
-                      fontSize: 50.0,
-                      fontWeight: FontWeight.w200,
-                      color: Colors.blue[500]),
-                ),
-              ),
-              MyCustomForm(onLoginClick: widget.onLoginClick,),
-            ],
-          )),
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(50.0, 70.0, 50.0, 50.0),
+            child: Text(
+              'Sign Up',
+              style: TextStyle(
+                  fontSize: 50.0,
+                  fontWeight: FontWeight.w200,
+                  color: Colors.blue[500]),
+            ),
+          ),
+          MyCustomForm(),
+        ],
+      )),
     );
   }
 }
 
-
 class MyCustomForm extends StatefulWidget {
-
-  MyCustomForm({this.onLoginClick});
-
-  final ValueChanged<bool>? onLoginClick;
-
-
   @override
   MyCustomFormState createState() {
     return MyCustomFormState();
@@ -53,7 +43,16 @@ class MyCustomForm extends StatefulWidget {
 class MyCustomFormState extends State<MyCustomForm> {
   final _formKey = GlobalKey<FormState>();
 
-  String? password;
+  bool isEmailAlreadySignedUp = false;
+  bool emailIsInvalid = false;
+  bool showPassword = false;
+
+  TextEditingController nameC = TextEditingController();
+  TextEditingController emailC = TextEditingController();
+  TextEditingController addressC = TextEditingController();
+  TextEditingController phoneC = TextEditingController();
+  TextEditingController passC = TextEditingController();
+  TextEditingController confirmC = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -63,22 +62,15 @@ class MyCustomFormState extends State<MyCustomForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
-            child: Text(
-              'Full Name',
-              style: TextStyle(fontSize: 20.0, color: Colors.grey[500]),
-            ),
-          ),
-          // Add TextFormFields and ElevatedButton here.
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+            padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
             child: Container(
-              height: 30.0,
               child: TextFormField(
-                textAlignVertical: TextAlignVertical.bottom,
+                controller: nameC,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(), labelText: 'Name'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your full name';
+                    return 'Please enter your name';
                   }
                   return null;
                 },
@@ -87,20 +79,26 @@ class MyCustomFormState extends State<MyCustomForm> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-            child: Text(
-              'E-mail',
-              style: TextStyle(fontSize: 20.0, color: Colors.grey[500]),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
             child: Container(
-              height: 30.0,
               child: TextFormField(
-                textAlignVertical: TextAlignVertical.bottom,
+                controller: emailC,
+                onChanged: (value) {
+                  setState(() {
+                    isEmailAlreadySignedUp = false;
+                    emailIsInvalid = false;
+                  });
+                },
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(), labelText: 'E-mail'),
                 validator: (value) {
                   if (value == null || value.isEmpty)
                     return 'Please enter an e-mail';
+                  else if (isEmailAlreadySignedUp) {
+                    return 'E-mail is already user for an account';
+                  }
+                  else if(emailIsInvalid){
+                    return 'Please enter a valid e-mail';
+                  }
                   return null;
                 },
               ),
@@ -108,17 +106,12 @@ class MyCustomFormState extends State<MyCustomForm> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-            child: Text(
-              'Shipping Address',
-              style: TextStyle(fontSize: 20.0, color: Colors.grey[500]),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
             child: Container(
-              height: 30.0,
               child: TextFormField(
-                textAlignVertical: TextAlignVertical.bottom,
+                controller: addressC,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Shipping Address'),
                 validator: (value) {
                   if (value == null || value.isEmpty)
                     return 'Please enter your shipping address';
@@ -129,18 +122,16 @@ class MyCustomFormState extends State<MyCustomForm> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-            child: Text(
-              'Phone (Optional)',
-              style: TextStyle(fontSize: 20.0, color: Colors.grey[500]),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
             child: Container(
-              height: 30.0,
               child: TextFormField(
-                textAlignVertical: TextAlignVertical.bottom,
+                keyboardType: TextInputType.phone,
+                controller: phoneC,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(), labelText: 'Phone'),
                 validator: (value) {
+                  if (value == null) {
+                    return 'Please enter a phone number';
+                  }
                   return null;
                 },
               ),
@@ -148,19 +139,14 @@ class MyCustomFormState extends State<MyCustomForm> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-            child: Text(
-              'Password',
-              style: TextStyle(fontSize: 20.0, color: Colors.grey[500]),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
             child: Container(
-              height: 30.0,
               child: TextFormField(
-                textAlignVertical: TextAlignVertical.bottom,
+                obscureText: !showPassword,
+                enableSuggestions: showPassword,
+                controller: passC,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(), labelText: 'Password'),
                 validator: (value) {
-                  password = value;
                   if (value == null || value.isEmpty)
                     return 'Please enter a password';
                   return null;
@@ -169,21 +155,30 @@ class MyCustomFormState extends State<MyCustomForm> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-            child: Text(
-              'Confirm Password',
-              style: TextStyle(fontSize: 20.0, color: Colors.grey[500]),
+            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+            child: Container(
+              child: TextButton(
+                onPressed: (){
+                  setState(() {
+                    showPassword = !showPassword;
+                  });
+                },
+                child: Text(showPassword ? 'Hide password' : 'Show password'),
+              )
             ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
             child: Container(
-              height: 30.0,
               child: TextFormField(
-                textAlignVertical: TextAlignVertical.bottom,
+                obscureText: !showPassword,
+                enableSuggestions: showPassword,
+                controller: confirmC,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Confirm Password'),
                 validator: (value) {
-                  if(password != value)
-                    return 'Passwords do not match';
+                  if (passC.text != value) return 'Passwords do not match';
                   return null;
                 },
               ),
@@ -198,7 +193,8 @@ class MyCustomFormState extends State<MyCustomForm> {
                     // Validate returns true if the form is valid, or false otherwise.
                     if (_formKey.currentState!.validate()) {
                       ScaffoldMessenger.of(context)
-                          .showSnackBar(SnackBar(content: Text('Logging in')));
+                          .showSnackBar(SnackBar(content: Text('Signing up')));
+                      signUpWithEmailAndPass(emailC.text, passC.text);
                     }
                   },
                   child: Text(
@@ -219,14 +215,43 @@ class MyCustomFormState extends State<MyCustomForm> {
                     ),
                   ),
                   onPressed: () {
-                    widget.onLoginClick!(true);
+                    Navigator.pop(context);
                   },
                 ),
-              )
+              ),
             ],
           )
         ],
       ),
     );
+  }
+
+  void signUpWithEmailAndPass(email, pass) async {
+    String userEmail = email;
+    String userPass = pass;
+
+    try {
+      await FirebaseFirestore.instance.collection('users').doc(emailC.text).set({
+        'phone': phoneC.text,
+        'address': addressC.text,
+      });
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: userEmail, password: userPass);
+      await FirebaseAuth.instance.currentUser!.updateProfile(displayName: nameC.text);
+      FirebaseAuth.instance.signOut();
+      FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: pass);
+
+      Navigator.of(context).pop();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+          isEmailAlreadySignedUp = true;
+      }
+      else if (e.code == 'invalid-email') {
+        emailIsInvalid = true;
+      }
+      _formKey.currentState!.validate();
+    }
   }
 }

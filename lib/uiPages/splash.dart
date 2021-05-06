@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:z_shop/appState.dart';
 
 class SplashPage extends StatelessWidget {
   void goHome(context) async {

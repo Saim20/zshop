@@ -1,6 +1,86 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:z_shop/services/user.dart';
+import 'package:z_shop/uiPages/login.dart';
 
-class AccountPage extends StatelessWidget {
+class AccountPage extends StatefulWidget {
+  @override
+  _AccountPageState createState() => _AccountPageState();
+}
+
+class _AccountPageState extends State<AccountPage> {
+  FirebaseAuth authInstance = FirebaseAuth.instance;
+  bool? signedIn;
+  bool incompleteGoogleSignin = false;
+  ZshopUser zuser = ZshopUser();
+  DocumentSnapshot? userSnap;
+
+  void signOut(bool signOut){
+    setState(() {
+      FirebaseAuth.instance.signOut();
+      signedIn = !signOut;
+    });
+  }
+
+  void completeSignIn(really){
+    setState(() {
+      incompleteGoogleSignin = false;
+      signedIn = true;
+    });
+  }
+
+  Future<bool> setUser(User user) async {
+    userSnap = await FirebaseFirestore.instance.collection('users').doc(user.email).get();
+    zuser.name = user.displayName!;
+    zuser.email = user.email!;
+    if(userSnap!.exists){
+      zuser.phone = userSnap!.data()!['phone'];
+      zuser.address = userSnap!.data()!['address'];
+    }
+    else{
+      incompleteGoogleSignin = true;
+    }
+    return true;
+  }
+
+  @override
+  void initState() {
+    authInstance.authStateChanges().listen((user) async {
+      if (user == null) {
+        setState(() {
+          signedIn = false;
+        });
+      } else if(user.displayName != null){
+        await setUser(user);
+        setState(() {
+          if(incompleteGoogleSignin){
+            signedIn = false;
+          }else
+          signedIn = true;
+        });
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if(signedIn == null){
+      return LoadingWidget();
+    }
+    return signedIn! ? Account(signOut: signOut,user: zuser) : LoginPage(isIncomplete: incompleteGoogleSignin,completeSignin: completeSignIn);
+  }
+}
+
+class Account extends StatelessWidget {
+
+  Account({this.signOut,this.user});
+
+  final ZshopUser? user;
+  final ValueChanged<bool>? signOut;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,9 +115,7 @@ class AccountPage extends StatelessWidget {
               child: Hero(
                 tag: 'accountHero',
                 child: CircleAvatar(
-                  backgroundImage: AssetImage(
-                    'assets/images/user.png'
-                  ),
+                  backgroundImage: AssetImage('assets/images/user.png'),
                 ),
               ),
             ),
@@ -45,32 +123,73 @@ class AccountPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 10.0),
             child: Text(
-              'User Name',
+              user!.name,
               style: TextStyle(fontSize: 35.0, fontWeight: FontWeight.w300),
             ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 10.0),
             child: Text(
-              'example@example.exa',
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300,color: Colors.grey),
+              user!.email,
+              style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w300,
+                  color: Colors.grey),
             ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 10.0),
             child: Text(
-              'Address: example street, example town, example city',
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300,color: Colors.grey),
+              user!.phone,
+              style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w300,
+                  color: Colors.grey),
             ),
-          )
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 10.0),
+            child: Text(
+              user!.address,
+              style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w300,
+                  color: Colors.grey),
+            ),
+          ),
+          SizedBox(
+            height: 30.0,
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 10.0),
+            child: ElevatedButton.icon(
+                onPressed: () {
+                  signOut!(true);
+                },
+                icon: Icon(Icons.logout),
+                label: Text('Logout')),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {  },
-        child: Icon(
-          Icons.edit
+        onPressed: () {},
+        child: Icon(Icons.edit),
+      ),
+    );
+  }
+}
+
+class LoadingWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: SpinKitSquareCircle(
+          color: Colors.blueAccent,
+          size: 50.0,
         ),
       ),
     );
   }
 }
+

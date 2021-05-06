@@ -1,29 +1,28 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:z_shop/appState.dart';
+import 'package:z_shop/services/product.dart';
 
 class ProductDetailsPage extends StatefulWidget {
-
   @override
   _ProductDetailsPageState createState() => _ProductDetailsPageState();
 }
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
-
-  QueryDocumentSnapshot? product;
+  Product? product;
 
   @override
   Widget build(BuildContext context) {
-
     bool fromCart;
     Map data = {};
-    data = ModalRoute.of(context)!.settings.arguments! as Map<String,dynamic>;
+    data = ModalRoute.of(context)!.settings.arguments! as Map<String, dynamic>;
     product = data['product'];
     fromCart = data['cart'];
 
-
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70.0),
         child: Padding(
@@ -43,21 +42,36 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           ),
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
         children: [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Hero(
-                tag: product!.id,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Image.network(
-                    product!.data()['image'],
-                    width: MediaQuery.of(context).size.width,
-                  ),
+          Container(
+            width: 500.0,
+            height: 380.0,
+            child: Hero(
+              tag: product!.id,
+              child: CarouselSlider(
+                options: CarouselOptions(
+                  enableInfiniteScroll: false,
+                  enlargeCenterPage: true,
                 ),
+                items: product!.images!
+                    .map((item) => Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Container(
+                            child: Center(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10.0),
+                                child: Image.network(
+                                  item,
+                                  width: 500.0,
+                                  height: 350.0,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ))
+                    .toList(),
               ),
             ),
           ),
@@ -65,7 +79,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             height: 15.0,
             indent: 15.0,
             endIndent: 15.0,
-            color: Theme.of(context).accentColor,
+            color: Colors.transparent,
             thickness: 1.0,
           ),
           Padding(
@@ -76,7 +90,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
                   child: Text(
-                    product!.data()['name'],
+                    product!.name,
                     style: TextStyle(
                       fontSize: 25.0,
                       fontWeight: FontWeight.w400,
@@ -94,18 +108,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           Column(
                             children: [
                               Text(
-                                '৳ ${product!.data()['offerPrice'].toString()}',
-                                style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.w300,
-                                    color: Colors.yellow[800]),
+                                '৳ ${product!.offerPrice.toString()}',
+                                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500, color: Colors.red[400]),
                               ),
                               Text(
-                                '৳ ${product!.data()['price'].toString()}',
-                                style: TextStyle(
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.w300,
-                                    decoration: TextDecoration.lineThrough),
+                                '৳ ${product!.price.toString()}',
+                                style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: Colors.red[100]),
                               ),
                             ],
                           ),
@@ -128,7 +136,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       Padding(
                         padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                         child: Text(
-                          product!.data()['description'],
+                          product!.description,
                           style: TextStyle(
                             fontSize: 16.0,
                             fontWeight: FontWeight.w300,
@@ -143,19 +151,24 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           ),
         ],
       ),
-      floatingActionButton: fromCart ? null : FloatingActionButton.extended(
-        onPressed: () {
-          if(App.addToCart(product)){
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Product added to cart')));
-          } else
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Product already added to cart')));
-        },
-        label: Text('Add to cart'),
-        icon: Icon(Icons.add_shopping_cart),
-        splashColor: Colors.blue[900],
-        hoverColor: Colors.blue[800],
-        focusColor: Colors.blue[300],
-      ),
+      floatingActionButton: fromCart
+          ? null
+          : FloatingActionButton.extended(
+              onPressed: product!.stock > 0
+                  ? () {
+                      if (App.addToCart(product)) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Product added to cart')));
+                      } else
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text('Product already added to cart')));
+                    }
+                  : null,
+              label: Text('Add to cart'),
+              icon: Icon(Icons.add_shopping_cart),
+              splashColor: Colors.blue[900],
+              hoverColor: Colors.blue[800],
+              focusColor: Colors.blue[300],
+            ),
     );
   }
 }

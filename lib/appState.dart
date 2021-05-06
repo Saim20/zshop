@@ -1,49 +1,116 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:z_shop/services/product.dart';
 import 'package:z_shop/uiPages/account.dart';
+import 'package:z_shop/uiPages/confirmation.dart';
 import 'package:z_shop/uiPages/error.dart';
 import 'package:z_shop/uiPages/home.dart';
+import 'package:z_shop/uiPages/itemList.dart';
 import 'package:z_shop/uiPages/login.dart';
 import 'package:z_shop/uiPages/product.dart';
 import 'package:z_shop/uiPages/signup.dart';
+import 'package:z_shop/uiPages/signupOptions.dart';
 import 'package:z_shop/uiPages/splash.dart';
+import 'package:z_shop/uiPages/success.dart';
 
 class App extends StatefulWidget {
 
-  static bool addToCart(product){
-    if(!App.cartProducts.contains(product))
-    {
-      App.cartProducts.add(product!);
-      return true;
+  static bool addToCart(Product? product) {
+    bool contains = false;
+    for (var cProduct in cartProducts) {
+      if (cProduct.id == product!.id) {
+        contains = true;
+        break;
+      }
     }
-    else
+    if (!contains) {
+      if (cartProductsString == '') {
+        cartProductsString += product.toString();
+      } else {
+        cartProductsString += '^' + product.toString();
+      }
+      App.cartProducts.add(product!);
+      App.saveCartProductsToStorage(cartProductsString);
+      return true;
+    } else
       return false;
   }
 
-  static List<QueryDocumentSnapshot> cartProducts = [];
+  static bool removeFromCart(product) {
+    int index = 0;
+    for (; index < cartProducts.length; index++) {
+      if (cartProducts.elementAt(index).id == product.id) {
+        cartProducts.removeAt(index);
+        cartProductsString = '';
+        for (var prod in cartProducts) {
+          if (cartProductsString == '') {
+            cartProductsString += prod.toString();
+          } else {
+            cartProductsString += '^' + prod.toString();
+          }
+        }
+        saveCartProductsToStorage(cartProductsString);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  static String cartProductsString = '';
+  static List<Product> cartProducts = [];
+
+  static void saveCartProductsToStorage(String cartProductsString) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('cartProducts', cartProductsString);
+  }
+
+  static void getCartProductsFromStorage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('cartProducts') != null && prefs.getString('cartProducts') != '') {
+      App.cartProductsString = prefs.getString('cartProducts')!;
+      for (var product in prefs
+          .getString('cartProducts')!
+          .split('^')
+          .map((e) => e)
+          .toList()) {
+        Product prod = Product(productJson: product);
+        prod.toProduct();
+        App.cartProducts.add(prod);
+      }
+    }
+  }
+
+  static void clearPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+  }
+
+  static void clearCart () async {
+    cartProducts = [];
+    cartProductsString = '';
+    clearPrefs();
+  }
 
   @override
   _AppState createState() => _AppState();
 }
 
 class _AppState extends State<App> {
-
-
   void initializeFlutterFire() async {
     try {
       // Wait for Firebase to initialize and set `_initialized` state to true
       await Firebase.initializeApp();
-    } catch(e) {
+    } catch (e) {
       // Set `_error` state to true if Firebase initialization fails
       print(e);
     }
   }
 
-  GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
-
   @override
   void initState() {
+    // App.clearPrefs();
+    App.getCartProductsFromStorage();
     initializeFlutterFire();
     super.initState();
   }
@@ -53,13 +120,17 @@ class _AppState extends State<App> {
     return MaterialApp(
       title: 'Zshop',
       routes: {
-        '/' : (context) => SplashPage(),
-        '/home' : (context) => HomePage(),
-        '/account' : (context) => AccountPage(),
-        '/details' : (context) => ProductDetailsPage(),
-        '/login' : (context) => LoginPage(),
-        '/error' : (context) => ErrorPage(),
-        '/signup' : (context) => SignupPage(),
+        '/': (context) => SplashPage(),
+        '/home': (context) => HomePage(),
+        '/account': (context) => AccountPage(),
+        '/details': (context) => ProductDetailsPage(),
+        '/products': (context) => ItemListPage(),
+        '/login': (context) => LoginPage(),
+        '/error': (context) => ErrorPage(),
+        '/signup': (context) => SignupPage(),
+        '/signupoptions': (context) => SignupOptionsPage(),
+        '/confirmation' : (context) => ConfirmationPage(),
+        '/success' : (context) => SuccessPage(),
       },
     );
   }
