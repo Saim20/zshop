@@ -12,7 +12,6 @@ import 'package:z_shop/uiPages/product.dart';
 import 'package:z_shop/uiPages/signup.dart';
 import 'package:z_shop/uiPages/signupOptions.dart';
 import 'package:z_shop/uiPages/splash.dart';
-import 'package:z_shop/uiPages/success.dart';
 
 class App extends StatefulWidget {
 
@@ -130,7 +129,6 @@ class _AppState extends State<App> {
         '/signup': (context) => SignupPage(),
         '/signupoptions': (context) => SignupOptionsPage(),
         '/confirmation' : (context) => ConfirmationPage(),
-        '/success' : (context) => SuccessPage(),
       },
     );
   }

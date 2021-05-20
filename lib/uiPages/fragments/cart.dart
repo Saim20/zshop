@@ -11,32 +11,39 @@ class CartFragment extends StatefulWidget {
 }
 
 class _CartFragmentState extends State<CartFragment> {
-
   int totalCost = 0;
 
-  void removeProduct(product){
+  void removeProduct(product) {
     setState(() {
       App.removeFromCart(product);
     });
   }
 
-  void retrieveProduct(product){
+  void retrieveProduct(product) {
     setState(() {
       App.addToCart(product);
     });
   }
 
-  void calculateTotalCost(bool ok){
+  void calculateTotalCost(bool ok) {
     totalCost = 0;
     setState(() {
       App.cartProducts.forEach((element) {
         totalCost += element.offerPrice;
         totalCost += element.setupTaken ? element.setupCost : 0;
         totalCost += element.deliveryTaken ? element.deliveryCost : 0;
+        totalCost *= element.quantity;
       });
     });
-
   }
+
+  void clearCart() {
+    setState(() {
+      App.clearCart();
+    });
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -51,36 +58,53 @@ class _CartFragmentState extends State<CartFragment> {
                     color: Colors.blue[500],
                     size: 100.0,
                   )
-                : ListView(
-                    children: [
-                      Column(
+                : ListView(children: [
+                    Column(
                       children: App.cartProducts
-                          .map((e) => CartProductCard(product: e,productRemover: removeProduct,costCalculator: calculateTotalCost,productRetriever: retrieveProduct,))
+                          .map((e) => CartProductCard(
+                                product: e,
+                                productRemover: removeProduct,
+                                costCalculator: calculateTotalCost,
+                                productRetriever: retrieveProduct,
+                              ))
                           .toList(),
-                      ),
-                      SizedBox(height: 50.0,)
-                    ]
-                  )),
+                    ),
+                    SizedBox(
+                      height: 50.0,
+                    )
+                  ])),
       ),
-      floatingActionButton: App.cartProducts.isEmpty ? null :
-      FloatingActionButton.extended(
-        onPressed: () async {
-          if(FirebaseAuth.instance.currentUser != null){
-            var user = FirebaseAuth.instance.currentUser;
-            var phone = await FirebaseFirestore.instance.collection('users').doc(user!.email).get().then((value) => value.data()!['phone']);
-            Order order = Order(userName: user.displayName!, userEmail: user.email!, userPhone: phone, cartProducts: App.cartProducts);
-            Navigator.of(context).pushNamed('/confirmation',arguments: {
-              'order':order
-            });
-          } else{
-            Navigator.of(context).pushNamed('/login');
-          }
-        },
-        label: Text('Place Order (৳$totalCost)'),
-        icon: Icon(
-            Icons.subdirectory_arrow_right
-        ),
-      ),
+      floatingActionButton: App.cartProducts.isEmpty
+          ? null
+          : FloatingActionButton.extended(
+              onPressed: () async {
+                if (FirebaseAuth.instance.currentUser != null) {
+                  var user = FirebaseAuth.instance.currentUser;
+                  var phone = await FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(user!.email)
+                      .get()
+                      .then((value) => value.data()!['phone']);
+                  var address = await FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(user.email)
+                      .get()
+                      .then((value) => value.data()!['address']);
+                  Order order = Order(
+                      userName: user.displayName!,
+                      userEmail: user.email!,
+                      userPhone: phone,
+                      userAddress: address,
+                      cartProducts: App.cartProducts);
+                  Navigator.of(context).pushNamed('/confirmation',
+                      arguments: {'order': order, 'clearcart': clearCart});
+                } else {
+                  Navigator.of(context).pushNamed('/login');
+                }
+              },
+              label: Text('Place Order (৳$totalCost)'),
+              icon: Icon(Icons.subdirectory_arrow_right),
+            ),
     );
   }
 }

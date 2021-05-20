@@ -3,7 +3,11 @@ import 'package:z_shop/appState.dart';
 import 'package:z_shop/services/product.dart';
 
 class CartProductCard extends StatefulWidget {
-  CartProductCard({this.product,this.productRemover,this.costCalculator,this.productRetriever});
+  CartProductCard(
+      {this.product,
+      this.productRemover,
+      this.costCalculator,
+      this.productRetriever});
 
   final Product? product;
   final ValueChanged<bool>? costCalculator;
@@ -15,11 +19,11 @@ class CartProductCard extends StatefulWidget {
 }
 
 class _CartProductCardState extends State<CartProductCard> {
-
   @override
   Widget build(BuildContext context) {
-    TextEditingController controller = TextEditingController(text: '1');
     Product product = widget.product!;
+    TextEditingController controller =
+        TextEditingController(text: product.quantity.toString());
 
     return InkWell(
       onTap: () {
@@ -48,8 +52,14 @@ class _CartProductCardState extends State<CartProductCard> {
                     borderRadius: BorderRadius.circular(20.0),
                     child: Image.network(
                       product.images![0],
-                      height: MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? 170 : 90,
-                      width: MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? 240 : 120,
+                      height: MediaQuery.of(context).size.width >
+                              MediaQuery.of(context).size.height
+                          ? 170
+                          : 90,
+                      width: MediaQuery.of(context).size.width >
+                              MediaQuery.of(context).size.height
+                          ? 240
+                          : 120,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -76,7 +86,10 @@ class _CartProductCardState extends State<CartProductCard> {
                                   fontSize: 15.0, fontWeight: FontWeight.bold),
                             ),
                             IconButton(
-                                icon: Icon(Icons.delete,color: Colors.redAccent,),
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: Colors.redAccent,
+                                ),
                                 onPressed: () {
                                   setState(() {
                                     var temp = product;
@@ -86,22 +99,28 @@ class _CartProductCardState extends State<CartProductCard> {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(SnackBar(
                                             content: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Icon(Icons.delete,color: Colors.white,),
-                                                  SizedBox(width: 10.0,),
-                                                  Text('Product Removed'),
-                                                ],
-                                              ),
-                                              TextButton(onPressed: (){
-                                                  widget.productRetriever!(temp);
-                                              }, child: Text('undo'))
-                                            ],
-                                        )
-                                      )
-                                    );
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.delete,
+                                              color: Colors.white,
+                                            ),
+                                            SizedBox(
+                                              width: 10.0,
+                                            ),
+                                            Text('Product Removed'),
+                                          ],
+                                        ),
+                                        TextButton(
+                                            onPressed: () {
+                                              widget.productRetriever!(temp);
+                                            },
+                                            child: Text('undo'))
+                                      ],
+                                    )));
                                   });
                                 })
                           ],
@@ -145,6 +164,9 @@ class _CartProductCardState extends State<CartProductCard> {
                                       height: 30.0,
                                       child: TextField(
                                         controller: controller,
+                                        onChanged: (value){
+                                          product.quantity = int.parse(value);
+                                        },
                                         textAlign: TextAlign.center,
                                         decoration: InputDecoration(
                                             labelText: 'Quantity',
@@ -166,13 +188,25 @@ class _CartProductCardState extends State<CartProductCard> {
                                     ),
                                     Switch(
                                         value: widget.product!.deliveryTaken,
-                                        onChanged: product.deliveryCost == 0 ? null : (value) {
-                                          setState(() {
-                                            widget.costCalculator!(true);
-                                            App.cartProducts.elementAt(App.cartProducts.indexOf(widget.product!)).deliveryTaken =
-                                                !App.cartProducts.elementAt(App.cartProducts.indexOf(widget.product!)).deliveryTaken;
-                                          });
-                                        }),
+                                        onChanged: product.deliveryCost == 0
+                                            ? null
+                                            : (value) {
+                                                setState(() {
+                                                  widget.costCalculator!(true);
+                                                  App.cartProducts
+                                                          .elementAt(App
+                                                              .cartProducts
+                                                              .indexOf(widget
+                                                                  .product!))
+                                                          .deliveryTaken =
+                                                      !App.cartProducts
+                                                          .elementAt(App
+                                                              .cartProducts
+                                                              .indexOf(widget
+                                                                  .product!))
+                                                          .deliveryTaken;
+                                                });
+                                              }),
                                   ],
                                 ),
                                 Row(
@@ -184,14 +218,26 @@ class _CartProductCardState extends State<CartProductCard> {
                                           fontWeight: FontWeight.w300),
                                     ),
                                     Switch(
-                                        value: widget.product!.setupTaken ,
-                                        onChanged: product.setupCost == 0 ? null : (value) {
-                                          setState(() {
-                                            widget.costCalculator!(true);
-                                            App.cartProducts.elementAt(App.cartProducts.indexOf(widget.product!)).setupTaken =
-                                            !App.cartProducts.elementAt(App.cartProducts.indexOf(widget.product!)).setupTaken;
-                                          });
-                                        }),
+                                        value: widget.product!.setupTaken,
+                                        onChanged: product.setupCost == 0
+                                            ? null
+                                            : (value) {
+                                                setState(() {
+                                                  widget.costCalculator!(true);
+                                                  App.cartProducts
+                                                          .elementAt(App
+                                                              .cartProducts
+                                                              .indexOf(widget
+                                                                  .product!))
+                                                          .setupTaken =
+                                                      !App.cartProducts
+                                                          .elementAt(App
+                                                              .cartProducts
+                                                              .indexOf(widget
+                                                                  .product!))
+                                                          .setupTaken;
+                                                });
+                                              }),
                                   ],
                                 ),
                               ],

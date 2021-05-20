@@ -5,6 +5,7 @@ class Product {
   String name;
   String description;
   String category;
+  int quantity;
   int price;
   int offerPrice;
   int stock;
@@ -26,6 +27,7 @@ class Product {
       this.imageString: '',
       this.offerPrice: 0,
       this.price: 0,
+      this.quantity: 1,
       this.deliveryCost: 0,
       this.setupCost: 0,
       this.productJson: '',
@@ -49,6 +51,7 @@ class Product {
       'description': this.description,
       'imageString': this.imageString,
       'id': this.id,
+      'quantity': this.quantity.toString(),
       'category': this.category,
       'offerPrice': this.offerPrice.toString(),
       'price': this.price.toString(),
@@ -59,14 +62,16 @@ class Product {
     productJson = jsonEncode(data);
     return productJson;
   }
-  
-  bool toProduct(){
-    if(productJson != ''){
-      Map<String,dynamic> data = jsonDecode(productJson) as Map<String,dynamic>;
+
+  bool toProduct() {
+    if (productJson != '') {
+      Map<String, dynamic> data =
+          jsonDecode(productJson) as Map<String, dynamic>;
       this.name = data['name']!;
       this.description = data['description']!;
       this.imageString = data['imageString']!;
       this.id = data['id']!;
+      this.quantity = int.parse(data['quantity']!);
       this.category = data['category']!;
       this.offerPrice = int.parse(data['offerPrice']!);
       this.price = int.parse(data['price']!);

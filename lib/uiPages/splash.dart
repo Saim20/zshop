@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class SplashPage extends StatelessWidget {
   void goHome(context) async {
     await Future.delayed(Duration(seconds: 1))
-        .then((value) => Navigator.pushReplacementNamed(context, '/home'));
+        .then((value) {Navigator.pushReplacementNamed(context, '/home');});
   }
 
   @override

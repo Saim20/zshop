@@ -111,6 +111,17 @@ class ProductCard extends StatelessWidget {
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ),
+                                  if(confirmation)
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 2.0),
+                                      child: Text(
+                                        'Quantity: ${product.quantity.toString()}',
+                                        style: TextStyle(
+                                            color: Colors.blue[500],
+                                            fontSize: 13.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
                                 ],
                               ),
                               width: 70.0,

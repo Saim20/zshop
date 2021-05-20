@@ -14,6 +14,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   Widget build(BuildContext context) {
     var data = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     Order order = data['order'];
+    Function clearCart = data['clearcart'];
 
     return Scaffold(
         appBar: PreferredSize(
@@ -61,7 +62,20 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                     onPressed: () async {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Placing order')));
                       await order.place();
-                      Navigator.of(context).pushReplacementNamed('/success');
+                      Navigator.of(context).pop();
+                      showDialog(context: context, builder: (context) => AlertDialog(
+                        title: Text('Order placed'),
+                        content: Icon(Icons.markunread_mailbox_rounded),
+                        actions: [
+                          TextButton(
+                            onPressed: (){
+                              Navigator.of(context).pop();
+                              clearCart();
+                            },
+                            child: Text('Ok'),
+                          )
+                        ],
+                      ));
                     },
                     child: Text('Confirm order')),
               ],
