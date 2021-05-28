@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:z_shop/services/product.dart';
 import 'package:z_shop/uiPages/account.dart';
+import 'package:z_shop/uiPages/cart.dart';
 import 'package:z_shop/uiPages/confirmation.dart';
 import 'package:z_shop/uiPages/error.dart';
 import 'package:z_shop/uiPages/home.dart';
 import 'package:z_shop/uiPages/itemList.dart';
 import 'package:z_shop/uiPages/login.dart';
 import 'package:z_shop/uiPages/product.dart';
+import 'package:z_shop/uiPages/searchItemList.dart';
 import 'package:z_shop/uiPages/signup.dart';
 import 'package:z_shop/uiPages/signupOptions.dart';
 import 'package:z_shop/uiPages/splash.dart';
@@ -124,8 +126,10 @@ class _AppState extends State<App> {
         '/account': (context) => AccountPage(),
         '/details': (context) => ProductDetailsPage(),
         '/products': (context) => ItemListPage(),
+        '/search': (context) => SearchItemListPage(),
         '/login': (context) => LoginPage(),
         '/error': (context) => ErrorPage(),
+        '/cart' : (context) => CartPage(),
         '/signup': (context) => SignupPage(),
         '/signupoptions': (context) => SignupOptionsPage(),
         '/confirmation' : (context) => ConfirmationPage(),

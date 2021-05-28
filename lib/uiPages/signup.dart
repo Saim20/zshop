@@ -251,6 +251,9 @@ class MyCustomFormState extends State<MyCustomForm> {
       else if (e.code == 'invalid-email') {
         emailIsInvalid = true;
       }
+      else{
+        print(e);
+      }
       _formKey.currentState!.validate();
     }
   }

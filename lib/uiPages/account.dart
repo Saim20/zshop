@@ -17,14 +17,14 @@ class _AccountPageState extends State<AccountPage> {
   ZshopUser zuser = ZshopUser();
   DocumentSnapshot? userSnap;
 
-  void signOut(bool signOut){
+  void signOut(bool signOut) {
     setState(() {
       FirebaseAuth.instance.signOut();
       signedIn = !signOut;
     });
   }
 
-  void completeSignIn(really){
+  void completeSignIn(really) {
     setState(() {
       incompleteGoogleSignin = false;
       signedIn = true;
@@ -32,14 +32,16 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   Future<bool> setUser(User user) async {
-    userSnap = await FirebaseFirestore.instance.collection('users').doc(user.email).get();
+    userSnap = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.email)
+        .get();
     zuser.name = user.displayName!;
     zuser.email = user.email!;
-    if(userSnap!.exists){
+    if (userSnap!.exists) {
       zuser.phone = userSnap!.data()!['phone'];
       zuser.address = userSnap!.data()!['address'];
-    }
-    else{
+    } else {
       incompleteGoogleSignin = true;
     }
     return true;
@@ -52,13 +54,13 @@ class _AccountPageState extends State<AccountPage> {
         setState(() {
           signedIn = false;
         });
-      } else if(user.displayName != null){
+      } else if (user.displayName != null) {
         await setUser(user);
         setState(() {
-          if(incompleteGoogleSignin){
+          if (incompleteGoogleSignin) {
             signedIn = false;
-          }else
-          signedIn = true;
+          } else
+            signedIn = true;
         });
       }
     });
@@ -67,19 +69,34 @@ class _AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
-    if(signedIn == null){
+    var data;
+    if (ModalRoute.of(context)!.settings.arguments != null)
+      data = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    else
+      data = {'fromCart': false};
+    bool fromCart = data['fromCart'] ?? false;
+
+    if (signedIn == null) {
       return LoadingWidget();
     }
-    return signedIn! ? Account(signOut: signOut,user: zuser) : LoginPage(isIncomplete: incompleteGoogleSignin,completeSignin: completeSignIn);
+    return signedIn!
+        ? Account(
+            signOut: signOut,
+            user: zuser,
+            fromCart: fromCart,
+          )
+        : LoginPage(
+            isIncomplete: incompleteGoogleSignin,
+            completeSignin: completeSignIn);
   }
 }
 
 class Account extends StatelessWidget {
-
-  Account({this.signOut,this.user});
+  Account({this.signOut, this.user, this.fromCart: false});
 
   final ZshopUser? user;
   final ValueChanged<bool>? signOut;
+  final bool fromCart;
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +117,24 @@ class Account extends StatelessWidget {
                 fontWeight: FontWeight.w300,
               ),
             ),
+            actions: [
+              IconButton(
+                  icon: Icon(
+                    Icons.shopping_cart,
+                    color: Colors.blue,
+                    size: 30.0,
+                  ),
+                  onPressed: () {
+                    if (fromCart)
+                      Navigator.of(context).pushReplacementNamed('/cart',arguments: {
+                        'fromAccount':true
+                      });
+                    else
+                      Navigator.of(context).pushNamed('/cart',arguments: {
+                      'fromAccount':true
+                      });
+                  }),
+            ],
           ),
         ),
       ),
@@ -192,4 +227,3 @@ class LoadingWidget extends StatelessWidget {
     );
   }
 }
-

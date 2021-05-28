@@ -39,14 +39,39 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 fontWeight: FontWeight.w300,
               ),
             ),
+            actions: [
+              IconButton(
+                  icon: Hero(
+                    tag: 'cartHero',
+                    child: Icon(
+                      Icons.shopping_cart,
+                      color: Colors.blue,
+                      size: 30.0,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/cart');
+                  }),
+              IconButton(
+                  icon: Hero(
+                    tag: 'accountHero',
+                    child: Icon(
+                      Icons.account_circle,
+                      color: Colors.blue,
+                      size: 30.0,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/account');
+                  }),
+            ],
           ),
         ),
       ),
       body: ListView(
         children: [
           Container(
-            width: 500.0,
-            height: 380.0,
+            height: MediaQuery.of(context).orientation == Orientation.landscape ? 300.0 : null,
             child: Hero(
               tag: product!.id,
               child: CarouselSlider(
@@ -143,6 +168,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           ),
                         ),
                       ),
+                      SizedBox(
+                        height: 50.0,
+                      )
                     ],
                   ),
                 )

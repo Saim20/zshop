@@ -54,7 +54,9 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                 Text('Phone: ${order.userPhone}',style: TextStyle(fontSize: 20.0),),
                 Text('E-mail: ${order.userEmail}',style: TextStyle(fontSize: 20.0),),
 
-                //TODO Show cost info
+                SizedBox(height: 20.0,),
+
+                Text('Total cost: ৳${order.totalCost}',style: TextStyle(fontSize: 20.0),),
 
                 SizedBox(height: 20.0,),
 

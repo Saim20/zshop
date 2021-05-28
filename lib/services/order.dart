@@ -7,12 +7,14 @@ class Order {
       required this.userEmail,
       required this.userPhone,
       required this.cartProducts,
-      required this.userAddress});
+      required this.userAddress,
+      required this.totalCost});
 
   String userName;
   String userPhone;
   String userEmail;
   String userAddress;
+  int totalCost;
   List<Product> cartProducts;
 
   Future<bool> place() async {

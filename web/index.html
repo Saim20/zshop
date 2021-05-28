@@ -13,6 +13,8 @@
   -->
   <base href="/">
 
+  <meta name="google-signin-client_id" content="742723823801-h75l4vpvim747186bsoqaspsluja1h94.apps.googleusercontent.com">
+
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
@@ -34,17 +36,16 @@
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->
   <!-- The core Firebase JS SDK is always required and must be listed first -->
-  <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
 
   <!-- TODO: Add SDKs for Firebase products that you want to use
        https://firebase.google.com/docs/web/setup#available-libraries -->
-  <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-storage.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
 
   <script>
   // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
   var firebaseConfig = {
     apiKey: "AIzaSyAPSCxJfJoloJjrx9DiJ3AcOxySjacuadY",
     authDomain: "zshop-ccbed.firebaseapp.com",
@@ -58,6 +59,7 @@
   firebase.initializeApp(firebaseConfig);
   firebase.firestore();
   firebase.storage();
+  firebase.auth();
 </script>
 
   <script>

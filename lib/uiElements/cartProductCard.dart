@@ -41,49 +41,51 @@ class _CartProductCardState extends State<CartProductCard> {
           shadowColor: Colors.grey[50],
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Column(
             children: [
-              Container(
-                margin: EdgeInsets.all(10.0),
-                child: Hero(
-                  tag: product.id,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20.0),
-                    child: Image.network(
-                      product.images![0],
-                      height: MediaQuery.of(context).size.width >
-                              MediaQuery.of(context).size.height
-                          ? 170
-                          : 90,
-                      width: MediaQuery.of(context).size.width >
-                              MediaQuery.of(context).size.height
-                          ? 240
-                          : 120,
-                      fit: BoxFit.cover,
+              // Top Row
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(10.0),
+                    child: Hero(
+                      tag: product.id,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20.0),
+                        child: Image.network(
+                          product.images![0],
+                          height: MediaQuery.of(context).size.width >
+                                  MediaQuery.of(context).size.height
+                              ? 170
+                              : 90,
+                          width: MediaQuery.of(context).size.width >
+                                  MediaQuery.of(context).size.height
+                              ? 240
+                              : 120,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        color: Colors.grey[300]),
                   ),
-                ),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    color: Colors.grey[300]),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 15.0, 5.0, 15.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(8.0, 2.0, 10.0, 0.0),
-                        child: Row(
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              product.name,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  fontSize: 15.0, fontWeight: FontWeight.bold),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+                              child: Text(
+                                product.name,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: 15.0, fontWeight: FontWeight.bold),
+                              ),
                             ),
                             IconButton(
                                 icon: Icon(
@@ -98,156 +100,160 @@ class _CartProductCardState extends State<CartProductCard> {
                                     //Notify the user
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(SnackBar(
-                                            content: Row(
-                                      mainAxisAlignment:
+                                        content: Row(
+                                          mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
                                           children: [
-                                            Icon(
-                                              Icons.delete,
-                                              color: Colors.white,
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.delete,
+                                                  color: Colors.white,
+                                                ),
+                                                SizedBox(
+                                                  width: 10.0,
+                                                ),
+                                                Text('Product Removed'),
+                                              ],
                                             ),
-                                            SizedBox(
-                                              width: 10.0,
-                                            ),
-                                            Text('Product Removed'),
+                                            TextButton(
+                                                onPressed: () {
+                                                  widget.productRetriever!(temp);
+                                                },
+                                                child: Text('undo'))
                                           ],
-                                        ),
-                                        TextButton(
-                                            onPressed: () {
-                                              widget.productRetriever!(temp);
-                                            },
-                                            child: Text('undo'))
-                                      ],
-                                    )));
+                                        )));
                                   });
                                 })
                           ],
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 5.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        Column(
                           children: [
-                            Column(
-                              children: [
-                                Padding(
-                                  padding:
-                                      EdgeInsets.fromLTRB(0.0, 3.0, 10.0, 0.0),
-                                  child: Text(
-                                    '৳ ${product.offerPrice.toString()}',
-                                    style: TextStyle(
-                                        fontSize: 15.0,
-                                        color: Colors.red[400],
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 2.0),
-                                  child: Text(
-                                    '৳ ${product.price.toString()}',
-                                    style: TextStyle(
-                                        color: Colors.red[100],
-                                        fontSize: 13.0,
-                                        decoration: TextDecoration.lineThrough,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      0.0, 10.0, 0.0, 0.0),
-                                  child: Container(
-                                      width: 70.0,
-                                      height: 30.0,
-                                      child: TextField(
-                                        controller: controller,
-                                        onChanged: (value){
-                                          product.quantity = int.parse(value);
-                                        },
-                                        textAlign: TextAlign.center,
-                                        decoration: InputDecoration(
-                                            labelText: 'Quantity',
-                                            border: OutlineInputBorder()),
-                                      )),
-                                )
-                              ],
+                            Padding(
+                              padding:
+                              EdgeInsets.fromLTRB(15.0, 3.0, 10.0, 0.0),
+                              child: Text(
+                                '৳ ${product.offerPrice.toString()}',
+                                style: TextStyle(
+                                    fontSize: 15.0,
+                                    color: Colors.red[400],
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      'Delivery(৳${widget.product!.deliveryCost})',
-                                      style: TextStyle(
-                                          fontSize: 15.0,
-                                          fontWeight: FontWeight.w300),
-                                    ),
-                                    Switch(
-                                        value: widget.product!.deliveryTaken,
-                                        onChanged: product.deliveryCost == 0
-                                            ? null
-                                            : (value) {
-                                                setState(() {
-                                                  widget.costCalculator!(true);
-                                                  App.cartProducts
-                                                          .elementAt(App
-                                                              .cartProducts
-                                                              .indexOf(widget
-                                                                  .product!))
-                                                          .deliveryTaken =
-                                                      !App.cartProducts
-                                                          .elementAt(App
-                                                              .cartProducts
-                                                              .indexOf(widget
-                                                                  .product!))
-                                                          .deliveryTaken;
-                                                });
-                                              }),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      'Setup(৳${widget.product!.setupCost})',
-                                      style: TextStyle(
-                                          fontSize: 15.0,
-                                          fontWeight: FontWeight.w300),
-                                    ),
-                                    Switch(
-                                        value: widget.product!.setupTaken,
-                                        onChanged: product.setupCost == 0
-                                            ? null
-                                            : (value) {
-                                                setState(() {
-                                                  widget.costCalculator!(true);
-                                                  App.cartProducts
-                                                          .elementAt(App
-                                                              .cartProducts
-                                                              .indexOf(widget
-                                                                  .product!))
-                                                          .setupTaken =
-                                                      !App.cartProducts
-                                                          .elementAt(App
-                                                              .cartProducts
-                                                              .indexOf(widget
-                                                                  .product!))
-                                                          .setupTaken;
-                                                });
-                                              }),
-                                  ],
-                                ),
-                              ],
+                            Padding(
+                              padding:
+                              EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 2.0),
+                              child: Text(
+                                '৳ ${product.price.toString()}',
+                                style: TextStyle(
+                                    color: Colors.red[200],
+                                    fontSize: 13.0,
+                                    decoration: TextDecoration.lineThrough,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ],
                         ),
-                      )
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+                ],
+              ),
+              // Bottom Row
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    margin: EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0),
+                      width: 90.0,
+                      height: 70.0,
+                      child: TextField(
+                        controller: controller,
+                        onChanged: (value){
+                          product.quantity = int.parse(value);
+                        },
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                            labelText: 'Quantity',
+                            border: OutlineInputBorder()),
+                      )),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0.0, 0.0, 20.0, 20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Container(
+                          height: 30.0,
+                          child: Row(
+                            children: [
+                              Text(
+                                'Delivery(৳${widget.product!.deliveryCost})',
+                                style: TextStyle(
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.w300),
+                              ),
+                              Switch(
+                                  value: widget.product!.deliveryTaken,
+                                  onChanged: product.deliveryCost == 0
+                                      ? null
+                                      : (value) {
+                                          setState(() {
+                                            widget.costCalculator!(true);
+                                            App.cartProducts
+                                                    .elementAt(App
+                                                        .cartProducts
+                                                        .indexOf(widget
+                                                            .product!))
+                                                    .deliveryTaken =
+                                                !App.cartProducts
+                                                    .elementAt(App
+                                                        .cartProducts
+                                                        .indexOf(widget
+                                                            .product!))
+                                                    .deliveryTaken;
+                                          });
+                                        }),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: 30.0,
+                          child: Row(
+                            children: [
+                              Text(
+                                'Setup(৳${widget.product!.setupCost})',
+                                style: TextStyle(
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.w300),
+                              ),
+                              Switch(
+                                  value: widget.product!.setupTaken,
+                                  onChanged: product.setupCost == 0
+                                      ? null
+                                      : (value) {
+                                          setState(() {
+                                            widget.costCalculator!(true);
+                                            App.cartProducts
+                                                    .elementAt(App
+                                                        .cartProducts
+                                                        .indexOf(widget
+                                                            .product!))
+                                                    .setupTaken =
+                                                !App.cartProducts
+                                                    .elementAt(App
+                                                        .cartProducts
+                                                        .indexOf(widget
+                                                            .product!))
+                                                    .setupTaken;
+                                          });
+                                        }),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
               )
             ],
           ),

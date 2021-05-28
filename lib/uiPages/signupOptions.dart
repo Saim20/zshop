@@ -22,6 +22,7 @@ class SignupOptionsPage extends StatelessWidget {
           ),
           Container(
             margin: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 0.0),
+            height: 40.0,
             child: SignInButton(
               Buttons.Email,
               onPressed: () {
