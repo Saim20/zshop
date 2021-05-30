@@ -14,6 +14,8 @@ class ProductCard extends StatelessWidget {
     bool confirmation = false;
     Product product;
 
+    bool outOfStock = false;
+
     if (prod != null) {
       product = Product(
         id: prod!.id,
@@ -28,6 +30,8 @@ class ProductCard extends StatelessWidget {
         imageString: prod!.data()['images'],
       );
       product.convert();
+
+      outOfStock = product.stock <= 0;
     } else {
       confirmation = true;
       product = productObject!;
@@ -35,7 +39,8 @@ class ProductCard extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed('/details', arguments: {'product': product, 'cart': false});
+        Navigator.of(context).pushNamed('/details',
+            arguments: {'product': product, 'cart': false});
       },
       splashColor: Colors.purpleAccent,
       focusColor: Colors.blue[100],
@@ -46,7 +51,8 @@ class ProductCard extends StatelessWidget {
           color: Colors.grey[100],
           elevation: 15.0,
           shadowColor: Colors.grey[50],
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,8 +65,14 @@ class ProductCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20.0),
                     child: Image.network(
                       product.images![0],
-                      height: MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? 140 : 80,
-                      width: MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? 180 : 120,
+                      height: MediaQuery.of(context).size.width >
+                              MediaQuery.of(context).size.height
+                          ? 140
+                          : 80,
+                      width: MediaQuery.of(context).size.width >
+                              MediaQuery.of(context).size.height
+                          ? 180
+                          : 120,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -80,7 +92,8 @@ class ProductCard extends StatelessWidget {
                         child: Text(
                           product.name,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 15.0, fontWeight: FontWeight.bold),
                         ),
                       ),
                       Padding(
@@ -93,27 +106,33 @@ class ProductCard extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.fromLTRB(0.0, 3.0, 10.0, 0.0),
+                                    padding: EdgeInsets.fromLTRB(
+                                        0.0, 3.0, 10.0, 0.0),
                                     child: Text(
                                       '৳ ${product.offerPrice.toString()}',
                                       style: TextStyle(
-                                          fontSize: 15.0, color: Colors.red[400], fontWeight: FontWeight.bold),
+                                          fontSize: 15.0,
+                                          color: Colors.red[400],
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 2.0),
+                                    padding: EdgeInsets.fromLTRB(
+                                        0.0, 0.0, 10.0, 2.0),
                                     child: Text(
                                       '৳ ${product.price.toString()}',
                                       style: TextStyle(
                                           color: Colors.red[100],
                                           fontSize: 13.0,
-                                          decoration: TextDecoration.lineThrough,
+                                          decoration:
+                                              TextDecoration.lineThrough,
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  if(confirmation)
+                                  if (confirmation)
                                     Padding(
-                                      padding: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 2.0),
+                                      padding: EdgeInsets.fromLTRB(
+                                          0.0, 0.0, 10.0, 2.0),
                                       child: Text(
                                         'Quantity: ${product.quantity.toString()}',
                                         style: TextStyle(
@@ -129,22 +148,30 @@ class ProductCard extends StatelessWidget {
                             if (confirmation)
                               Column(
                                 children: [
-                                  Text('Setup: ${product.setupTaken ? 'Yes' : 'No'}'),
-                                  Text('Delivery: ${product.deliveryTaken ? 'Yes' : 'No'}')
+                                  Text(
+                                      'Setup: ${product.setupTaken ? 'Yes' : 'No'}'),
+                                  Text(
+                                      'Delivery: ${product.deliveryTaken ? 'Yes' : 'No'}')
                                 ],
                               ),
                             if (!confirmation) Text('Rating'),
                             if (!confirmation)
                               IconButton(
-                                  icon: Icon(Icons.add_shopping_cart),
-                                  onPressed: product.stock > 0
+                                  icon: Icon(outOfStock
+                                      ? Icons.not_interested
+                                      : Icons.add_shopping_cart),
+                                  onPressed: !outOfStock
                                       ? () {
                                           if (App.addToCart(product)) {
                                             ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(content: Text('Product added to cart')));
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        'Product added to cart')));
                                           } else
                                             ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(content: Text('Product already added to cart')));
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        'Product already added to cart')));
                                         }
                                       : null)
                           ],

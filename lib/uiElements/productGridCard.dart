@@ -26,6 +26,8 @@ class ProductGridCard extends StatelessWidget {
     );
     product.convert();
 
+    bool outOfStock = product.stock <= 0;
+
     return InkWell(
       onTap: () {
         Navigator.of(context).pushNamed('/details',
@@ -74,7 +76,9 @@ class ProductGridCard extends StatelessWidget {
                       product.name,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                          fontSize: 15.0, fontWeight: FontWeight.bold),
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.fromLTRB(3.0, 0.0, 0.0, 5.0),
@@ -114,8 +118,10 @@ class ProductGridCard extends StatelessWidget {
                           ),
                           Text('Rating'),
                           IconButton(
-                              icon: Icon(Icons.add_shopping_cart),
-                              onPressed: product.stock > 0
+                              icon: Icon((outOfStock
+                                  ? Icons.not_interested
+                                  : Icons.add_shopping_cart)),
+                              onPressed: !outOfStock
                                   ? () {
                                       if (App.addToCart(product)) {
                                         ScaffoldMessenger.of(context)
@@ -128,8 +134,7 @@ class ProductGridCard extends StatelessWidget {
                                                 content: Text(
                                                     'Product already added to cart')));
                                     }
-                                  : null
-                          )
+                                  : null)
                         ],
                       ),
                     )

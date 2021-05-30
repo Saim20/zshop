@@ -14,6 +14,11 @@ class SearchItemListPage extends StatefulWidget {
 class _SearchItemListPageState extends State<SearchItemListPage> {
   String sort = 'name';
   bool descending = false;
+  bool filter = false;
+  RangeValues range = RangeValues(0.0, 0.0);
+  int min = 0;
+  int max = 0;
+  bool onceFlag = false;
 
   setSortValue(value) {
     setState(() {
@@ -24,6 +29,18 @@ class _SearchItemListPageState extends State<SearchItemListPage> {
   setDescendingValue(value) {
     setState(() {
       descending = value;
+    });
+  }
+
+  setFilterValue(value) {
+    setState(() {
+      filter = value;
+    });
+  }
+
+  setRangeValue(mrange) {
+    setState(() {
+      range = mrange;
     });
   }
 
@@ -93,8 +110,8 @@ class _SearchItemListPageState extends State<SearchItemListPage> {
                 .collection('products')
                 .orderBy(sort, descending: descending)
                 .get(),
-            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) {
                 print(snapshot.error);
                 return Center(
@@ -114,7 +131,15 @@ class _SearchItemListPageState extends State<SearchItemListPage> {
                         docs.add(each);
                       }
                     }
-                    if (docs.isNotEmpty)
+
+                    if (docs.isNotEmpty) {
+
+                      sortDocsForMinMax(snapshot.data!.docs);
+
+                      if(filter){
+                        docs = filterDocs(docs);
+                      }
+
                       return Container(
                         child: ListView(
                           children: [
@@ -123,6 +148,12 @@ class _SearchItemListPageState extends State<SearchItemListPage> {
                               descending: descending,
                               setSortValue: setSortValue,
                               setDescendingValue: setDescendingValue,
+                              filter: filter,
+                              range: range,
+                              setRangeValue: setRangeValue,
+                              setFilterValue: setFilterValue,
+                              min: min,
+                              max: max,
                             ),
                             Column(
                               children: docs.map((e) {
@@ -134,7 +165,7 @@ class _SearchItemListPageState extends State<SearchItemListPage> {
                           ],
                         ),
                       );
-                    else
+                    } else
                       return Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -172,5 +203,32 @@ class _SearchItemListPageState extends State<SearchItemListPage> {
         ],
       ),
     );
+  }
+
+  void sortDocsForMinMax(List<QueryDocumentSnapshot> docs) {
+    docs.sort(
+        (a, b) => a.data()['offerPrice'].compareTo(b.data()['offerPrice']));
+    min = docs.first.data()['offerPrice'];
+    max = docs.last.data()['offerPrice'];
+    if (!onceFlag) {
+      onceFlag = true;
+      range = RangeValues(min.toDouble(), max.toDouble());
+    }
+  }
+
+  List<QueryDocumentSnapshot> filterDocs(List<QueryDocumentSnapshot> docs) {
+    List<String> ids = [];
+    for (var doc in docs) {
+      if (doc.data()['offerPrice'] < range.start.ceil()) {
+        ids.add(doc.id);
+      }
+      if (doc.data()['offerPrice'] > range.end.ceil()) {
+        ids.add(doc.id);
+      }
+    }
+    for (var id in ids) {
+      docs.removeWhere((element) => element.id == id);
+    }
+    return docs;
   }
 }

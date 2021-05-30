@@ -14,6 +14,11 @@ class ItemListPage extends StatefulWidget {
 class _ItemListPageState extends State<ItemListPage> {
   String sort = 'name';
   bool descending = false;
+  bool filter = false;
+  RangeValues range = RangeValues(0.0, 0.0);
+  bool onceFlag = false;
+  int min = 0;
+  int max = 0;
 
   setSortValue(value) {
     setState(() {
@@ -24,6 +29,18 @@ class _ItemListPageState extends State<ItemListPage> {
   setDescendingValue(value) {
     setState(() {
       descending = value;
+    });
+  }
+
+  setFilterValue(value) {
+    setState(() {
+      filter = value;
+    });
+  }
+
+  setRangeValue(mrange) {
+    setState(() {
+      range = mrange;
     });
   }
 
@@ -104,8 +121,15 @@ class _ItemListPageState extends State<ItemListPage> {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.hasData) {
                     if (snapshot.data!.docs.isNotEmpty) {
+
+                      sortDocsForMinMax(snapshot.data!.docs);
+
                       List<QueryDocumentSnapshot> docs =
                           sortDocs(snapshot.data!.docs);
+                      if(filter){
+                        docs = filterDocs(docs);
+                      }
+
                       return Container(
                         child: ListView(children: [
                           SortFilterStrip(
@@ -113,6 +137,12 @@ class _ItemListPageState extends State<ItemListPage> {
                             descending: descending,
                             setSortValue: setSortValue,
                             setDescendingValue: setDescendingValue,
+                            filter: filter,
+                            range: range,
+                            setFilterValue: setFilterValue,
+                            setRangeValue: setRangeValue,
+                            min: min,
+                            max: max,
                           ),
                           Column(
                             children: docs.map((e) {
@@ -178,7 +208,30 @@ class _ItemListPageState extends State<ItemListPage> {
     if (descending) {
       return sortedDocs.reversed.toList();
     }
-    print(sortedDocs.map((e) => e.data()['name']).toString());
     return sortedDocs;
+  }
+  void sortDocsForMinMax(List<QueryDocumentSnapshot> docs) {
+    docs.sort((a, b) => a.data()['offerPrice'].compareTo(b.data()['offerPrice']));
+    min = docs.first.data()['offerPrice'];
+    max = docs.last.data()['offerPrice'];
+    if(!onceFlag){
+      onceFlag = true;
+      range = RangeValues(min.toDouble(),max.toDouble());
+    }
+  }
+  List<QueryDocumentSnapshot> filterDocs(List<QueryDocumentSnapshot> docs) {
+    List<String> ids = [];
+    for(var doc in docs){
+      if(doc.data()['offerPrice'] < range.start.ceil()){
+        ids.add(doc.id);
+      }
+      if(doc.data()['offerPrice'] > range.end.ceil()){
+        ids.add(doc.id);
+      }
+    }
+    for(var id in ids){
+      docs.removeWhere((element) => element.id == id);
+    }
+    return docs;
   }
 }

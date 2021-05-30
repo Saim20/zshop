@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class MyRadioColumn extends StatefulWidget {
+class MySortColumn extends StatefulWidget {
 
-  MyRadioColumn({required this.sort,required this.descending,required this.setDescendingValue,required this.setSortValue});
+  MySortColumn({required this.sort,required this.descending,required this.setDescendingValue,required this.setSortValue});
 
   String sort;
   bool descending;
@@ -10,10 +10,10 @@ class MyRadioColumn extends StatefulWidget {
   ValueChanged<bool> setDescendingValue;
 
   @override
-  _MyRadioColumnState createState() => _MyRadioColumnState();
+  _MySortColumnState createState() => _MySortColumnState();
 }
 
-class _MyRadioColumnState extends State<MyRadioColumn> {
+class _MySortColumnState extends State<MySortColumn> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -58,7 +58,7 @@ class _MyRadioColumnState extends State<MyRadioColumn> {
                 }),
           ),
           SizedBox(
-            height: 20.0,
+            height: 40.0,
           ),
           ListTile(
             title: Text('Ascending'),

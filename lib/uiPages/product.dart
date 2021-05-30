@@ -19,6 +19,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     Map data = {};
     data = ModalRoute.of(context)!.settings.arguments! as Map<String, dynamic>;
     product = data['product'];
+    bool outOfStock = product!.stock <= 0;
     fromCart = data['cart'];
 
     return Scaffold(
@@ -71,7 +72,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       body: ListView(
         children: [
           Container(
-            height: MediaQuery.of(context).orientation == Orientation.landscape ? 300.0 : null,
+            height: MediaQuery.of(context).orientation == Orientation.landscape
+                ? 300.0
+                : null,
             child: Hero(
               tag: product!.id,
               child: CarouselSlider(
@@ -134,11 +137,17 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                             children: [
                               Text(
                                 '৳ ${product!.offerPrice.toString()}',
-                                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500, color: Colors.red[400]),
+                                style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.red[400]),
                               ),
                               Text(
                                 '৳ ${product!.price.toString()}',
-                                style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400, color: Colors.red[100]),
+                                style: TextStyle(
+                                    fontSize: 17.0,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.red[100]),
                               ),
                             ],
                           ),
@@ -182,17 +191,19 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       floatingActionButton: fromCart
           ? null
           : FloatingActionButton.extended(
-              onPressed: product!.stock > 0
+              onPressed: !outOfStock
                   ? () {
                       if (App.addToCart(product)) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Product added to cart')));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Product added to cart')));
                       } else
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text('Product already added to cart')));
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Product already added to cart')));
                     }
                   : null,
-              label: Text('Add to cart'),
-              icon: Icon(Icons.add_shopping_cart),
+              label: Text(outOfStock ? 'Out of stock ' : 'Add to cart'),
+              icon: Icon(
+                  outOfStock ? Icons.not_interested : Icons.add_shopping_cart),
               splashColor: Colors.blue[900],
               hoverColor: Colors.blue[800],
               focusColor: Colors.blue[300],
