@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:z_shop/appState.dart';
 import 'package:z_shop/services/product.dart';
 
@@ -24,6 +25,10 @@ class ProductCard extends StatelessWidget {
         category: prod!.data()['category'],
         price: prod!.data()['price'],
         offerPrice: prod!.data()['offerPrice'],
+        rating: prod!.data()['rating'] == null
+            ? 0.0
+            : prod!.data()['rating'].toDouble(),
+        ratingCount: prod!.data()['ratingCount'] ?? 0,
         stock: prod!.data()['stock'],
         deliveryCost: prod!.data()['deliveryCost'],
         setupCost: prod!.data()['setupCost'],
@@ -97,7 +102,7 @@ class ProductCard extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(8.0, 0.0, 15.0, 5.0),
+                        padding: EdgeInsets.fromLTRB(8.0, 0.0, 10.0, 5.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -106,8 +111,8 @@ class ProductCard extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.fromLTRB(
-                                        0.0, 3.0, 10.0, 0.0),
+                                    padding:
+                                        EdgeInsets.fromLTRB(0.0, 3.0, 0.0, 0.0),
                                     child: Text(
                                       '৳ ${product.offerPrice.toString()}',
                                       style: TextStyle(
@@ -117,8 +122,8 @@ class ProductCard extends StatelessWidget {
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.fromLTRB(
-                                        0.0, 0.0, 10.0, 2.0),
+                                    padding:
+                                        EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 2.0),
                                     child: Text(
                                       '৳ ${product.price.toString()}',
                                       style: TextStyle(
@@ -154,12 +159,31 @@ class ProductCard extends StatelessWidget {
                                       'Delivery: ${product.deliveryTaken ? 'Yes' : 'No'}')
                                 ],
                               ),
-                            if (!confirmation) Text('Rating'),
+                            if (!confirmation)
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        0.0, 0.0, 8.0, 0.0),
+                                    child: Text(product.rating.toString()),
+                                  ),
+                                  RatingBarIndicator(
+                                    rating: product.rating,
+                                    itemCount: 5,
+                                    itemSize: 13.0,
+                                    itemBuilder: (context, index) => Icon(
+                                      Icons.star,
+                                      color: Colors.amber,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             if (!confirmation)
                               IconButton(
                                   icon: Icon(outOfStock
                                       ? Icons.not_interested
                                       : Icons.add_shopping_cart),
+                                  tooltip: 'Add to cart',
                                   onPressed: !outOfStock
                                       ? () {
                                           if (App.addToCart(product)) {

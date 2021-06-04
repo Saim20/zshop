@@ -11,6 +11,8 @@ class Product {
   int stock;
   int deliveryCost;
   int setupCost;
+  double rating;
+  int ratingCount;
   List<String>? images;
   bool setupTaken;
   bool deliveryTaken;
@@ -28,6 +30,8 @@ class Product {
       this.offerPrice: 0,
       this.price: 0,
       this.quantity: 1,
+      this.rating: 0.0,
+      this.ratingCount: 0,
       this.deliveryCost: 0,
       this.setupCost: 0,
       this.productJson: '',
@@ -51,9 +55,11 @@ class Product {
       'description': this.description,
       'imageString': this.imageString,
       'id': this.id,
+      'rating': this.rating.toString(),
       'quantity': this.quantity.toString(),
       'category': this.category,
       'offerPrice': this.offerPrice.toString(),
+      'ratingCount': this.ratingCount.toString(),
       'price': this.price.toString(),
       'deliveryCost': this.deliveryCost.toString(),
       'setupCost': this.setupCost.toString(),
@@ -74,7 +80,9 @@ class Product {
       this.quantity = int.parse(data['quantity']!);
       this.category = data['category']!;
       this.offerPrice = int.parse(data['offerPrice']!);
+      this.ratingCount = int.parse(data['ratingCount']);
       this.price = int.parse(data['price']!);
+      this.rating = double.parse(data['rating']);
       this.deliveryCost = int.parse(data['deliveryCost']!);
       this.setupCost = int.parse(data['setupCost']!);
       this.stock = int.parse(data['stock']!);

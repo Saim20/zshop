@@ -126,13 +126,11 @@ class Account extends StatelessWidget {
                   ),
                   onPressed: () {
                     if (fromCart)
-                      Navigator.of(context).pushReplacementNamed('/cart',arguments: {
-                        'fromAccount':true
-                      });
+                      Navigator.of(context).pushReplacementNamed('/cart',
+                          arguments: {'fromAccount': true});
                     else
-                      Navigator.of(context).pushNamed('/cart',arguments: {
-                      'fromAccount':true
-                      });
+                      Navigator.of(context)
+                          .pushNamed('/cart', arguments: {'fromAccount': true});
                   }),
             ],
           ),

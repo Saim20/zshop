@@ -1,9 +1,13 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:z_shop/appState.dart';
 import 'package:z_shop/services/product.dart';
+import 'package:z_shop/uiElements/myCarouselSlider.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   @override
@@ -12,13 +16,38 @@ class ProductDetailsPage extends StatefulWidget {
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   Product? product;
+  double? userRating;
+  bool? isNotRated;
+  double rating = 0.0;
+
+  getUserRating() async {
+    var user = await FirebaseAuth.instance.currentUser;
+    userRating = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.email)
+        .collection('ratings')
+        .doc(product!.id)
+        .get()
+        .then((value) {
+      if (value.data() == null) {
+        return null;
+      } else {
+        return value.data()!['rating'];
+      }
+    });
+    setState(() {
+      isNotRated = userRating == null;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (isNotRated == null) getUserRating();
+
     bool fromCart;
     Map data = {};
     data = ModalRoute.of(context)!.settings.arguments! as Map<String, dynamic>;
-    product = data['product'];
+    if (product == null) product = data['product'];
     bool outOfStock = product!.stock <= 0;
     fromCart = data['cart'];
 
@@ -71,44 +100,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       ),
       body: ListView(
         children: [
-          Container(
-            height: MediaQuery.of(context).orientation == Orientation.landscape
-                ? 300.0
-                : null,
-            child: Hero(
-              tag: product!.id,
-              child: CarouselSlider(
-                options: CarouselOptions(
-                  enableInfiniteScroll: false,
-                  enlargeCenterPage: true,
-                ),
-                items: product!.images!
-                    .map((item) => Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Container(
-                            child: Center(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10.0),
-                                child: Image.network(
-                                  item,
-                                  width: 500.0,
-                                  height: 350.0,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ))
-                    .toList(),
-              ),
-            ),
+          Hero(
+            tag: product!.id,
+            child: CarouselWithIndicator(product: product!),
           ),
-          Divider(
+          SizedBox(
             height: 15.0,
-            indent: 15.0,
-            endIndent: 15.0,
-            color: Colors.transparent,
-            thickness: 1.0,
           ),
           Padding(
             padding: const EdgeInsets.all(13.0),
@@ -151,9 +148,22 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                               ),
                             ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text('Rating'),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(product!.rating.toString()),
+                              ),
+                              RatingBarIndicator(
+                                rating: product!.rating,
+                                itemCount: 5,
+                                itemSize: 20.0,
+                                itemBuilder: (context, index) => Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                ),
+                              ),
+                            ],
                           )
                         ],
                       ),
@@ -175,6 +185,91 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                             fontSize: 16.0,
                             fontWeight: FontWeight.w300,
                           ),
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: EdgeInsets.fromLTRB(15.0, 50.0, 15.0, 20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text((isNotRated ?? true)
+                                ? 'Rate the product'
+                                : 'Your rating'),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            RatingBar.builder(
+                              initialRating: (isNotRated ?? true)
+                                  ? 5
+                                  : userRating == null
+                                      ? 0.0
+                                      : userRating!,
+                              minRating: 1,
+                              direction: Axis.horizontal,
+                              allowHalfRating: false,
+                              itemCount: 5,
+                              itemPadding:
+                                  EdgeInsets.symmetric(horizontal: 4.0),
+                              itemBuilder: (context, _) => Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              ),
+                              onRatingUpdate: (rating) {
+                                this.rating = rating;
+                                print(rating);
+                              },
+                            ),
+                            SizedBox(
+                              height: 40.0,
+                            ),
+                            ElevatedButton(
+                              onPressed: () async {
+                                //TODO Implement rating
+                                var rate = product!.rating;
+                                rate =
+                                    ((product!.rating * product!.ratingCount) +
+                                            rating) /
+                                        (product!.ratingCount + 1);
+
+                                await FirebaseFirestore.instance
+                                    .collection('products')
+                                    .doc(product!.id)
+                                    .update({
+                                  'rating': rate,
+                                });
+                                try {
+                                  await FirebaseFirestore.instance
+                                      .collection('users')
+                                      .doc(FirebaseAuth
+                                          .instance.currentUser!.email)
+                                      .collection('ratings')
+                                      .doc(product!.id)
+                                      .update({
+                                    'rating': rating,
+                                  });
+                                } catch (e) {
+                                  await FirebaseFirestore.instance
+                                      .collection('users')
+                                      .doc(FirebaseAuth
+                                          .instance.currentUser!.email)
+                                      .collection('ratings')
+                                      .doc(product!.id)
+                                      .set({
+                                    'rating': rating,
+                                  });
+                                }
+
+                                setState(() {
+                                  userRating = rating;
+                                  product!.rating = rate;
+                                  isNotRated = false;
+                                });
+                              },
+                              child: Text(
+                                  (isNotRated ?? true) ? 'Submit' : 'Change'),
+                            )
+                          ],
                         ),
                       ),
                       SizedBox(
@@ -204,6 +299,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               label: Text(outOfStock ? 'Out of stock ' : 'Add to cart'),
               icon: Icon(
                   outOfStock ? Icons.not_interested : Icons.add_shopping_cart),
+              tooltip: 'Add to cart',
               splashColor: Colors.blue[900],
               hoverColor: Colors.blue[800],
               focusColor: Colors.blue[300],

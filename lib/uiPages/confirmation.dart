@@ -12,7 +12,8 @@ class ConfirmationPage extends StatefulWidget {
 class _ConfirmationPageState extends State<ConfirmationPage> {
   @override
   Widget build(BuildContext context) {
-    var data = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    var data =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     Order order = data['order'];
     Function clearCart = data['clearcart'];
 
@@ -27,13 +28,15 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
               margin: const EdgeInsets.fromLTRB(30.0, 50.0, 30.0, 30.0),
               child: Text(
                 'Confirm Order',
-                style: GoogleFonts.roboto(color: Colors.blue, fontWeight: FontWeight.w300, fontSize: 40.0),
+                style: GoogleFonts.roboto(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.w300,
+                    fontSize: 40.0),
               ),
             ),
           ),
         ),
-        body: ListView(
-            children: [
+        body: ListView(children: [
           Column(
             children: order.cartProducts
                 .map((e) => ProductCard(
@@ -50,34 +53,57 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //Show user info
-                Text('Name: ${order.userName}',style: TextStyle(fontSize: 20.0),),
-                Text('Phone: ${order.userPhone}',style: TextStyle(fontSize: 20.0),),
-                Text('E-mail: ${order.userEmail}',style: TextStyle(fontSize: 20.0),),
+                Text(
+                  'Name: ${order.userName}',
+                  style: TextStyle(fontSize: 20.0),
+                ),
+                Text(
+                  'Phone: ${order.userPhone}',
+                  style: TextStyle(fontSize: 20.0),
+                ),
+                Text(
+                  'E-mail: ${order.userEmail}',
+                  style: TextStyle(fontSize: 20.0),
+                ),
+                Text(
+                  'Shipping address: ${order.userAddress}',
+                  style: TextStyle(fontSize: 20.0),
+                ),
 
-                SizedBox(height: 20.0,),
+                SizedBox(
+                  height: 20.0,
+                ),
 
-                Text('Total cost: ৳${order.totalCost}',style: TextStyle(fontSize: 20.0),),
+                Text(
+                  'Total cost: ৳${order.totalCost}',
+                  style: TextStyle(fontSize: 20.0),
+                ),
 
-                SizedBox(height: 20.0,),
+                SizedBox(
+                  height: 20.0,
+                ),
 
                 ElevatedButton(
                     onPressed: () async {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Placing order')));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Placing order')));
                       await order.place();
                       Navigator.of(context).pop();
-                      showDialog(context: context, builder: (context) => AlertDialog(
-                        title: Text('Order placed'),
-                        content: Icon(Icons.markunread_mailbox_rounded),
-                        actions: [
-                          TextButton(
-                            onPressed: (){
-                              Navigator.of(context).pop();
-                              clearCart();
-                            },
-                            child: Text('Ok'),
-                          )
-                        ],
-                      ));
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: Text('Order placed'),
+                                content: Icon(Icons.markunread_mailbox_rounded),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      clearCart();
+                                    },
+                                    child: Text('Ok'),
+                                  )
+                                ],
+                              ));
                     },
                     child: Text('Confirm order')),
               ],

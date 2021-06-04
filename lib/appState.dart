@@ -16,7 +16,6 @@ import 'package:z_shop/uiPages/signupOptions.dart';
 import 'package:z_shop/uiPages/splash.dart';
 
 class App extends StatefulWidget {
-
   static bool addToCart(Product? product) {
     bool contains = false;
     for (var cProduct in cartProducts) {
@@ -68,7 +67,8 @@ class App extends StatefulWidget {
 
   static void getCartProductsFromStorage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getString('cartProducts') != null && prefs.getString('cartProducts') != '') {
+    if (prefs.getString('cartProducts') != null &&
+        prefs.getString('cartProducts') != '') {
       App.cartProductsString = prefs.getString('cartProducts')!;
       for (var product in prefs
           .getString('cartProducts')!
@@ -87,7 +87,7 @@ class App extends StatefulWidget {
     prefs.clear();
   }
 
-  static void clearCart () async {
+  static void clearCart() async {
     cartProducts = [];
     cartProductsString = '';
     clearPrefs();
@@ -119,6 +119,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Zshop',
       routes: {
         '/': (context) => SplashPage(),
@@ -129,10 +130,10 @@ class _AppState extends State<App> {
         '/search': (context) => SearchItemListPage(),
         '/login': (context) => LoginPage(),
         '/error': (context) => ErrorPage(),
-        '/cart' : (context) => CartPage(),
+        '/cart': (context) => CartPage(),
         '/signup': (context) => SignupPage(),
         '/signupoptions': (context) => SignupOptionsPage(),
-        '/confirmation' : (context) => ConfirmationPage(),
+        '/confirmation': (context) => ConfirmationPage(),
       },
     );
   }

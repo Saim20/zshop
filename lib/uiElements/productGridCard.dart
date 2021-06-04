@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:z_shop/appState.dart';
 import 'package:z_shop/services/product.dart';
 
@@ -18,6 +19,10 @@ class ProductGridCard extends StatelessWidget {
       description: prod!.data()['description'],
       category: prod!.data()['category'],
       price: prod!.data()['price'],
+      rating: prod!.data()['rating'] == null
+          ? 0.0
+          : prod!.data()['rating'].toDouble(),
+      ratingCount: prod!.data()['ratingCount'] ?? 0,
       offerPrice: prod!.data()['offerPrice'],
       stock: prod!.data()['stock'],
       deliveryCost: prod!.data()['deliveryCost'],
@@ -116,11 +121,21 @@ class ProductGridCard extends StatelessWidget {
                             ),
                             width: 70.0,
                           ),
-                          Text('Rating'),
+                          Text(product.rating.toString()),
+                          RatingBarIndicator(
+                            rating: product.rating,
+                            itemCount: 5,
+                            itemSize: 13.0,
+                            itemBuilder: (context, index) => Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                          ),
                           IconButton(
                               icon: Icon((outOfStock
                                   ? Icons.not_interested
                                   : Icons.add_shopping_cart)),
+                              tooltip: 'Add to cart',
                               onPressed: !outOfStock
                                   ? () {
                                       if (App.addToCart(product)) {
