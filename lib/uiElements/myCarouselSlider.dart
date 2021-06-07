@@ -25,14 +25,24 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                   padding: const EdgeInsets.all(5.0),
                   child: Container(
                     child: Center(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10.0),
-                        child: Image.network(
-                          item,
-                          // width: 500.0,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                      child: widget.product.images![0] == item
+                          ? Hero(
+                              tag: item,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10.0),
+                                child: Image.network(
+                                  item,
+                                ),
+                              ),
+                            )
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(10.0),
+                              child: Image.network(
+                                item,
+                                // width: 500.0,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                     ),
                   ),
                 ))

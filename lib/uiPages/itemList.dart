@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:z_shop/data/data.dart';
 import 'package:z_shop/uiElements/floatingSearchBar.dart';
 import 'package:z_shop/uiElements/productCard.dart';
 import 'package:z_shop/uiElements/sortFilterStrip.dart';
@@ -56,15 +56,15 @@ class _ItemListPageState extends State<ItemListPage> {
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(60.0),
           child: AppBar(
-            iconTheme: IconThemeData(color: Colors.blue),
+            iconTheme: IconThemeData(color: accentColor),
             elevation: 0.0,
             backgroundColor: Colors.transparent,
             title: Container(
               margin: const EdgeInsets.fromLTRB(0.0, 30.0, 30.0, 30.0),
               child: Text(
                 category,
-                style: GoogleFonts.roboto(
-                    color: Colors.blue,
+                style: TextStyle(
+                    color: accentColor,
                     fontWeight: FontWeight.w300,
                     fontSize: 25.0),
               ),
@@ -73,11 +73,12 @@ class _ItemListPageState extends State<ItemListPage> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 0.0),
                 child: IconButton(
+                    tooltip: 'Cart',
                     icon: Hero(
                       tag: 'cartHero',
                       child: Icon(
-                        Icons.shopping_cart,
-                        color: Colors.blue,
+                        cartIcon,
+                        color: cartColor,
                         size: 30.0,
                       ),
                     ),
@@ -88,11 +89,12 @@ class _ItemListPageState extends State<ItemListPage> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(0.0, 5.0, 10.0, 0.0),
                 child: IconButton(
+                    tooltip: 'Account',
                     icon: Hero(
                       tag: 'accountHero',
                       child: Icon(
-                        Icons.account_circle,
-                        color: Colors.blue,
+                        accountIcon,
+                        color: accountColor,
                         size: 30.0,
                       ),
                     ),
@@ -121,12 +123,11 @@ class _ItemListPageState extends State<ItemListPage> {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.hasData) {
                     if (snapshot.data!.docs.isNotEmpty) {
-
                       sortDocsForMinMax(snapshot.data!.docs);
 
                       List<QueryDocumentSnapshot> docs =
                           sortDocs(snapshot.data!.docs);
-                      if(filter){
+                      if (filter) {
                         docs = filterDocs(docs);
                       }
 
@@ -160,7 +161,7 @@ class _ItemListPageState extends State<ItemListPage> {
                           children: [
                             Icon(
                               Icons.remove_shopping_cart,
-                              color: Colors.blue,
+                              color: accentColor,
                               size: 50.0,
                             ),
                           ],
@@ -174,14 +175,13 @@ class _ItemListPageState extends State<ItemListPage> {
                     SizedBox(
                       height: 80.0,
                       child: SpinKitSquareCircle(
-                        color: Colors.blueAccent,
+                        color: accentColor,
                         size: 50.0,
                       ),
                     ),
                     Text(
                       'Loading',
-                      style:
-                          TextStyle(fontSize: 25.0, color: Colors.blueAccent),
+                      style: TextStyle(fontSize: 25.0, color: accentColor),
                     )
                   ],
                 );
@@ -193,43 +193,45 @@ class _ItemListPageState extends State<ItemListPage> {
   }
 
   List<QueryDocumentSnapshot> sortDocs(List<QueryDocumentSnapshot> docs) {
-
     List<QueryDocumentSnapshot> sortedDocs = [];
 
     if (sort == 'name') {
-      docs.sort((a, b) => a.data()['name'].toString().compareTo(b.data()['name'].toString()));
+      docs.sort((a, b) =>
+          a.data()['name'].toString().compareTo(b.data()['name'].toString()));
       sortedDocs = docs;
-    }
-    else if (sort == 'offerPrice') {
-      docs.sort((a, b) => a.data()['offerPrice'].compareTo(b.data()['offerPrice']));
+    } else if (sort == 'offerPrice') {
+      docs.sort(
+          (a, b) => a.data()['offerPrice'].compareTo(b.data()['offerPrice']));
       sortedDocs = docs;
-    }
-    else if (sort == 'rating') {}
+    } else if (sort == 'rating') {}
     if (descending) {
       return sortedDocs.reversed.toList();
     }
     return sortedDocs;
   }
+
   void sortDocsForMinMax(List<QueryDocumentSnapshot> docs) {
-    docs.sort((a, b) => a.data()['offerPrice'].compareTo(b.data()['offerPrice']));
+    docs.sort(
+        (a, b) => a.data()['offerPrice'].compareTo(b.data()['offerPrice']));
     min = docs.first.data()['offerPrice'];
     max = docs.last.data()['offerPrice'];
-    if(!onceFlag){
+    if (!onceFlag) {
       onceFlag = true;
-      range = RangeValues(min.toDouble(),max.toDouble());
+      range = RangeValues(min.toDouble(), max.toDouble());
     }
   }
+
   List<QueryDocumentSnapshot> filterDocs(List<QueryDocumentSnapshot> docs) {
     List<String> ids = [];
-    for(var doc in docs){
-      if(doc.data()['offerPrice'] < range.start.ceil()){
+    for (var doc in docs) {
+      if (doc.data()['offerPrice'] < range.start.ceil()) {
         ids.add(doc.id);
       }
-      if(doc.data()['offerPrice'] > range.end.ceil()){
+      if (doc.data()['offerPrice'] > range.end.ceil()) {
         ids.add(doc.id);
       }
     }
-    for(var id in ids){
+    for (var id in ids) {
       docs.removeWhere((element) => element.id == id);
     }
     return docs;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:z_shop/data/data.dart';
 
 class SignupOptionsPage extends StatelessWidget {
   @override
@@ -17,7 +18,7 @@ class SignupOptionsPage extends StatelessWidget {
               style: TextStyle(
                   fontSize: 50.0,
                   fontWeight: FontWeight.w200,
-                  color: Colors.blue[500]),
+                  color: accentColor),
             ),
           ),
           Container(

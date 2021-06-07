@@ -1,19 +1,33 @@
 import 'package:flutter/material.dart';
 
 class MySortColumn extends StatefulWidget {
+  MySortColumn(
+      {required this.sort,
+      required this.descending,
+      required this.setDescendingValue,
+      required this.setSortValue});
 
-  MySortColumn({required this.sort,required this.descending,required this.setDescendingValue,required this.setSortValue});
-
-  String sort;
-  bool descending;
-  ValueChanged<String> setSortValue;
-  ValueChanged<bool> setDescendingValue;
+  final String sort;
+  final bool descending;
+  final ValueChanged<String> setSortValue;
+  final ValueChanged<bool> setDescendingValue;
 
   @override
-  _MySortColumnState createState() => _MySortColumnState();
+  _MySortColumnState createState() => _MySortColumnState(
+    sort: sort,
+    descending: descending,
+  );
 }
 
 class _MySortColumnState extends State<MySortColumn> {
+  _MySortColumnState({
+    required this.sort,
+    required this.descending,
+  });
+
+  String sort;
+  bool descending;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,10 +39,10 @@ class _MySortColumnState extends State<MySortColumn> {
             title: Text('Name'),
             leading: Radio(
                 value: 'name',
-                groupValue: widget.sort,
+                groupValue: sort,
                 onChanged: (value) {
                   setState(() {
-                    widget.sort = 'name';
+                    sort = 'name';
                   });
                   widget.setSortValue('name');
                 }),
@@ -37,10 +51,10 @@ class _MySortColumnState extends State<MySortColumn> {
             title: Text('Price'),
             leading: Radio(
                 value: 'offerPrice',
-                groupValue: widget.sort,
+                groupValue: sort,
                 onChanged: (value) {
                   setState(() {
-                    widget.sort = 'offerPrice';
+                    sort = 'offerPrice';
                   });
                   widget.setSortValue('offerPrice');
                 }),
@@ -49,10 +63,10 @@ class _MySortColumnState extends State<MySortColumn> {
             title: Text('Rating'),
             leading: Radio(
                 value: 'rating',
-                groupValue: widget.sort,
+                groupValue: sort,
                 onChanged: (value) {
                   setState(() {
-                    widget.sort = 'rating';
+                    sort = 'rating';
                   });
                   widget.setSortValue('rating');
                 }),
@@ -64,10 +78,10 @@ class _MySortColumnState extends State<MySortColumn> {
             title: Text('Ascending'),
             leading: Radio(
                 value: false,
-                groupValue: widget.descending,
+                groupValue: descending,
                 onChanged: (value) {
                   setState(() {
-                    widget.descending = false;
+                    descending = false;
                   });
                   widget.setDescendingValue(false);
                 }),
@@ -76,10 +90,10 @@ class _MySortColumnState extends State<MySortColumn> {
             title: Text('Descending'),
             leading: Radio(
                 value: true,
-                groupValue: widget.descending,
+                groupValue: descending,
                 onChanged: (value) {
                   setState(() {
-                    widget.descending = true;
+                    descending = true;
                   });
                   widget.setDescendingValue(true);
                 }),

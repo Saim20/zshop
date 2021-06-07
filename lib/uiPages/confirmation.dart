@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:z_shop/data/data.dart';
 import 'package:z_shop/services/order.dart';
 import 'package:z_shop/uiElements/productCard.dart';
 
@@ -21,15 +21,15 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(70.0),
           child: AppBar(
-            iconTheme: IconThemeData(color: Colors.blue),
+            iconTheme: IconThemeData(color: accentColor),
             elevation: 0.0,
             backgroundColor: Colors.transparent,
             title: Container(
               margin: const EdgeInsets.fromLTRB(30.0, 50.0, 30.0, 30.0),
               child: Text(
                 'Confirm Order',
-                style: GoogleFonts.roboto(
-                    color: Colors.blue,
+                style: TextStyle(
+                    color: accentColor,
                     fontWeight: FontWeight.w300,
                     fontSize: 40.0),
               ),
@@ -90,17 +90,21 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                       await order.place();
                       Navigator.of(context).pop();
                       showDialog(
+                          barrierDismissible: false,
                           context: context,
                           builder: (context) => AlertDialog(
                                 title: Text('Order placed'),
-                                content: Icon(Icons.markunread_mailbox_rounded),
                                 actions: [
-                                  TextButton(
+                                  TextButton.icon(
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                       clearCart();
                                     },
-                                    child: Text('Ok'),
+                                    label: Text('Ok'),
+                                    icon: Icon(
+                                      Icons.check,
+                                      color: Colors.redAccent[200],
+                                    ),
                                   )
                                 ],
                               ));

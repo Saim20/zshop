@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:z_shop/data/data.dart';
 import 'package:z_shop/services/user.dart';
 import 'package:z_shop/uiPages/login.dart';
 
@@ -34,7 +35,7 @@ class _AccountPageState extends State<AccountPage> {
   Future<bool> setUser(User user) async {
     userSnap = await FirebaseFirestore.instance
         .collection('users')
-        .doc(user.email)
+        .doc(user.uid)
         .get();
     zuser.name = user.displayName!;
     zuser.email = user.email!;
@@ -106,22 +107,23 @@ class Account extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: AppBar(
-            iconTheme: IconThemeData(color: Colors.blue),
+            iconTheme: IconThemeData(color: accentColor),
             backgroundColor: Colors.transparent,
             elevation: 0.0,
             title: Text(
               'Account',
               style: TextStyle(
                 fontSize: 35.0,
-                color: Colors.blue,
+                color: accentColor,
                 fontWeight: FontWeight.w300,
               ),
             ),
             actions: [
               IconButton(
+                  tooltip: 'Cart',
                   icon: Icon(
-                    Icons.shopping_cart,
-                    color: Colors.blue,
+                    cartIcon,
+                    color: cartColor,
                     size: 30.0,
                   ),
                   onPressed: () {
@@ -205,7 +207,12 @@ class Account extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pushNamed(
+            '/accountedit',
+            arguments: {'user': user},
+          );
+        },
         child: Icon(Icons.edit),
       ),
     );
@@ -218,7 +225,7 @@ class LoadingWidget extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: SpinKitSquareCircle(
-          color: Colors.blueAccent,
+          color: accentColor,
           size: 50.0,
         ),
       ),

@@ -2,18 +2,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:z_shop/services/product.dart';
 
 class Order {
-  Order(
-      {required this.userName,
-      required this.userEmail,
-      required this.userPhone,
-      required this.cartProducts,
-      required this.userAddress,
-      required this.totalCost});
+  Order({
+    required this.userName,
+    required this.userEmail,
+    required this.userPhone,
+    required this.cartProducts,
+    required this.userAddress,
+    required this.totalCost,
+    required this.userId,
+  });
 
   String userName;
   String userPhone;
   String userEmail;
   String userAddress;
+  String userId;
   int totalCost;
   List<Product> cartProducts;
 
@@ -23,6 +26,7 @@ class Order {
         'name': userName,
         'phone': userPhone,
         'email': userEmail,
+        'uid' :userId,
         'address': userAddress,
         'status': 'placed',
       }).then((v) async {

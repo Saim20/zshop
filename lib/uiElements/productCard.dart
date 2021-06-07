@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:z_shop/appState.dart';
+import 'package:z_shop/data/data.dart';
 import 'package:z_shop/services/product.dart';
+import 'package:z_shop/services/roundDouble.dart';
 
 class ProductCard extends StatelessWidget {
   ProductCard({this.prod, this.productObject});
@@ -47,9 +49,9 @@ class ProductCard extends StatelessWidget {
         Navigator.of(context).pushNamed('/details',
             arguments: {'product': product, 'cart': false});
       },
-      splashColor: Colors.purpleAccent,
-      focusColor: Colors.blue[100],
-      hoverColor: Colors.blue[100],
+      splashColor: accountColor,
+      focusColor: accentColor,
+      hoverColor: accentColor,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
         child: Card(
@@ -65,7 +67,7 @@ class ProductCard extends StatelessWidget {
               Container(
                 margin: EdgeInsets.all(10.0),
                 child: Hero(
-                  tag: product.id,
+                  tag: product.images![0],
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20.0),
                     child: Image.network(
@@ -141,7 +143,7 @@ class ProductCard extends StatelessWidget {
                                       child: Text(
                                         'Quantity: ${product.quantity.toString()}',
                                         style: TextStyle(
-                                            color: Colors.blue[500],
+                                            color: accentColor,
                                             fontSize: 13.0,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -165,10 +167,11 @@ class ProductCard extends StatelessWidget {
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(
                                         0.0, 0.0, 8.0, 0.0),
-                                    child: Text(product.rating.toString()),
+                                    child: Text(roundRating(product.rating, 1)
+                                        .toString()),
                                   ),
                                   RatingBarIndicator(
-                                    rating: product.rating,
+                                    rating: roundRating(product.rating, 1),
                                     itemCount: 5,
                                     itemSize: 13.0,
                                     itemBuilder: (context, index) => Icon(

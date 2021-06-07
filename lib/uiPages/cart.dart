@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:z_shop/appState.dart';
+import 'package:z_shop/data/data.dart';
 import 'package:z_shop/services/order.dart';
 import 'package:z_shop/uiElements/cartProductCard.dart';
 
@@ -46,7 +46,6 @@ class _CartPageState extends State<CartPage> {
 
   @override
   Widget build(BuildContext context) {
-
     var data;
     if (ModalRoute.of(context)!.settings.arguments != null)
       data = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
@@ -60,34 +59,37 @@ class _CartPageState extends State<CartPage> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70.0),
         child: AppBar(
-          iconTheme: IconThemeData(color: Colors.blue),
+          iconTheme: IconThemeData(color: accentColor),
           elevation: 0.0,
           backgroundColor: Colors.transparent,
           title: Text(
             'Cart',
             style: TextStyle(
-                color: Colors.blue,
+                color: accentColor,
                 fontWeight: FontWeight.w300,
                 fontSize: 35.0),
           ),
           actions: [
-            IconButton(
-                icon: Hero(
-                  tag: 'accountHero',
-                  child: Icon(
-                    Icons.account_circle,
-                    color: Colors.blue,
-                    size: 30.0,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+              child: IconButton(
+                  icon: Hero(
+                    tag: 'accountHero',
+                    child: Icon(
+                      accountIcon,
+                      color: accountColor,
+                      size: 30.0,
+                    ),
                   ),
-                ),
-                onPressed: () {
-                  if(fromAccount)
-                  Navigator.of(context)
-                      .pushReplacementNamed('/account', arguments: {'fromCart': true});
-                  else
-                    Navigator.of(context)
-                        .pushNamed('/account', arguments: {'fromCart': true});
-                })
+                  onPressed: () {
+                    if (fromAccount)
+                      Navigator.of(context).pushReplacementNamed('/account',
+                          arguments: {'fromCart': true});
+                    else
+                      Navigator.of(context)
+                          .pushNamed('/account', arguments: {'fromCart': true});
+                  }),
+            )
           ],
         ),
       ),
@@ -96,7 +98,7 @@ class _CartPageState extends State<CartPage> {
             child: App.cartProducts.isEmpty
                 ? Icon(
                     Icons.remove_shopping_cart_outlined,
-                    color: Colors.blue[500],
+                    color: accentColor,
                     size: 100.0,
                   )
                 : ListView(children: [
@@ -121,19 +123,17 @@ class _CartPageState extends State<CartPage> {
               onPressed: () async {
                 if (FirebaseAuth.instance.currentUser != null) {
                   var user = FirebaseAuth.instance.currentUser;
-                  var phone = await FirebaseFirestore.instance
+                  var doc = await FirebaseFirestore.instance
                       .collection('users')
-                      .doc(user!.email)
+                      .doc(user!.uid)
                       .get()
-                      .then((value) => value.data()!['phone']);
-                  var address = await FirebaseFirestore.instance
-                      .collection('users')
-                      .doc(user.email)
-                      .get()
-                      .then((value) => value.data()!['address']);
+                      .then((value) => value);
+                  var phone = doc.data()!['phone'];
+                  var address = doc.data()!['address'];
                   Order order = Order(
                       userName: user.displayName!,
                       userEmail: user.email!,
+                      userId: user.uid,
                       userPhone: phone,
                       userAddress: address,
                       totalCost: totalCost,

@@ -1,13 +1,14 @@
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:z_shop/appState.dart';
+import 'package:z_shop/data/data.dart';
 import 'package:z_shop/services/product.dart';
+import 'package:z_shop/services/roundDouble.dart';
 import 'package:z_shop/uiElements/myCarouselSlider.dart';
+import 'package:z_shop/uiPages/account.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   @override
@@ -21,10 +22,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   double rating = 0.0;
 
   getUserRating() async {
-    var user = await FirebaseAuth.instance.currentUser;
+    var user = FirebaseAuth.instance.currentUser;
     userRating = await FirebaseFirestore.instance
         .collection('users')
-        .doc(user!.email)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('ratings')
         .doc(product!.id)
         .get()
@@ -42,14 +43,14 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (isNotRated == null) getUserRating();
-
     bool fromCart;
     Map data = {};
     data = ModalRoute.of(context)!.settings.arguments! as Map<String, dynamic>;
     if (product == null) product = data['product'];
     bool outOfStock = product!.stock <= 0;
     fromCart = data['cart'];
+
+    if (isNotRated == null) getUserRating();
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
@@ -58,24 +59,25 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: AppBar(
-            iconTheme: IconThemeData(color: Colors.blue),
+            iconTheme: IconThemeData(color: accentColor),
             backgroundColor: Colors.transparent,
             elevation: 0.0,
             title: Text(
               'Details',
               style: TextStyle(
                 fontSize: 35.0,
-                color: Colors.blue,
+                color: accentColor,
                 fontWeight: FontWeight.w300,
               ),
             ),
             actions: [
               IconButton(
+                  tooltip: 'Cart',
                   icon: Hero(
                     tag: 'cartHero',
                     child: Icon(
-                      Icons.shopping_cart,
-                      color: Colors.blue,
+                      cartIcon,
+                      color: cartColor,
                       size: 30.0,
                     ),
                   ),
@@ -83,11 +85,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     Navigator.of(context).pushNamed('/cart');
                   }),
               IconButton(
+                  tooltip: 'Account',
                   icon: Hero(
                     tag: 'accountHero',
                     child: Icon(
-                      Icons.account_circle,
-                      color: Colors.blue,
+                      accountIcon,
+                      color: accountColor,
                       size: 30.0,
                     ),
                   ),
@@ -100,10 +103,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       ),
       body: ListView(
         children: [
-          Hero(
-            tag: product!.id,
-            child: CarouselWithIndicator(product: product!),
-          ),
+          CarouselWithIndicator(product: product!),
           SizedBox(
             height: 15.0,
           ),
@@ -152,10 +152,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Text(product!.rating.toString()),
+                                child: Text(
+                                    roundRating(product!.rating, 1).toString()),
                               ),
                               RatingBarIndicator(
-                                rating: product!.rating,
+                                rating: roundRating(product!.rating, 1),
                                 itemCount: 5,
                                 itemSize: 20.0,
                                 itemBuilder: (context, index) => Icon(
@@ -187,91 +188,117 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           ),
                         ),
                       ),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: EdgeInsets.fromLTRB(15.0, 50.0, 15.0, 20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text((isNotRated ?? true)
-                                ? 'Rate the product'
-                                : 'Your rating'),
-                            SizedBox(
-                              height: 20.0,
-                            ),
-                            RatingBar.builder(
-                              initialRating: (isNotRated ?? true)
-                                  ? 5
-                                  : userRating == null
-                                      ? 0.0
-                                      : userRating!,
-                              minRating: 1,
-                              direction: Axis.horizontal,
-                              allowHalfRating: false,
-                              itemCount: 5,
-                              itemPadding:
-                                  EdgeInsets.symmetric(horizontal: 4.0),
-                              itemBuilder: (context, _) => Icon(
-                                Icons.star,
-                                color: Colors.amber,
+                      if (FirebaseAuth.instance.currentUser != null)
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.fromLTRB(15.0, 50.0, 15.0, 20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text((isNotRated ?? true)
+                                  ? 'Rate the product'
+                                  : 'Your rating'),
+                              SizedBox(
+                                height: 20.0,
                               ),
-                              onRatingUpdate: (rating) {
-                                this.rating = rating;
-                                print(rating);
-                              },
-                            ),
-                            SizedBox(
-                              height: 40.0,
-                            ),
-                            ElevatedButton(
-                              onPressed: () async {
-                                //TODO Implement rating
-                                var rate = product!.rating;
-                                rate =
-                                    ((product!.rating * product!.ratingCount) +
+                              RatingBar.builder(
+                                initialRating: (isNotRated ?? true)
+                                    ? 5
+                                    : userRating == null
+                                        ? 0.0
+                                        : userRating!,
+                                minRating: 1,
+                                direction: Axis.horizontal,
+                                allowHalfRating: false,
+                                itemCount: 5,
+                                itemPadding:
+                                    EdgeInsets.symmetric(horizontal: 4.0),
+                                itemBuilder: (context, _) => Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                ),
+                                onRatingUpdate: (rating) {
+                                  this.rating = rating;
+                                  print(rating);
+                                },
+                              ),
+                              SizedBox(
+                                height: 40.0,
+                              ),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  var rate;
+                                  if (isNotRated ?? true) {
+                                    rate = ((product!.rating *
+                                                product!.ratingCount) +
                                             rating) /
                                         (product!.ratingCount + 1);
 
-                                await FirebaseFirestore.instance
-                                    .collection('products')
-                                    .doc(product!.id)
-                                    .update({
-                                  'rating': rate,
-                                });
-                                try {
-                                  await FirebaseFirestore.instance
-                                      .collection('users')
-                                      .doc(FirebaseAuth
-                                          .instance.currentUser!.email)
-                                      .collection('ratings')
-                                      .doc(product!.id)
-                                      .update({
-                                    'rating': rating,
-                                  });
-                                } catch (e) {
-                                  await FirebaseFirestore.instance
-                                      .collection('users')
-                                      .doc(FirebaseAuth
-                                          .instance.currentUser!.email)
-                                      .collection('ratings')
-                                      .doc(product!.id)
-                                      .set({
-                                    'rating': rating,
-                                  });
-                                }
+                                    await FirebaseFirestore.instance
+                                        .collection('products')
+                                        .doc(product!.id)
+                                        .update({
+                                      'rating': rate,
+                                      'ratingCount': (product!.ratingCount + 1),
+                                    });
 
-                                setState(() {
-                                  userRating = rating;
-                                  product!.rating = rate;
-                                  isNotRated = false;
-                                });
-                              },
-                              child: Text(
-                                  (isNotRated ?? true) ? 'Submit' : 'Change'),
-                            )
-                          ],
+                                    await FirebaseFirestore.instance
+                                        .collection('users')
+                                        .doc(FirebaseAuth
+                                            .instance.currentUser!.uid)
+                                        .collection('ratings')
+                                        .doc(product!.id)
+                                        .set({
+                                      'rating': rating,
+                                    });
+
+                                    setState(() {
+                                      userRating = rating;
+                                      product!.rating = rate;
+                                      isNotRated = false;
+                                      product!.ratingCount += 1;
+                                    });
+                                  }
+                                  //Check if is rated
+                                  else if (!(isNotRated ?? true)) {
+                                    rate = ((product!.rating *
+                                                product!.ratingCount) +
+                                            (rating - (userRating ?? 0))) /
+                                        (product!.ratingCount);
+
+                                    print(rate);
+                                    print(product!.ratingCount);
+
+                                    await FirebaseFirestore.instance
+                                        .collection('products')
+                                        .doc(product!.id)
+                                        .update({
+                                      'rating': rate,
+                                    });
+
+                                    await FirebaseFirestore.instance
+                                        .collection('users')
+                                        .doc(FirebaseAuth
+                                            .instance.currentUser!.uid)
+                                        .collection('ratings')
+                                        .doc(product!.id)
+                                        .update({
+                                      'rating': rating,
+                                    });
+                                  }
+
+                                  setState(() {
+                                    userRating = rating;
+                                    product!.rating = rate;
+                                    isNotRated = false;
+                                  });
+                                },
+                                child: Text(
+                                    (isNotRated ?? true) ? 'Submit' : 'Change'),
+                              )
+                            ],
+                          ),
                         ),
-                      ),
                       SizedBox(
                         height: 50.0,
                       )
@@ -300,9 +327,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               icon: Icon(
                   outOfStock ? Icons.not_interested : Icons.add_shopping_cart),
               tooltip: 'Add to cart',
-              splashColor: Colors.blue[900],
-              hoverColor: Colors.blue[800],
-              focusColor: Colors.blue[300],
+              splashColor: accentColor,
+              hoverColor: accentColor.withAlpha(1),
+              focusColor: accentColor.withAlpha(2),
             ),
     );
   }

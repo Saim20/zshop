@@ -5,9 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:z_shop/data/data.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({this.isIncomplete,this.completeSignin});
+  LoginPage({this.isIncomplete, this.completeSignin});
 
   final bool? isIncomplete;
   final ValueChanged<bool>? completeSignin;
@@ -17,7 +18,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   bool isIncomplete = false;
 
   @override
@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
               style: TextStyle(
                   fontSize: 50.0,
                   fontWeight: FontWeight.w200,
-                  color: Colors.blue[500]),
+                  color: accentColor),
             ),
           ),
           MyCustomForm(
@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 class MyCustomForm extends StatefulWidget {
-  MyCustomForm({this.isIncomplete,this.completeSignin});
+  MyCustomForm({this.isIncomplete, this.completeSignin});
 
   final bool? isIncomplete;
   final ValueChanged<bool>? completeSignin;
@@ -69,6 +69,13 @@ class MyCustomFormState extends State<MyCustomForm> {
 
   TextEditingController emailC = TextEditingController();
   TextEditingController passC = TextEditingController();
+
+  @override
+  void dispose() {
+    emailC.dispose();
+    passC.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,8 +116,8 @@ class MyCustomFormState extends State<MyCustomForm> {
             child: Container(
               child: TextFormField(
                 obscureText: widget.isIncomplete! ? false : true,
-                enableSuggestions:  widget.isIncomplete! ? true :false,
-                autocorrect:  widget.isIncomplete! ? true : false,
+                enableSuggestions: widget.isIncomplete! ? true : false,
+                autocorrect: widget.isIncomplete! ? true : false,
                 onChanged: (value) {
                   passwordIsWrong = false;
                 },
@@ -192,7 +199,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   void completeAccount(phone, address) async {
     await FirebaseFirestore.instance
         .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.email)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .set({
       'phone': phone,
       'address': address,

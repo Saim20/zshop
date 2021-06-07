@@ -10,22 +10,32 @@ class MyFilterColumn extends StatefulWidget {
     required this.max,
   });
 
+  final bool filter;
+  final RangeValues range;
+  final ValueChanged<bool> setFilterValue;
+  final ValueChanged<RangeValues> setRangeValue;
+  final int min;
+  final int max;
+
+  @override
+  _MyFilterColumnState createState() => _MyFilterColumnState(
+    filter: filter,
+    range: range,
+    min: min,
+    max: max,
+  );
+}
+
+class _MyFilterColumnState extends State<MyFilterColumn> {
+  _MyFilterColumnState({required this.filter,required this.range,required this.min,required this.max});
+
   bool filter;
-  RangeValues? range;
-  ValueChanged<bool> setFilterValue;
-  ValueChanged<RangeValues> setRangeValue;
+  RangeValues range;
   int min;
   int max;
 
   @override
-  _MyFilterColumnState createState() => _MyFilterColumnState();
-}
-
-class _MyFilterColumnState extends State<MyFilterColumn> {
-
-  @override
   Widget build(BuildContext context) {
-
     return Container(
       height: 350.0,
       width: MediaQuery.of(context).size.width,
@@ -36,38 +46,39 @@ class _MyFilterColumnState extends State<MyFilterColumn> {
               onChanged: (value) {
                 widget.setFilterValue(value!);
                 setState(() {
-                  widget.filter = value;
+                  filter = value;
                 });
               },
-              value: widget.filter,
+              value: filter,
             ),
             title: Text('By Price'),
           ),
-          if (widget.filter)
+          if (filter)
             RangeSlider(
-              values: widget.range!,
+              values: range,
               onChanged: (value) {
                 setState(() {
-                  widget.range = value;
+                  range = value;
                 });
-                widget.setRangeValue(widget.range!);
+                widget.setRangeValue(range);
               },
-              min: widget.min.toDouble(),
-              max: widget.max.toDouble(),
-              divisions: (widget.max/10).floor(),
-              labels: RangeLabels('${widget.range!.start.ceil()}','${widget.range!.end.ceil()}'),
+              min: min.toDouble(),
+              max: max.toDouble(),
+              divisions: (max / 10).floor(),
+              labels: RangeLabels('${range.start.ceil()}',
+                  '${range.end.ceil()}'),
             ),
-          if(widget.filter)
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Min: ' + widget.range!.start.ceil().toString()),
-                Text('Max: ' +widget.range!.end.ceil().toString()),
-              ],
-            ),
-          )
+          if (filter)
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Min: ' + range.start.ceil().toString()),
+                  Text('Max: ' + range.end.ceil().toString()),
+                ],
+              ),
+            )
         ],
       ),
     );

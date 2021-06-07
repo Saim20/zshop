@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:z_shop/data/data.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -8,7 +9,6 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +23,7 @@ class _SignupPageState extends State<SignupPage> {
               style: TextStyle(
                   fontSize: 50.0,
                   fontWeight: FontWeight.w200,
-                  color: Colors.blue[500]),
+                  color: accentColor),
             ),
           ),
           MyCustomForm(),
@@ -53,6 +53,17 @@ class MyCustomFormState extends State<MyCustomForm> {
   TextEditingController phoneC = TextEditingController();
   TextEditingController passC = TextEditingController();
   TextEditingController confirmC = TextEditingController();
+
+  @override
+  void dispose() {
+    nameC.dispose();
+    emailC.dispose();
+    addressC.dispose();
+    phoneC.dispose();
+    passC.dispose();
+    confirmC.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,8 +106,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                     return 'Please enter an e-mail';
                   else if (isEmailAlreadySignedUp) {
                     return 'E-mail is already user for an account';
-                  }
-                  else if(emailIsInvalid){
+                  } else if (emailIsInvalid) {
                     return 'Please enter a valid e-mail';
                   }
                   return null;
@@ -157,15 +167,14 @@ class MyCustomFormState extends State<MyCustomForm> {
           Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
             child: Container(
-              child: TextButton(
-                onPressed: (){
-                  setState(() {
-                    showPassword = !showPassword;
-                  });
-                },
-                child: Text(showPassword ? 'Hide password' : 'Show password'),
-              )
-            ),
+                child: TextButton(
+              onPressed: () {
+                setState(() {
+                  showPassword = !showPassword;
+                });
+              },
+              child: Text(showPassword ? 'Hide password' : 'Show password'),
+            )),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
@@ -230,28 +239,32 @@ class MyCustomFormState extends State<MyCustomForm> {
     String userEmail = email;
     String userPass = pass;
 
+    await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: userEmail, password: userPass);
+    await FirebaseAuth.instance.currentUser!.updateDisplayName(nameC.text);
+
     try {
-      await FirebaseFirestore.instance.collection('users').doc(emailC.text).set({
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .set({
         'phone': phoneC.text,
         'address': addressC.text,
       });
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: userEmail, password: userPass);
-      await FirebaseAuth.instance.currentUser!.updateProfile(displayName: nameC.text);
+
       FirebaseAuth.instance.signOut();
-      FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: pass);
+      FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: pass);
 
       Navigator.of(context).pop();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
-          isEmailAlreadySignedUp = true;
-      }
-      else if (e.code == 'invalid-email') {
+        isEmailAlreadySignedUp = true;
+      } else if (e.code == 'invalid-email') {
         emailIsInvalid = true;
-      }
-      else{
+      } else {
         print(e);
       }
       _formKey.currentState!.validate();

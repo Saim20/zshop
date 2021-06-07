@@ -15,11 +15,5 @@
                 "5000"
             ]
         },
-        {
-            "name": "web",
-            "cwd": "build/web",
-            "request": "launch",
-            "type": "dart"
-        }
     ]
 }

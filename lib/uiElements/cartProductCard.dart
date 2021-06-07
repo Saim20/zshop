@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:z_shop/appState.dart';
+import 'package:z_shop/data/data.dart';
 import 'package:z_shop/services/product.dart';
 
 class CartProductCard extends StatefulWidget {
@@ -30,9 +31,9 @@ class _CartProductCardState extends State<CartProductCard> {
         Navigator.of(context).pushNamed('/details',
             arguments: {'product': product, 'cart': true});
       },
-      splashColor: Colors.purpleAccent,
-      focusColor: Colors.blue[100],
-      hoverColor: Colors.blue[100],
+      splashColor: accountColor,
+      focusColor: accentColor,
+      hoverColor: accentColor,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
         child: Card(
@@ -50,7 +51,7 @@ class _CartProductCardState extends State<CartProductCard> {
                   Container(
                     margin: EdgeInsets.all(10.0),
                     child: Hero(
-                      tag: product.id,
+                      tag: product.images![0],
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20.0),
                         child: Image.network(
@@ -79,12 +80,14 @@ class _CartProductCardState extends State<CartProductCard> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+                              padding:
+                                  const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
                               child: Text(
                                 product.name,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                    fontSize: 15.0, fontWeight: FontWeight.bold),
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
                             IconButton(
@@ -100,29 +103,29 @@ class _CartProductCardState extends State<CartProductCard> {
                                     //Notify the user
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(SnackBar(
-                                        content: Row(
-                                          mainAxisAlignment:
+                                            content: Row(
+                                      mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
                                           children: [
-                                            Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.delete,
-                                                  color: Colors.white,
-                                                ),
-                                                SizedBox(
-                                                  width: 10.0,
-                                                ),
-                                                Text('Product Removed'),
-                                              ],
+                                            Icon(
+                                              Icons.delete,
+                                              color: Colors.white,
                                             ),
-                                            TextButton(
-                                                onPressed: () {
-                                                  widget.productRetriever!(temp);
-                                                },
-                                                child: Text('undo'))
+                                            SizedBox(
+                                              width: 10.0,
+                                            ),
+                                            Text('Product Removed'),
                                           ],
-                                        )));
+                                        ),
+                                        TextButton(
+                                            onPressed: () {
+                                              widget.productRetriever!(temp);
+                                            },
+                                            child: Text('undo'))
+                                      ],
+                                    )));
                                   });
                                 })
                           ],
@@ -131,7 +134,7 @@ class _CartProductCardState extends State<CartProductCard> {
                           children: [
                             Padding(
                               padding:
-                              EdgeInsets.fromLTRB(15.0, 3.0, 10.0, 0.0),
+                                  EdgeInsets.fromLTRB(15.0, 3.0, 10.0, 0.0),
                               child: Text(
                                 '৳ ${product.offerPrice.toString()}',
                                 style: TextStyle(
@@ -142,7 +145,7 @@ class _CartProductCardState extends State<CartProductCard> {
                             ),
                             Padding(
                               padding:
-                              EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 2.0),
+                                  EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 2.0),
                               child: Text(
                                 '৳ ${product.price.toString()}',
                                 style: TextStyle(
@@ -164,12 +167,12 @@ class _CartProductCardState extends State<CartProductCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    margin: EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0),
+                      margin: EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0),
                       width: 90.0,
                       height: 70.0,
                       child: TextField(
                         controller: controller,
-                        onChanged: (value){
+                        onChanged: (value) {
                           product.quantity = int.parse(value);
                         },
                         textAlign: TextAlign.center,
@@ -200,16 +203,15 @@ class _CartProductCardState extends State<CartProductCard> {
                                           setState(() {
                                             widget.costCalculator!(true);
                                             App.cartProducts
-                                                    .elementAt(App
-                                                        .cartProducts
-                                                        .indexOf(widget
-                                                            .product!))
+                                                    .elementAt(
+                                                        App.cartProducts
+                                                            .indexOf(widget
+                                                                .product!))
                                                     .deliveryTaken =
                                                 !App.cartProducts
-                                                    .elementAt(App
-                                                        .cartProducts
-                                                        .indexOf(widget
-                                                            .product!))
+                                                    .elementAt(App.cartProducts
+                                                        .indexOf(
+                                                            widget.product!))
                                                     .deliveryTaken;
                                           });
                                         }),
@@ -234,16 +236,15 @@ class _CartProductCardState extends State<CartProductCard> {
                                           setState(() {
                                             widget.costCalculator!(true);
                                             App.cartProducts
-                                                    .elementAt(App
-                                                        .cartProducts
-                                                        .indexOf(widget
-                                                            .product!))
+                                                    .elementAt(
+                                                        App.cartProducts
+                                                            .indexOf(widget
+                                                                .product!))
                                                     .setupTaken =
                                                 !App.cartProducts
-                                                    .elementAt(App
-                                                        .cartProducts
-                                                        .indexOf(widget
-                                                            .product!))
+                                                    .elementAt(App.cartProducts
+                                                        .indexOf(
+                                                            widget.product!))
                                                     .setupTaken;
                                           });
                                         }),

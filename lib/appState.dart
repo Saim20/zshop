@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:z_shop/services/product.dart';
 import 'package:z_shop/uiPages/account.dart';
+import 'package:z_shop/uiPages/accountEdit.dart';
 import 'package:z_shop/uiPages/cart.dart';
 import 'package:z_shop/uiPages/confirmation.dart';
 import 'package:z_shop/uiPages/error.dart';
@@ -125,6 +126,7 @@ class _AppState extends State<App> {
         '/': (context) => SplashPage(),
         '/home': (context) => HomePage(),
         '/account': (context) => AccountPage(),
+        '/accountedit': (context) => AccountEditPage(),
         '/details': (context) => ProductDetailsPage(),
         '/products': (context) => ItemListPage(),
         '/search': (context) => SearchItemListPage(),

@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:z_shop/appState.dart';
+import 'package:z_shop/data/data.dart';
 import 'package:z_shop/services/product.dart';
+import 'package:z_shop/services/roundDouble.dart';
 
 class ProductGridCard extends StatelessWidget {
   ProductGridCard({
@@ -38,9 +40,8 @@ class ProductGridCard extends StatelessWidget {
         Navigator.of(context).pushNamed('/details',
             arguments: {'product': product, 'cart': false});
       },
-      splashColor: Colors.purpleAccent,
-      focusColor: Colors.blue[100],
-      hoverColor: Colors.blue[100],
+      splashColor: accentColor,
+      hoverColor: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 34.0),
         child: Card(
@@ -50,13 +51,12 @@ class ProductGridCard extends StatelessWidget {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
                 child: Container(
                   margin: EdgeInsets.all(10.0),
                   child: Hero(
-                    tag: product.id,
+                    tag: product.images![0],
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20.0),
                       child: Image.network(
@@ -75,7 +75,6 @@ class ProductGridCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 10.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       product.name,
@@ -90,45 +89,51 @@ class ProductGridCard extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SizedBox(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding:
-                                      EdgeInsets.fromLTRB(0.0, 3.0, 10.0, 0.0),
-                                  child: Text(
-                                    '৳ ${product.offerPrice.toString()}',
-                                    style: TextStyle(
-                                        fontSize: 15.0,
-                                        color: Colors.red[400],
-                                        fontWeight: FontWeight.bold),
-                                  ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding:
+                                    EdgeInsets.fromLTRB(0.0, 3.0, 10.0, 0.0),
+                                child: Text(
+                                  '৳ ${product.offerPrice.toString()}',
+                                  style: TextStyle(
+                                      fontSize: 15.0,
+                                      color: Colors.red[400],
+                                      fontWeight: FontWeight.bold),
                                 ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 2.0),
-                                  child: Text(
-                                    '৳ ${product.price.toString()}',
-                                    style: TextStyle(
-                                        color: Colors.red[100],
-                                        fontSize: 13.0,
-                                        decoration: TextDecoration.lineThrough,
-                                        fontWeight: FontWeight.bold),
-                                  ),
+                              ),
+                              Padding(
+                                padding:
+                                    EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 2.0),
+                                child: Text(
+                                  '৳ ${product.price.toString()}',
+                                  style: TextStyle(
+                                      color: Colors.red[100],
+                                      fontSize: 13.0,
+                                      decoration: TextDecoration.lineThrough,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              ],
-                            ),
-                            width: 70.0,
+                              ),
+                            ],
                           ),
-                          Text(product.rating.toString()),
-                          RatingBarIndicator(
-                            rating: product.rating,
-                            itemCount: 5,
-                            itemSize: 13.0,
-                            itemBuilder: (context, index) => Icon(
-                              Icons.star,
-                              color: Colors.amber,
+                          Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+                            child:
+                                Text(roundRating(product.rating, 1).toString()),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(0.0, 0.0, 15.0, 0.0),
+                            child: RatingBarIndicator(
+                              rating: roundRating(product.rating, 1),
+                              itemCount: 5,
+                              itemSize: 13.0,
+                              itemBuilder: (context, index) => Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              ),
                             ),
                           ),
                           IconButton(

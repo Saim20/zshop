@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:z_shop/data/data.dart';
 import 'package:z_shop/uiElements/floatingSearchBar.dart';
 import 'package:z_shop/uiElements/productCard.dart';
 import 'package:z_shop/uiElements/sortFilterStrip.dart';
@@ -56,15 +56,15 @@ class _SearchItemListPageState extends State<SearchItemListPage> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0),
         child: AppBar(
-          iconTheme: IconThemeData(color: Colors.blue),
+          iconTheme: IconThemeData(color: accentColor),
           elevation: 0.0,
           backgroundColor: Colors.transparent,
           title: Container(
             margin: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 30.0),
             child: Text(
               name,
-              style: GoogleFonts.roboto(
-                  color: Colors.blue,
+              style: TextStyle(
+                  color: accentColor,
                   fontWeight: FontWeight.w300,
                   fontSize: 35.0),
             ),
@@ -76,8 +76,8 @@ class _SearchItemListPageState extends State<SearchItemListPage> {
                   icon: Hero(
                     tag: 'cartHero',
                     child: Icon(
-                      Icons.shopping_cart,
-                      color: Colors.blue,
+                      cartIcon,
+                      color: cartColor,
                       size: 30.0,
                     ),
                   ),
@@ -91,8 +91,8 @@ class _SearchItemListPageState extends State<SearchItemListPage> {
                   icon: Hero(
                     tag: 'accountHero',
                     child: Icon(
-                      Icons.account_circle,
-                      color: Colors.blue,
+                      accountIcon,
+                      color: accountColor,
                       size: 30.0,
                     ),
                   ),
@@ -133,10 +133,9 @@ class _SearchItemListPageState extends State<SearchItemListPage> {
                     }
 
                     if (docs.isNotEmpty) {
-
                       sortDocsForMinMax(snapshot.data!.docs);
 
-                      if(filter){
+                      if (filter) {
                         docs = filterDocs(docs);
                       }
 
@@ -172,7 +171,7 @@ class _SearchItemListPageState extends State<SearchItemListPage> {
                           children: [
                             Icon(
                               Icons.remove_shopping_cart,
-                              color: Colors.blue,
+                              color: accentColor,
                               size: 50.0,
                             ),
                           ],
@@ -187,13 +186,13 @@ class _SearchItemListPageState extends State<SearchItemListPage> {
                   SizedBox(
                     height: 80.0,
                     child: SpinKitSquareCircle(
-                      color: Colors.blueAccent,
+                      color: accentColor,
                       size: 50.0,
                     ),
                   ),
                   Text(
                     'Loading',
-                    style: TextStyle(fontSize: 25.0, color: Colors.blueAccent),
+                    style: TextStyle(fontSize: 25.0, color: accentColor),
                   ),
                 ],
               );
