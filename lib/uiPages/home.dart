@@ -15,6 +15,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  User? user;
+
+  @override
+  void initState() {
+    FirebaseAuth.instance.authStateChanges().listen((user) async {
+      if (user != null) {
+        setState(() {
+          this.user = user;
+        });
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,21 +65,21 @@ class _HomePageState extends State<HomePage> {
                     Navigator.of(context).pushNamed('/cart');
                   }),
             ),
-            if(FirebaseAuth.instance.currentUser != null)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
-              child: IconButton(
-                tooltip: 'Orders',
-                icon: Icon(
-                  orderIcon,
-                  color: orderColor,
-                  size: 30.0,
+            if (user != null)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+                child: IconButton(
+                  tooltip: 'Orders',
+                  icon: Icon(
+                    orderIcon,
+                    color: orderColor,
+                    size: 30.0,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/orders');
+                  },
                 ),
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/orders');
-                },
               ),
-            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 15.0, 10.0, 0.0),
               child: IconButton(
@@ -110,16 +124,6 @@ class _HomePageState extends State<HomePage> {
     'Bicylce and Tricycle',
     'Fashion'
   ];
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   Widget buildListView() {
     return RefreshIndicator(
