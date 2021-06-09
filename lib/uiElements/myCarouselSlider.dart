@@ -48,6 +48,8 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                 ))
             .toList(),
         options: CarouselOptions(
+            enableInfiniteScroll:
+                widget.product.images!.length <= 1 ? false : true,
             height: 300.0,
             autoPlay: true,
             enlargeCenterPage: true,

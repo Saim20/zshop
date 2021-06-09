@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:z_shop/data/data.dart';
@@ -85,6 +86,21 @@ class _SearchItemListPageState extends State<SearchItemListPage> {
                     Navigator.of(context).pushNamed('/cart');
                   }),
             ),
+            if (FirebaseAuth.instance.currentUser != null)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 0.0),
+                child: IconButton(
+                  tooltip: 'Orders',
+                  icon: Icon(
+                    orderIcon,
+                    color: orderColor,
+                    size: 30.0,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/orders');
+                  },
+                ),
+              ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 5.0, 10.0, 0.0),
               child: IconButton(

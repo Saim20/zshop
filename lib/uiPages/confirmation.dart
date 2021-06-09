@@ -103,7 +103,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                     label: Text('Ok'),
                                     icon: Icon(
                                       Icons.check,
-                                      color: Colors.redAccent[200],
+                                      color: Colors.black,
                                     ),
                                   )
                                 ],

@@ -13,7 +13,7 @@ class _MyFloationgSearchBarState extends State<MyFloationgSearchBar> {
   static const int historyLength = 5;
   static List<String> searchHistory = [];
   static List<String> filteredSearchHistory = [];
-  // static String selectedTerm = '';
+
   static FloatingSearchBarController? controller;
 
   List<String> filterSearchTerms({

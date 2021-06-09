@@ -134,6 +134,16 @@ class Account extends StatelessWidget {
                       Navigator.of(context)
                           .pushNamed('/cart', arguments: {'fromAccount': true});
                   }),
+              IconButton(
+                  tooltip: 'Orders',
+                  icon: Icon(
+                    orderIcon,
+                    color: orderColor,
+                    size: 30.0,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/orders');
+                  }),
             ],
           ),
         ),

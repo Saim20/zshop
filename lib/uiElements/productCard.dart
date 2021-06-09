@@ -45,6 +45,7 @@ class ProductCard extends StatelessWidget {
     }
 
     return InkWell(
+      borderRadius: BorderRadius.circular(20.0),
       onTap: () {
         Navigator.of(context).pushNamed('/details',
             arguments: {'product': product, 'cart': false});

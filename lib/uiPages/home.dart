@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:z_shop/data/data.dart';
 import 'package:z_shop/uiElements/categoryCard.dart';
@@ -49,6 +50,21 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     Navigator.of(context).pushNamed('/cart');
                   }),
+            ),
+            if(FirebaseAuth.instance.currentUser != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+              child: IconButton(
+                tooltip: 'Orders',
+                icon: Icon(
+                  orderIcon,
+                  color: orderColor,
+                  size: 30.0,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/orders');
+                },
+              ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 15.0, 10.0, 0.0),

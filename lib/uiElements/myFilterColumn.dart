@@ -19,23 +19,32 @@ class MyFilterColumn extends StatefulWidget {
 
   @override
   _MyFilterColumnState createState() => _MyFilterColumnState(
-    filter: filter,
-    range: range,
-    min: min,
-    max: max,
-  );
+        filter: filter,
+        range: range,
+        min: min,
+        max: max,
+      );
 }
 
 class _MyFilterColumnState extends State<MyFilterColumn> {
-  _MyFilterColumnState({required this.filter,required this.range,required this.min,required this.max});
+  _MyFilterColumnState(
+      {required this.filter,
+      required this.range,
+      required this.min,
+      required this.max});
 
   bool filter;
+  bool once = true;
   RangeValues range;
   int min;
   int max;
 
   @override
   Widget build(BuildContext context) {
+    if (once) {
+      widget.setRangeValue(range);
+      once = false;
+    }
     return Container(
       height: 350.0,
       width: MediaQuery.of(context).size.width,
@@ -65,8 +74,8 @@ class _MyFilterColumnState extends State<MyFilterColumn> {
               min: min.toDouble(),
               max: max.toDouble(),
               divisions: (max / 10).floor(),
-              labels: RangeLabels('${range.start.ceil()}',
-                  '${range.end.ceil()}'),
+              labels:
+                  RangeLabels('${range.start.ceil()}', '${range.end.ceil()}'),
             ),
           if (filter)
             Padding(

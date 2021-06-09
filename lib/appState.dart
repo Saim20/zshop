@@ -10,6 +10,8 @@ import 'package:z_shop/uiPages/error.dart';
 import 'package:z_shop/uiPages/home.dart';
 import 'package:z_shop/uiPages/itemList.dart';
 import 'package:z_shop/uiPages/login.dart';
+import 'package:z_shop/uiPages/orderPage.dart';
+import 'package:z_shop/uiPages/orders.dart';
 import 'package:z_shop/uiPages/product.dart';
 import 'package:z_shop/uiPages/searchItemList.dart';
 import 'package:z_shop/uiPages/signup.dart';
@@ -133,6 +135,8 @@ class _AppState extends State<App> {
         '/login': (context) => LoginPage(),
         '/error': (context) => ErrorPage(),
         '/cart': (context) => CartPage(),
+        '/orders': (context) => OrdersPage(),
+        '/orderpage': (context) => OrderPage(),
         '/signup': (context) => SignupPage(),
         '/signupoptions': (context) => SignupOptionsPage(),
         '/confirmation': (context) => ConfirmationPage(),

@@ -8,7 +8,8 @@ import 'package:z_shop/data/data.dart';
 import 'package:z_shop/services/product.dart';
 import 'package:z_shop/services/roundDouble.dart';
 import 'package:z_shop/uiElements/myCarouselSlider.dart';
-import 'package:z_shop/uiPages/account.dart';
+import 'package:z_shop/uiElements/reviewCard.dart';
+import 'package:z_shop/uiElements/reviewer.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   @override
@@ -17,28 +18,9 @@ class ProductDetailsPage extends StatefulWidget {
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   Product? product;
-  double? userRating;
-  bool? isNotRated;
-  double rating = 0.0;
 
-  getUserRating() async {
-    var user = FirebaseAuth.instance.currentUser;
-    userRating = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('ratings')
-        .doc(product!.id)
-        .get()
-        .then((value) {
-      if (value.data() == null) {
-        return null;
-      } else {
-        return value.data()!['rating'];
-      }
-    });
-    setState(() {
-      isNotRated = userRating == null;
-    });
+  void updateState(void a) {
+    setState(() {});
   }
 
   @override
@@ -49,8 +31,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     if (product == null) product = data['product'];
     bool outOfStock = product!.stock <= 0;
     fromCart = data['cart'];
-
-    if (isNotRated == null) getUserRating();
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
@@ -188,117 +168,42 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           ),
                         ),
                       ),
-                      if (FirebaseAuth.instance.currentUser != null)
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: EdgeInsets.fromLTRB(15.0, 50.0, 15.0, 20.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text((isNotRated ?? true)
-                                  ? 'Rate the product'
-                                  : 'Your rating'),
-                              SizedBox(
-                                height: 20.0,
-                              ),
-                              RatingBar.builder(
-                                initialRating: (isNotRated ?? true)
-                                    ? 5
-                                    : userRating == null
-                                        ? 0.0
-                                        : userRating!,
-                                minRating: 1,
-                                direction: Axis.horizontal,
-                                allowHalfRating: false,
-                                itemCount: 5,
-                                itemPadding:
-                                    EdgeInsets.symmetric(horizontal: 4.0),
-                                itemBuilder: (context, _) => Icon(
-                                  Icons.star,
-                                  color: Colors.amber,
-                                ),
-                                onRatingUpdate: (rating) {
-                                  this.rating = rating;
-                                  print(rating);
-                                },
-                              ),
-                              SizedBox(
-                                height: 40.0,
-                              ),
-                              ElevatedButton(
-                                onPressed: () async {
-                                  var rate;
-                                  if (isNotRated ?? true) {
-                                    rate = ((product!.rating *
-                                                product!.ratingCount) +
-                                            rating) /
-                                        (product!.ratingCount + 1);
-
-                                    await FirebaseFirestore.instance
-                                        .collection('products')
-                                        .doc(product!.id)
-                                        .update({
-                                      'rating': rate,
-                                      'ratingCount': (product!.ratingCount + 1),
-                                    });
-
-                                    await FirebaseFirestore.instance
-                                        .collection('users')
-                                        .doc(FirebaseAuth
-                                            .instance.currentUser!.uid)
-                                        .collection('ratings')
-                                        .doc(product!.id)
-                                        .set({
-                                      'rating': rating,
-                                    });
-
-                                    setState(() {
-                                      userRating = rating;
-                                      product!.rating = rate;
-                                      isNotRated = false;
-                                      product!.ratingCount += 1;
-                                    });
-                                  }
-                                  //Check if is rated
-                                  else if (!(isNotRated ?? true)) {
-                                    rate = ((product!.rating *
-                                                product!.ratingCount) +
-                                            (rating - (userRating ?? 0))) /
-                                        (product!.ratingCount);
-
-                                    print(rate);
-                                    print(product!.ratingCount);
-
-                                    await FirebaseFirestore.instance
-                                        .collection('products')
-                                        .doc(product!.id)
-                                        .update({
-                                      'rating': rate,
-                                    });
-
-                                    await FirebaseFirestore.instance
-                                        .collection('users')
-                                        .doc(FirebaseAuth
-                                            .instance.currentUser!.uid)
-                                        .collection('ratings')
-                                        .doc(product!.id)
-                                        .update({
-                                      'rating': rating,
-                                    });
-                                  }
-
-                                  setState(() {
-                                    userRating = rating;
-                                    product!.rating = rate;
-                                    isNotRated = false;
-                                  });
-                                },
-                                child: Text(
-                                    (isNotRated ?? true) ? 'Submit' : 'Change'),
-                              )
-                            ],
-                          ),
+                      if (FirebaseAuth.instance.currentUser != null &&
+                          !fromCart)
+                        Reviewer(
+                          product: product!,
+                          updateState: updateState,
                         ),
+                      if (!(FirebaseAuth.instance.currentUser != null &&
+                          !fromCart))
+                        SizedBox(
+                          height: 15.0,
+                        ),
+                      FutureBuilder<QuerySnapshot>(
+                        future: FirebaseFirestore.instance
+                            .collection('products')
+                            .doc(product!.id)
+                            .collection('reviews')
+                            .get(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            if (snapshot.hasData) {
+                              return Column(
+                                children: snapshot.data!.docs
+                                    .map((e) => ReviewCard(review: e))
+                                    .toList(),
+                              );
+                            } else {
+                              return Container(
+                                  height: 320.0,
+                                  child: Center(child: Text('Nothing found')));
+                            }
+                          }
+                          return Text('Nothing');
+                        },
+                      ),
                       SizedBox(
                         height: 50.0,
                       )

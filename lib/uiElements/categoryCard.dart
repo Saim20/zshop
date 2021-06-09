@@ -8,23 +8,33 @@ class CategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      borderRadius: BorderRadius.circular(10.0),
       onTap: () {
         Navigator.of(context)
             .pushNamed('/products', arguments: {'category': category});
       },
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 10.0),
+        padding: const EdgeInsets.all(3.0),
         child: Card(
-          child: ListTile(
-            title: Text(category!),
-            leading: Container(
-              child: Image.asset(
-                'assets/categoryIcons/$category.png',
-                width: 30.0,
-                height: 30.0,
-                fit: BoxFit.contain,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Row(
+            children: [
+              Container(
+                margin: EdgeInsets.all(15.0),
+                child: Image.asset(
+                  'assets/categoryIcons/$category.png',
+                  width: 45.0,
+                  height: 45.0,
+                  fit: BoxFit.contain,
+                ),
               ),
-            ),
+              Text(
+                category!,
+                style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w400),
+              ),
+            ],
           ),
         ),
       ),

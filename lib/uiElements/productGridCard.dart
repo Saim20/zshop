@@ -36,6 +36,7 @@ class ProductGridCard extends StatelessWidget {
     bool outOfStock = product.stock <= 0;
 
     return InkWell(
+      borderRadius: BorderRadius.circular(20.0),
       onTap: () {
         Navigator.of(context).pushNamed('/details',
             arguments: {'product': product, 'cart': false});
