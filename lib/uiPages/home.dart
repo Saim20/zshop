@@ -20,11 +20,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     FirebaseAuth.instance.authStateChanges().listen((user) async {
-      if (user != null) {
-        setState(() {
-          this.user = user;
-        });
-      }
+      setState(() {
+        this.user = user;
+      });
     });
     super.initState();
   }
