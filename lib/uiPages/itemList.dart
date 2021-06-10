@@ -92,11 +92,14 @@ class _ItemListPageState extends State<ItemListPage> {
                   padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 0.0),
                   child: IconButton(
                     tooltip: 'Orders',
-                    icon: Icon(
+                    icon: Hero(
+                    tag: 'orderHero',
+                    child: Icon(
                       orderIcon,
                       color: orderColor,
                       size: 30.0,
                     ),
+                  ),
                     onPressed: () {
                       Navigator.of(context).pushNamed('/orders');
                     },

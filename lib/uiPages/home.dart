@@ -68,10 +68,13 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                 child: IconButton(
                   tooltip: 'Orders',
-                  icon: Icon(
-                    orderIcon,
-                    color: orderColor,
-                    size: 30.0,
+                  icon: Hero(
+                    tag: 'orderHero',
+                    child: Icon(
+                      orderIcon,
+                      color: orderColor,
+                      size: 30.0,
+                    ),
                   ),
                   onPressed: () {
                     Navigator.of(context).pushNamed('/orders');

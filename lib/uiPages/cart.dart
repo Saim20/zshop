@@ -70,9 +70,25 @@ class _CartPageState extends State<CartPage> {
                 fontSize: 35.0),
           ),
           actions: [
+            if (FirebaseAuth.instance.currentUser != null)
+              IconButton(
+                tooltip: 'Orders',
+                icon: Hero(
+                  tag: 'orderHero',
+                  child: Icon(
+                    orderIcon,
+                    color: orderColor,
+                    size: 30.0,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/orders');
+                },
+              ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-              child: IconButton(
+              child: 
+              IconButton(
                   icon: Hero(
                     tag: 'accountHero',
                     child: Icon(
