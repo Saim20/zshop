@@ -93,13 +93,13 @@ class _ItemListPageState extends State<ItemListPage> {
                   child: IconButton(
                     tooltip: 'Orders',
                     icon: Hero(
-                    tag: 'orderHero',
-                    child: Icon(
-                      orderIcon,
-                      color: orderColor,
-                      size: 30.0,
+                      tag: 'orderHero',
+                      child: Icon(
+                        orderIcon,
+                        color: orderColor,
+                        size: 30.0,
+                      ),
                     ),
-                  ),
                     onPressed: () {
                       Navigator.of(context).pushNamed('/orders');
                     },
@@ -222,7 +222,11 @@ class _ItemListPageState extends State<ItemListPage> {
       docs.sort(
           (a, b) => a.data()['offerPrice'].compareTo(b.data()['offerPrice']));
       sortedDocs = docs;
-    } else if (sort == 'rating') {}
+    } else if (sort == 'rating') {
+      docs.sort((a, b) =>
+          (a.data()['rating'] ?? 0.0).compareTo(b.data()['rating'] ?? 0.0));
+      sortedDocs = docs;
+    }
     if (descending) {
       return sortedDocs.reversed.toList();
     }
