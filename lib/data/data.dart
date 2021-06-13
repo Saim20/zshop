@@ -9,4 +9,6 @@ IconData accountIcon = Icons.account_circle_rounded;
 IconData cartIcon = Icons.shopping_cart;
 IconData orderIcon = Icons.shopping_bag;
 
+String paymentUrl = 'https://bkashtest.000webhostapp.com/payment.php';
+
 String shopName = 'Zshop';

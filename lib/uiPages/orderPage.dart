@@ -13,7 +13,6 @@ class _OrderPageState extends State<OrderPage> {
 
   @override
   Widget build(BuildContext context) {
-
     var order;
     var data =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
@@ -91,7 +90,7 @@ class _OrderPageState extends State<OrderPage> {
                               Text(
                                 ' - Complete',
                                 style: TextStyle(
-                                    fontSize: 18.0, color: Colors.blueAccent),
+                                    fontSize: 18.0, color: Colors.green),
                               ),
                           ],
                         ),
@@ -112,6 +111,34 @@ class _OrderPageState extends State<OrderPage> {
                         ),
                         Text(
                           'Address: ${order.data()!['address']}',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'Payment Method: ${order.data()!['paymentMethod']}',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'Payment status: ${order.data()!['paymentStatus']}',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'Transaction ID: ${order.data()!['transactionId']}',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'Payment Time: ${order.data()!['paymentTime']}',
                           style: TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.bold,

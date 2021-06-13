@@ -171,9 +171,11 @@ class _CartProductCardState extends State<CartProductCard> {
                       width: 90.0,
                       height: 70.0,
                       child: TextField(
+                        keyboardType: TextInputType.number,
                         controller: controller,
                         onChanged: (value) {
                           product.quantity = int.parse(value);
+                          widget.costCalculator!(true);
                         },
                         textAlign: TextAlign.center,
                         decoration: InputDecoration(
@@ -218,39 +220,41 @@ class _CartProductCardState extends State<CartProductCard> {
                             ],
                           ),
                         ),
-                        Container(
-                          height: 30.0,
-                          child: Row(
-                            children: [
-                              Text(
-                                'Setup(৳${widget.product!.setupCost})',
-                                style: TextStyle(
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.w300),
-                              ),
-                              Switch(
-                                  value: widget.product!.setupTaken,
-                                  onChanged: product.setupCost == 0
-                                      ? null
-                                      : (value) {
-                                          setState(() {
-                                            widget.costCalculator!(true);
-                                            App.cartProducts
-                                                    .elementAt(
-                                                        App.cartProducts
-                                                            .indexOf(widget
-                                                                .product!))
-                                                    .setupTaken =
-                                                !App.cartProducts
-                                                    .elementAt(App.cartProducts
-                                                        .indexOf(
-                                                            widget.product!))
-                                                    .setupTaken;
-                                          });
-                                        }),
-                            ],
+                        if (widget.product!.deliveryTaken)
+                          Container(
+                            height: 30.0,
+                            child: Row(
+                              children: [
+                                Text(
+                                  'Setup(৳${widget.product!.setupCost})',
+                                  style: TextStyle(
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.w300),
+                                ),
+                                Switch(
+                                    value: widget.product!.setupTaken,
+                                    onChanged: product.setupCost == 0
+                                        ? null
+                                        : (value) {
+                                            setState(() {
+                                              widget.costCalculator!(true);
+                                              App.cartProducts
+                                                      .elementAt(
+                                                          App.cartProducts
+                                                              .indexOf(widget
+                                                                  .product!))
+                                                      .setupTaken =
+                                                  !App.cartProducts
+                                                      .elementAt(App
+                                                          .cartProducts
+                                                          .indexOf(
+                                                              widget.product!))
+                                                      .setupTaken;
+                                            });
+                                          }),
+                              ],
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   )

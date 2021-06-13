@@ -110,6 +110,13 @@ class _OrdersPageState extends State<OrdersPage> {
                                               fontSize: 18.0,
                                               color: Colors.blueAccent),
                                         ),
+                                      if (order.data()!['status'] == 'complete')
+                                        Text(
+                                          ' - Complete',
+                                          style: TextStyle(
+                                              fontSize: 18.0,
+                                              color: Colors.green),
+                                        ),
                                     ],
                                   ),
                                 ),

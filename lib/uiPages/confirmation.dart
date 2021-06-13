@@ -10,6 +10,9 @@ class ConfirmationPage extends StatefulWidget {
 }
 
 class _ConfirmationPageState extends State<ConfirmationPage> {
+  List<String> paymentMethods = ['cod', 'bkash'];
+  String selectedMethod = 'cod';
+
   @override
   Widget build(BuildContext context) {
     var data =
@@ -18,25 +21,26 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
     Function clearCart = data['clearcart'];
 
     return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(70.0),
-          child: AppBar(
-            iconTheme: IconThemeData(color: accentColor),
-            elevation: 0.0,
-            backgroundColor: Colors.transparent,
-            title: Container(
-              margin: const EdgeInsets.fromLTRB(30.0, 50.0, 30.0, 30.0),
-              child: Text(
-                'Confirm Order',
-                style: TextStyle(
-                    color: accentColor,
-                    fontWeight: FontWeight.w300,
-                    fontSize: 40.0),
-              ),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(70.0),
+        child: AppBar(
+          iconTheme: IconThemeData(color: accentColor),
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          title: Container(
+            margin: const EdgeInsets.fromLTRB(30.0, 50.0, 30.0, 30.0),
+            child: Text(
+              'Confirm Order',
+              style: TextStyle(
+                  color: accentColor,
+                  fontWeight: FontWeight.w300,
+                  fontSize: 40.0),
             ),
           ),
         ),
-        body: ListView(children: [
+      ),
+      body: ListView(
+        children: [
           Column(
             children: order.cartProducts
                 .map((e) => ProductCard(
@@ -83,36 +87,89 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                   height: 20.0,
                 ),
 
+                Column(
+                  children: [
+                    Text('Payment Method'),
+                    Form(
+                      child: Column(
+                        children: [
+                          ListTile(
+                            title: Text('Cash On Delivery'),
+                            leading: Radio(
+                              value: paymentMethods.elementAt(0),
+                              groupValue: selectedMethod,
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedMethod = value.toString();
+                                });
+                              },
+                            ),
+                          ),
+                          ListTile(
+                            title: Text('Bkash Payment'),
+                            leading: Radio(
+                              value: paymentMethods.elementAt(1),
+                              groupValue: selectedMethod,
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedMethod = value.toString();
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(
+                  height: 20.0,
+                ),
+
                 ElevatedButton(
                     onPressed: () async {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Placing order')));
-                      await order.place();
-                      Navigator.of(context).pop();
-                      showDialog(
+                      if (selectedMethod == 'cod') {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Placing order')));
+                        await order.place();
+                        Navigator.of(context).pop();
+                        showDialog(
                           barrierDismissible: false,
                           context: context,
                           builder: (context) => AlertDialog(
-                                title: Text('Order placed'),
-                                actions: [
-                                  TextButton.icon(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      clearCart();
-                                    },
-                                    label: Text('Ok'),
-                                    icon: Icon(
-                                      Icons.check,
-                                      color: Colors.black,
-                                    ),
-                                  )
-                                ],
-                              ));
+                            title: Text('Order placed'),
+                            actions: [
+                              TextButton.icon(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  clearCart();
+                                },
+                                label: Text('Ok'),
+                                icon: Icon(
+                                  Icons.check,
+                                  color: Colors.black,
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      } else if (selectedMethod == 'bkash') {
+                        Navigator.of(context).pushReplacementNamed(
+                          '/payment',
+                          arguments: {
+                            'order': order,
+                            'clearCart':clearCart,
+                          },
+                        );
+                      }
                     },
                     child: Text('Confirm order')),
               ],
             ),
-          )
-        ]));
+          ),
+        ],
+      ),
+    );
   }
 }

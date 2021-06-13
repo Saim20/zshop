@@ -10,6 +10,10 @@ class Order {
     required this.userAddress,
     required this.totalCost,
     required this.userId,
+    required this.paymentMethod,
+    this.paymentStatus: 'Unpaid',
+    this.transactionId: '',
+    this.paymentTime: '',
   });
 
   String userName;
@@ -17,6 +21,10 @@ class Order {
   String userEmail;
   String userAddress;
   String userId;
+  String paymentMethod;
+  String paymentStatus;
+  String? transactionId;
+  String? paymentTime;
   int totalCost;
   List<Product> cartProducts;
 
@@ -26,8 +34,12 @@ class Order {
         'name': userName,
         'phone': userPhone,
         'email': userEmail,
-        'uid' :userId,
+        'uid': userId,
         'address': userAddress,
+        'paymentMethod': paymentMethod,
+        'paymentStatus': paymentStatus,
+        'transactionId': transactionId,
+        'paymentTime': paymentTime,
         'status': 'placed',
       }).then((v) async {
         for (var product in cartProducts) {

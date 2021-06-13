@@ -152,6 +152,8 @@ class _CartPageState extends State<CartPage> {
                       userId: user.uid,
                       userPhone: phone,
                       userAddress: address,
+                      paymentStatus: 'Unpaid',
+                      paymentMethod: 'COD',
                       totalCost: totalCost,
                       cartProducts: App.cartProducts);
                   Navigator.of(context).pushNamed('/confirmation',
