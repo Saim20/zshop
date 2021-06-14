@@ -168,13 +168,15 @@ class _CartProductCardState extends State<CartProductCard> {
                 children: [
                   Container(
                       margin: EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0),
-                      width: 140.0,
+                      width: 100.0,
                       height: 70.0,
                       child: TextFormField(
                         keyboardType: TextInputType.number,
                         controller: controller,
                         onChanged: (value) {
                           product.quantity = int.parse(value);
+                        },
+                        onEditingComplete: () {
                           widget.costCalculator!(true);
                         },
                         textAlign: TextAlign.center,
@@ -215,6 +217,15 @@ class _CartProductCardState extends State<CartProductCard> {
                                                         .indexOf(
                                                             widget.product!))
                                                     .deliveryTaken;
+                                            if (!widget
+                                                .product!.deliveryTaken) {
+                                              App.cartProducts
+                                                  .elementAt(App.cartProducts
+                                                      .indexOf(widget.product!))
+                                                  .setupTaken = false;
+                                              widget.product!.setupTaken =
+                                                  false;
+                                            }
                                           });
                                         }),
                             ],

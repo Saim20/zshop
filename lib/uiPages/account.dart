@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:z_shop/data/data.dart';
 import 'package:z_shop/services/user.dart';
+import 'package:z_shop/uiElements/loadingWidget.dart';
 import 'package:z_shop/uiPages/login.dart';
 
 class AccountPage extends StatefulWidget {
@@ -76,6 +77,7 @@ class _AccountPageState extends State<AccountPage> {
     else
       data = {'fromCart': false};
     bool fromCart = data['fromCart'] ?? false;
+    signedIn = FirebaseAuth.instance.currentUser != null;
 
     if (signedIn == null) {
       return LoadingWidget();
@@ -227,20 +229,6 @@ class Account extends StatelessWidget {
           );
         },
         child: Icon(Icons.edit),
-      ),
-    );
-  }
-}
-
-class LoadingWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: SpinKitSquareCircle(
-          color: accentColor,
-          size: 50.0,
-        ),
       ),
     );
   }

@@ -14,20 +14,37 @@ class _SignupPageState extends State<SignupPage> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       body: SafeArea(
-          child: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(50.0, 70.0, 50.0, 50.0),
-            child: Text(
-              'Sign Up',
-              style: TextStyle(
-                  fontSize: 50.0,
-                  fontWeight: FontWeight.w200,
-                  color: accentColor),
-            ),
+          child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.white,
+              Colors.blue[100]!,
+              Colors.blue[200]!,
+              Colors.blue[300]!,
+              Colors.blue[400]!,
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-          MyCustomForm(),
-        ],
+        ),
+        child: ListView(
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(50.0, 70.0, 50.0, 50.0),
+                child: Text(
+                  'Sign Up',
+                  style: TextStyle(
+                      fontSize: 50.0,
+                      fontWeight: FontWeight.w200,
+                      color: accentColor),
+                ),
+              ),
+            ),
+            MyCustomForm(),
+          ],
+        ),
       )),
     );
   }
@@ -70,15 +87,34 @@ class MyCustomFormState extends State<MyCustomForm> {
     return Form(
       key: _formKey,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
             child: Container(
+              width: MediaQuery.of(context).orientation == Orientation.landscape
+                  ? 600
+                  : 500,
               child: TextFormField(
                 controller: nameC,
+                cursorColor: Colors.grey[800],
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'Name'),
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelStyle: TextStyle(color: Colors.grey[600]),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    labelText: 'Name *'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your name';
@@ -91,6 +127,9 @@ class MyCustomFormState extends State<MyCustomForm> {
           Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
             child: Container(
+              width: MediaQuery.of(context).orientation == Orientation.landscape
+                  ? 600
+                  : 500,
               child: TextFormField(
                 controller: emailC,
                 onChanged: (value) {
@@ -99,8 +138,24 @@ class MyCustomFormState extends State<MyCustomForm> {
                     emailIsInvalid = false;
                   });
                 },
+                cursorColor: Colors.grey[800],
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'E-mail'),
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelStyle: TextStyle(color: Colors.grey[600]),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    labelText: 'E-mail *'),
                 validator: (value) {
                   if (value == null || value.isEmpty)
                     return 'Please enter an e-mail';
@@ -117,11 +172,29 @@ class MyCustomFormState extends State<MyCustomForm> {
           Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
             child: Container(
+              width: MediaQuery.of(context).orientation == Orientation.landscape
+                  ? 600
+                  : 500,
               child: TextFormField(
                 controller: addressC,
+                cursorColor: Colors.grey[800],
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Shipping Address'),
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelStyle: TextStyle(color: Colors.grey[600]),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    labelText: 'Shipping Address *'),
                 validator: (value) {
                   if (value == null || value.isEmpty)
                     return 'Please enter your shipping address';
@@ -133,11 +206,30 @@ class MyCustomFormState extends State<MyCustomForm> {
           Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
             child: Container(
+              width: MediaQuery.of(context).orientation == Orientation.landscape
+                  ? 600
+                  : 500,
               child: TextFormField(
                 keyboardType: TextInputType.phone,
                 controller: phoneC,
+                cursorColor: Colors.grey[800],
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'Phone'),
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelStyle: TextStyle(color: Colors.grey[600]),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    labelText: 'Phone'),
                 validator: (value) {
                   if (value == null) {
                     return 'Please enter a phone number';
@@ -150,12 +242,33 @@ class MyCustomFormState extends State<MyCustomForm> {
           Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
             child: Container(
+              width: MediaQuery.of(context).orientation == Orientation.landscape
+                  ? 600
+                  : 500,
               child: TextFormField(
                 obscureText: !showPassword,
                 enableSuggestions: showPassword,
                 controller: passC,
+                cursorColor: Colors.grey[800],
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'Password'),
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelStyle: TextStyle(
+                      color: Colors.grey[600],
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    labelText: 'Password *'),
                 validator: (value) {
                   if (value == null || value.isEmpty)
                     return 'Please enter a password';
@@ -165,27 +278,67 @@ class MyCustomFormState extends State<MyCustomForm> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 20.0),
             child: Container(
-                child: TextButton(
-              onPressed: () {
-                setState(() {
-                  showPassword = !showPassword;
-                });
-              },
-              child: Text(showPassword ? 'Hide password' : 'Show password'),
-            )),
+              width: MediaQuery.of(context).orientation == Orientation.landscape
+                  ? 600
+                  : 500,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        showPassword = !showPassword;
+                      });
+                    },
+                    icon: showPassword
+                        ? Icon(
+                            Icons.visibility_off_rounded,
+                            color: Colors.white,
+                          )
+                        : Icon(
+                            Icons.visibility_rounded,
+                            color: Colors.white,
+                          ),
+                    label: Text(
+                      showPassword ? 'Hide password' : 'Show password',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  SizedBox(),
+                ],
+              ),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
             child: Container(
+              width: MediaQuery.of(context).orientation == Orientation.landscape
+                  ? 600
+                  : 500,
               child: TextFormField(
                 obscureText: !showPassword,
                 enableSuggestions: showPassword,
                 controller: confirmC,
+                cursorColor: Colors.grey[800],
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Confirm Password'),
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelStyle: TextStyle(color: Colors.grey[600]),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    labelText: 'Confirm Password *'),
                 validator: (value) {
                   if (passC.text != value) return 'Passwords do not match';
                   return null;
@@ -196,8 +349,11 @@ class MyCustomFormState extends State<MyCustomForm> {
           Column(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(30.0, 30.0, 0.0, 0.0),
+                padding: const EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 0.0),
                 child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(accentColor),
+                  ),
                   onPressed: () {
                     // Validate returns true if the form is valid, or false otherwise.
                     if (_formKey.currentState!.validate()) {
@@ -215,12 +371,13 @@ class MyCustomFormState extends State<MyCustomForm> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 0.0),
+                padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 20.0),
                 child: TextButton(
                   child: Text(
                     'Or Login',
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
+                      color: Colors.white,
                     ),
                   ),
                   onPressed: () {

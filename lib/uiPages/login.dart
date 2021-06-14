@@ -26,26 +26,47 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       body: SafeArea(
-          child: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(50.0, 70.0, 50.0, 50.0),
-            child: Text(
-              isIncomplete ? 'Complete Account' : 'Login',
-              style: TextStyle(
-                  fontSize: 50.0,
-                  fontWeight: FontWeight.w200,
-                  color: accentColor),
+          child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.white,
+              Colors.blue[100]!,
+              Colors.blue[200]!,
+              Colors.blue[300]!,
+              Colors.blue[400]!,
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: ListView(
+          children: [
+            SizedBox(height: 100),
+            createTitle(isIncomplete),
+            SizedBox(height: 100),
+            MyCustomForm(
+              isIncomplete: isIncomplete,
+              completeSignin: widget.completeSignin,
             ),
-          ),
-          MyCustomForm(
-            isIncomplete: isIncomplete,
-            completeSignin: widget.completeSignin,
-          ),
-        ],
+            SizedBox(
+              height: 20.0,
+            ),
+          ],
+        ),
       )),
     );
   }
+}
+
+Widget createTitle(isIncomplete) {
+  return Center(
+    child: Text(
+      isIncomplete ? 'Complete Account' : 'Login',
+      style: TextStyle(
+          fontSize: 50.0, fontWeight: FontWeight.w200, color: accentColor),
+    ),
+  );
 }
 
 class MyCustomForm extends StatefulWidget {
@@ -86,6 +107,9 @@ class MyCustomFormState extends State<MyCustomForm> {
           Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
             child: Container(
+              width: MediaQuery.of(context).orientation == Orientation.landscape
+                  ? 600
+                  : 500,
               child: TextFormField(
                 keyboardType: TextInputType.emailAddress,
                 controller: emailC,
@@ -93,8 +117,23 @@ class MyCustomFormState extends State<MyCustomForm> {
                   userNotFound = false;
                   emailIsInvalid = false;
                 },
+                cursorColor: Colors.grey[800],
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelStyle: TextStyle(color: Colors.grey[600]),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
                     labelText: widget.isIncomplete! ? 'Phone' : 'E-mail'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -114,6 +153,9 @@ class MyCustomFormState extends State<MyCustomForm> {
           Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
             child: Container(
+              width: MediaQuery.of(context).orientation == Orientation.landscape
+                  ? 600
+                  : 500,
               child: TextFormField(
                 obscureText: widget.isIncomplete! ? false : true,
                 enableSuggestions: widget.isIncomplete! ? true : false,
@@ -123,8 +165,23 @@ class MyCustomFormState extends State<MyCustomForm> {
                 },
                 controller: passC,
                 keyboardType: TextInputType.visiblePassword,
+                cursorColor: Colors.grey[800],
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelStyle: TextStyle(color: Colors.grey[600]),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
                     labelText:
                         widget.isIncomplete! ? 'Shipping Address' : 'Password'),
                 validator: (value) {
@@ -145,6 +202,9 @@ class MyCustomFormState extends State<MyCustomForm> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 0.0),
                 child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(accentColor),
+                  ),
                   onPressed: () async {
                     // Validate returns true if the form is valid, or false otherwise.
                     if (_formKey.currentState!.validate()) if (!widget
@@ -167,16 +227,20 @@ class MyCustomFormState extends State<MyCustomForm> {
                 ),
               ),
               if (!widget.isIncomplete!)
-                TextButton(
-                  child: Text(
-                    'Or Sign Up',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: TextButton(
+                    child: Text(
+                      'Or Sign Up',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                      ),
                     ),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/signupoptions');
+                    },
                   ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/signupoptions');
-                  },
                 ),
               if (!widget.isIncomplete!)
                 Container(
