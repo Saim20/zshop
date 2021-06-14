@@ -77,12 +77,11 @@ class _AccountPageState extends State<AccountPage> {
     else
       data = {'fromCart': false};
     bool fromCart = data['fromCart'] ?? false;
-    signedIn = FirebaseAuth.instance.currentUser != null;
 
     if (signedIn == null) {
       return LoadingWidget();
     }
-    return signedIn!
+    return (signedIn! && !incompleteGoogleSignin)
         ? Account(
             signOut: signOut,
             user: zuser,
