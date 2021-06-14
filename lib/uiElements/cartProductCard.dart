@@ -168,9 +168,9 @@ class _CartProductCardState extends State<CartProductCard> {
                 children: [
                   Container(
                       margin: EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0),
-                      width: 90.0,
+                      width: 140.0,
                       height: 70.0,
-                      child: TextField(
+                      child: TextFormField(
                         keyboardType: TextInputType.number,
                         controller: controller,
                         onChanged: (value) {

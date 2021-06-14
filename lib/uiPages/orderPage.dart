@@ -169,17 +169,22 @@ class _OrderPageState extends State<OrderPage> {
               );
             }
             return Center(
-              child: Column(
-                children: [
-                  SpinKitSquareCircle(
-                    color: Colors.blueAccent,
-                    size: 50.0,
-                  ),
-                  Text(
-                    'Loading',
-                    style: TextStyle(fontSize: 25.0, color: Colors.blueAccent),
-                  ),
-                ],
+              child: Container(
+                height: MediaQuery.of(context).size.height * 3 / 4,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SpinKitSquareCircle(
+                      color: Colors.blueAccent,
+                      size: 50.0,
+                    ),
+                    Text(
+                      'Loading',
+                      style:
+                          TextStyle(fontSize: 25.0, color: Colors.blueAccent),
+                    ),
+                  ],
+                ),
               ),
             );
           }),
