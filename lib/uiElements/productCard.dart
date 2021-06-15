@@ -50,9 +50,8 @@ class ProductCard extends StatelessWidget {
         Navigator.of(context).pushNamed('/details',
             arguments: {'product': product, 'cart': false});
       },
-      splashColor: accountColor,
+      splashColor: accentColor,
       focusColor: accentColor,
-      hoverColor: accentColor,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
         child: Card(
@@ -80,7 +79,7 @@ class ProductCard extends StatelessWidget {
                       width: MediaQuery.of(context).size.width >
                               MediaQuery.of(context).size.height
                           ? 180
-                          : 120,
+                          : 100,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -174,7 +173,7 @@ class ProductCard extends StatelessWidget {
                                   RatingBarIndicator(
                                     rating: roundRating(product.rating, 1),
                                     itemCount: 5,
-                                    itemSize: 13.0,
+                                    itemSize: 12.0,
                                     itemBuilder: (context, index) => Icon(
                                       Icons.star,
                                       color: Colors.amber,

@@ -124,33 +124,35 @@ class Account extends StatelessWidget {
             ),
             actions: [
               IconButton(
-                  tooltip: 'Cart',
-                  icon: Icon(
-                    cartIcon,
-                    color: cartColor,
+                tooltip: 'Cart',
+                icon: Icon(
+                  cartIcon,
+                  color: cartColor,
+                  size: 30.0,
+                ),
+                onPressed: () {
+                  if (fromCart)
+                    Navigator.of(context).pushReplacementNamed('/cart',
+                        arguments: {'fromAccount': true});
+                  else
+                    Navigator.of(context)
+                        .pushNamed('/cart', arguments: {'fromAccount': true});
+                },
+              ),
+              IconButton(
+                tooltip: 'Orders',
+                icon: Hero(
+                  tag: 'orderHero',
+                  child: Icon(
+                    orderIcon,
+                    color: orderColor,
                     size: 30.0,
                   ),
-                  onPressed: () {
-                    if (fromCart)
-                      Navigator.of(context).pushReplacementNamed('/cart',
-                          arguments: {'fromAccount': true});
-                    else
-                      Navigator.of(context)
-                          .pushNamed('/cart', arguments: {'fromAccount': true});
-                  }),
-              IconButton(
-                  tooltip: 'Orders',
-                  icon: Hero(
-                    tag: 'orderHero',
-                    child: Icon(
-                      orderIcon,
-                      color: orderColor,
-                      size: 30.0,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('/orders');
-                  }),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/orders');
+                },
+              ),
             ],
           ),
         ),

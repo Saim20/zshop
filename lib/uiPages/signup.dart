@@ -62,6 +62,7 @@ class MyCustomFormState extends State<MyCustomForm> {
 
   bool isEmailAlreadySignedUp = false;
   bool emailIsInvalid = false;
+  bool emailAlreadyInUse = false;
   bool showPassword = false;
 
   TextEditingController nameC = TextEditingController();
@@ -136,6 +137,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                   setState(() {
                     isEmailAlreadySignedUp = false;
                     emailIsInvalid = false;
+                    emailAlreadyInUse = false;
                   });
                 },
                 cursorColor: Colors.grey[800],
@@ -163,6 +165,8 @@ class MyCustomFormState extends State<MyCustomForm> {
                     return 'E-mail is already user for an account';
                   } else if (emailIsInvalid) {
                     return 'Please enter a valid e-mail';
+                  } else if(emailAlreadyInUse){
+                    return 'This email is already used';
                   }
                   return null;
                 },
@@ -421,7 +425,10 @@ class MyCustomFormState extends State<MyCustomForm> {
         isEmailAlreadySignedUp = true;
       } else if (e.code == 'invalid-email') {
         emailIsInvalid = true;
-      } else {
+      } else if(e.code == 'email-already-in-use'){
+        emailAlreadyInUse = true;
+      }
+       else {
         print(e);
       }
       _formKey.currentState!.validate();

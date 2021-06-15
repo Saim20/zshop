@@ -52,31 +52,47 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             ),
             actions: [
               IconButton(
-                  tooltip: 'Cart',
-                  icon: Hero(
-                    tag: 'cartHero',
-                    child: Icon(
-                      cartIcon,
-                      color: cartColor,
-                      size: 30.0,
-                    ),
+                tooltip: 'Cart',
+                icon: Hero(
+                  tag: 'cartHero',
+                  child: Icon(
+                    cartIcon,
+                    color: cartColor,
+                    size: 30.0,
                   ),
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('/cart');
-                  }),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/cart');
+                },
+              ),
               IconButton(
-                  tooltip: 'Account',
-                  icon: Hero(
-                    tag: 'accountHero',
-                    child: Icon(
-                      accountIcon,
-                      color: accountColor,
-                      size: 30.0,
-                    ),
+                tooltip: 'Orders',
+                icon: Hero(
+                  tag: 'orderHero',
+                  child: Icon(
+                    orderIcon,
+                    color: orderColor,
+                    size: 30.0,
                   ),
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('/account');
-                  }),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/orders');
+                },
+              ),
+              IconButton(
+                tooltip: 'Account',
+                icon: Hero(
+                  tag: 'accountHero',
+                  child: Icon(
+                    accountIcon,
+                    color: accountColor,
+                    size: 30.0,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/account');
+                },
+              ),
             ],
           ),
         ),

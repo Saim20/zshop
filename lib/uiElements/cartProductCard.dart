@@ -31,9 +31,8 @@ class _CartProductCardState extends State<CartProductCard> {
         Navigator.of(context).pushNamed('/details',
             arguments: {'product': product, 'cart': true});
       },
-      splashColor: accountColor,
+      splashColor: accentColor,
       focusColor: accentColor,
-      hoverColor: accentColor,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
         child: Card(
@@ -79,15 +78,18 @@ class _CartProductCardState extends State<CartProductCard> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
-                              child: Text(
-                                product.name,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.bold),
+                            Flexible(
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                    5.0, 0.0, 0.0, 0.0),
+                                child: Text(
+                                  product.name,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ),
                             IconButton(
@@ -180,9 +182,25 @@ class _CartProductCardState extends State<CartProductCard> {
                           widget.costCalculator!(true);
                         },
                         textAlign: TextAlign.center,
+                        cursorColor: Colors.grey[800],
                         decoration: InputDecoration(
-                            labelText: 'Quantity',
-                            border: OutlineInputBorder()),
+                          filled: true,
+                          fillColor: Colors.white,
+                          labelStyle: TextStyle(color: Colors.grey[600]),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.circular(40.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(40.0),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.circular(40.0),
+                          ),
+                          labelText: 'Quantity',
+                        ),
                       )),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0.0, 0.0, 20.0, 20.0),
