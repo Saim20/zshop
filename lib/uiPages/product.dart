@@ -97,139 +97,148 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           ),
         ),
       ),
-      body: ListView(
-        children: [
-          CarouselWithIndicator(product: product!),
-          SizedBox(
-            height: 15.0,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(13.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
-                  child: Text(
-                    product!.name,
-                    style: TextStyle(
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.w400,
+      body: RefreshIndicator(
+        onRefresh: () {
+          setState(() {});
+          return Future.delayed(Duration(seconds: 1));
+        },
+        child: ListView(
+          children: [
+            CarouselWithIndicator(product: product!),
+            SizedBox(
+              height: 15.0,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(13.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
+                    child: Text(
+                      product!.name,
+                      style: TextStyle(
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            children: [
-                              Text(
-                                '৳ ${product!.offerPrice.toString()}',
-                                style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.red[400]),
-                              ),
-                              Text(
-                                '৳ ${product!.price.toString()}',
-                                style: TextStyle(
-                                    fontSize: 17.0,
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.red[100]),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                    roundRating(product!.rating, 1).toString()),
-                              ),
-                              RatingBarIndicator(
-                                rating: roundRating(product!.rating, 1),
-                                itemCount: 5,
-                                itemSize: 20.0,
-                                itemBuilder: (context, index) => Icon(
-                                  Icons.star,
-                                  color: Colors.amber,
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              children: [
+                                Text(
+                                  '৳ ${product!.offerPrice.toString()}',
+                                  style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.red[400]),
                                 ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                        child: Text(
-                          'Description',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20.0,
+                                Text(
+                                  '৳ ${product!.price.toString()}',
+                                  style: TextStyle(
+                                      fontSize: 17.0,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.red[100]),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(roundRating(product!.rating, 1)
+                                      .toString()),
+                                ),
+                                RatingBarIndicator(
+                                  rating: roundRating(product!.rating, 1),
+                                  itemCount: 5,
+                                  itemSize: 20.0,
+                                  itemBuilder: (context, index) => Icon(
+                                    Icons.star,
+                                    color: Colors.amber,
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                          child: Text(
+                            'Description',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 20.0,
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                        child: Text(
-                          product!.description,
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w300,
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                          child: Text(
+                            product!.description,
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w300,
+                            ),
                           ),
                         ),
-                      ),
-                      if (FirebaseAuth.instance.currentUser != null &&
-                          !fromCart)
-                        Reviewer(
-                          product: product!,
-                          updateState: updateState,
-                        ),
-                      if (!(FirebaseAuth.instance.currentUser != null &&
-                          !fromCart))
-                        SizedBox(
-                          height: 15.0,
-                        ),
-                      FutureBuilder<QuerySnapshot>(
-                        future: FirebaseFirestore.instance
-                            .collection('products')
-                            .doc(product!.id)
-                            .collection('reviews')
-                            .get(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            if (snapshot.hasData) {
-                              return Column(
-                                children: snapshot.data!.docs
-                                    .map((e) => ReviewCard(review: e))
-                                    .toList(),
-                              );
-                            } else {
-                              return Container(
-                                  height: 320.0,
-                                  child: Center(child: Text('Nothing found')));
+                        if (FirebaseAuth.instance.currentUser != null &&
+                            !fromCart)
+                          Reviewer(
+                            product: product!,
+                            updateState: updateState,
+                          ),
+                        if (!(FirebaseAuth.instance.currentUser != null &&
+                            !fromCart))
+                          SizedBox(
+                            height: 15.0,
+                          ),
+                        FutureBuilder<QuerySnapshot>(
+                          future: FirebaseFirestore.instance
+                              .collection('products')
+                              .doc(product!.id)
+                              .collection('reviews')
+                              .get(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              if (snapshot.hasData) {
+                                return Column(
+                                  children: snapshot.data!.docs
+                                      .map((e) => ReviewCard(review: e))
+                                      .toList(),
+                                );
+                              } else {
+                                return Container(
+                                    height: 320.0,
+                                    child:
+                                        Center(child: Text('Nothing found')));
+                              }
                             }
-                          }
-                          return Text('Nothing');
-                        },
-                      ),
-                      SizedBox(
-                        height: 50.0,
-                      )
-                    ],
-                  ),
-                )
-              ],
+                            return Text('Nothing');
+                          },
+                        ),
+                        SizedBox(
+                          height: 50.0,
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       floatingActionButton: fromCart
           ? null

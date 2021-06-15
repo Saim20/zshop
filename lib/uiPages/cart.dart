@@ -136,6 +136,7 @@ class _CartPageState extends State<CartPage> {
           ? null
           : FloatingActionButton.extended(
               onPressed: () async {
+                print(App.isIncompleteSignIn);
                 if (FirebaseAuth.instance.currentUser != null &&
                     !App.isIncompleteSignIn) {
                   var user = FirebaseAuth.instance.currentUser;
@@ -159,7 +160,12 @@ class _CartPageState extends State<CartPage> {
                   Navigator.of(context).pushNamed('/confirmation',
                       arguments: {'order': order, 'clearcart': clearCart});
                 } else {
-                  Navigator.of(context).pushNamed('/login');
+                  if (FirebaseAuth.instance.currentUser == null &&
+                      App.isIncompleteSignIn) {
+                    Navigator.of(context).pushNamed('/login');
+                  } else {
+                    Navigator.of(context).pushNamed('/account');
+                  }
                 }
               },
               label: Text('Place Order (৳$totalCost)'),

@@ -207,15 +207,16 @@ class MyCustomFormState extends State<MyCustomForm> {
                   ),
                   onPressed: () async {
                     // Validate returns true if the form is valid, or false otherwise.
-                    if (_formKey.currentState!.validate()) if (!widget
-                        .isIncomplete!) {
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(SnackBar(content: Text('Logging in')));
-                      signInWithEmailAndPass(emailC.text, passC.text);
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Completing account')));
-                      completeAccount(emailC.text, passC.text);
+                    if (_formKey.currentState!.validate()) {
+                      if (!widget.isIncomplete!) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Logging in')));
+                        signInWithEmailAndPass(emailC.text, passC.text);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Completing account')));
+                        completeAccount(emailC.text, passC.text);
+                      }
                     }
                   },
                   child: Text(

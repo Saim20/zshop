@@ -47,7 +47,7 @@ class _AccountPageState extends State<AccountPage> {
       zuser.address = userSnap!.data()!['address'];
     } else {
       incompleteGoogleSignin = true;
-      App.isIncompleteSignIn = false;
+      App.isIncompleteSignIn = true;
     }
     return true;
   }

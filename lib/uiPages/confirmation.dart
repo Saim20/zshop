@@ -148,7 +148,6 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                 label: Text('Ok'),
                                 icon: Icon(
                                   Icons.check,
-                                  color: Colors.black,
                                 ),
                               )
                             ],

@@ -120,7 +120,6 @@ class _PaymentPageState extends State<PaymentPage> {
             label: Text('Ok'),
             icon: Icon(
               Icons.check,
-              color: Colors.black,
             ),
           )
         ],

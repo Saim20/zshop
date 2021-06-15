@@ -64,6 +64,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   bool emailIsInvalid = false;
   bool emailAlreadyInUse = false;
   bool showPassword = false;
+  bool weakPassword = false;
 
   TextEditingController nameC = TextEditingController();
   TextEditingController emailC = TextEditingController();
@@ -134,11 +135,9 @@ class MyCustomFormState extends State<MyCustomForm> {
               child: TextFormField(
                 controller: emailC,
                 onChanged: (value) {
-                  setState(() {
-                    isEmailAlreadySignedUp = false;
-                    emailIsInvalid = false;
-                    emailAlreadyInUse = false;
-                  });
+                  isEmailAlreadySignedUp = false;
+                  emailIsInvalid = false;
+                  emailAlreadyInUse = false;
                 },
                 cursorColor: Colors.grey[800],
                 decoration: InputDecoration(
@@ -165,7 +164,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                     return 'E-mail is already user for an account';
                   } else if (emailIsInvalid) {
                     return 'Please enter a valid e-mail';
-                  } else if(emailAlreadyInUse){
+                  } else if (emailAlreadyInUse) {
                     return 'This email is already used';
                   }
                   return null;
@@ -253,6 +252,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                 obscureText: !showPassword,
                 enableSuggestions: showPassword,
                 controller: passC,
+                onChanged: (value) {
+                  weakPassword = false;
+                },
                 cursorColor: Colors.grey[800],
                 decoration: InputDecoration(
                     filled: true,
@@ -276,6 +278,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                 validator: (value) {
                   if (value == null || value.isEmpty)
                     return 'Please enter a password';
+                  if (weakPassword) return 'Password is too weak';
                   return null;
                 },
               ),
@@ -400,11 +403,11 @@ class MyCustomFormState extends State<MyCustomForm> {
     String userEmail = email;
     String userPass = pass;
 
-    await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(email: userEmail, password: userPass);
-    await FirebaseAuth.instance.currentUser!.updateDisplayName(nameC.text);
-
     try {
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: userEmail, password: userPass);
+      await FirebaseAuth.instance.currentUser!.updateDisplayName(nameC.text);
+
       await FirebaseFirestore.instance
           .collection('users')
           .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -420,16 +423,16 @@ class MyCustomFormState extends State<MyCustomForm> {
       Navigator.of(context).pop();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        weakPassword = true;
       } else if (e.code == 'email-already-in-use') {
         isEmailAlreadySignedUp = true;
       } else if (e.code == 'invalid-email') {
         emailIsInvalid = true;
-      } else if(e.code == 'email-already-in-use'){
+      } else if (e.code == 'email-already-in-use') {
+        print(e.code);
         emailAlreadyInUse = true;
-      }
-       else {
-        print(e);
+      } else {
+        print(e.code);
       }
       _formKey.currentState!.validate();
     }
