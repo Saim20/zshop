@@ -18,9 +18,20 @@ class ProductDetailsPage extends StatefulWidget {
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   Product? product;
+  User? user;
 
   void updateState(void a) {
     setState(() {});
+  }
+
+  @override
+  void initState() {
+    FirebaseAuth.instance.authStateChanges().listen((user) {
+      setState(() {
+        this.user = user;
+      });
+    });
+    super.initState();
   }
 
   @override
@@ -191,14 +202,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                             ),
                           ),
                         ),
-                        if (FirebaseAuth.instance.currentUser != null &&
-                            !fromCart)
+                        if (user != null && !fromCart)
                           Reviewer(
                             product: product!,
                             updateState: updateState,
                           ),
-                        if (!(FirebaseAuth.instance.currentUser != null &&
-                            !fromCart))
+                        if (!(user != null && !fromCart))
                           SizedBox(
                             height: 15.0,
                           ),
