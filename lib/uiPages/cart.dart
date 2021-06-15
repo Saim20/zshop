@@ -87,8 +87,7 @@ class _CartPageState extends State<CartPage> {
               ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-              child: 
-              IconButton(
+              child: IconButton(
                   icon: Hero(
                     tag: 'accountHero',
                     child: Icon(
@@ -137,7 +136,8 @@ class _CartPageState extends State<CartPage> {
           ? null
           : FloatingActionButton.extended(
               onPressed: () async {
-                if (FirebaseAuth.instance.currentUser != null) {
+                if (FirebaseAuth.instance.currentUser != null &&
+                    !App.isIncompleteSignIn) {
                   var user = FirebaseAuth.instance.currentUser;
                   var doc = await FirebaseFirestore.instance
                       .collection('users')

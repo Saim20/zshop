@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:z_shop/appState.dart';
 import 'package:z_shop/data/data.dart';
 import 'package:z_shop/services/user.dart';
 import 'package:z_shop/uiElements/loadingWidget.dart';
@@ -41,10 +42,12 @@ class _AccountPageState extends State<AccountPage> {
     zuser.name = user.displayName!;
     zuser.email = user.email!;
     if (userSnap!.exists) {
+      App.isIncompleteSignIn = false;
       zuser.phone = userSnap!.data()!['phone'];
       zuser.address = userSnap!.data()!['address'];
     } else {
       incompleteGoogleSignin = true;
+      App.isIncompleteSignIn = false;
     }
     return true;
   }

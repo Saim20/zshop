@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,6 +22,21 @@ import 'package:z_shop/uiPages/signupOptions.dart';
 import 'package:z_shop/uiPages/splash.dart';
 
 class App extends StatefulWidget {
+  static bool isIncompleteSignIn = true;
+
+  static Future<bool> checkIsIncomplete() async {
+    var userSnap = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+    if (!userSnap.exists) {
+      isIncompleteSignIn = true;
+      return true;
+    }
+    isIncompleteSignIn = false;
+    return false;
+  }
+
   static bool addToCart(Product? product) {
     bool contains = false;
     for (var cProduct in cartProducts) {
@@ -114,7 +131,7 @@ class _AppState extends State<App> {
 
   @override
   void initState() {
-    // App.clearPrefs();
+    App.checkIsIncomplete();
     App.getCartProductsFromStorage();
     initializeFlutterFire();
     super.initState();
