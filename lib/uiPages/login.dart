@@ -64,7 +64,7 @@ Widget createTitle(isIncomplete) {
     child: Text(
       isIncomplete ? 'Complete Account' : 'Login',
       style: TextStyle(
-          fontSize: 50.0, fontWeight: FontWeight.w200, color: accentColor),
+          fontSize: isIncomplete ? 35 : 50.0, fontWeight: FontWeight.w200, color: accentColor),
     ),
   );
 }
