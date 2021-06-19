@@ -26,16 +26,19 @@ class App extends StatefulWidget {
   static bool isIncompleteSignIn = true;
 
   static Future<bool> checkIsIncomplete() async {
-    var userSnap = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get();
-    if (!userSnap.exists) {
-      isIncompleteSignIn = true;
-      return true;
+    if (FirebaseAuth.instance.currentUser != null) {
+      var userSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+      if (!userSnap.exists) {
+        isIncompleteSignIn = true;
+        return true;
+      }
+      isIncompleteSignIn = false;
+      return false;
     }
-    isIncompleteSignIn = false;
-    return false;
+    return true;
   }
 
   static bool addToCart(Product? product) {
@@ -125,6 +128,7 @@ class _AppState extends State<App> {
       // Wait for Firebase to initialize and set `_initialized` state to true
       await Firebase.initializeApp();
       await FirebaseAppCheck.instance.activate();
+      App.checkIsIncomplete();
     } catch (e) {
       // Set `_error` state to true if Firebase initialization fails
       print(e);
@@ -133,14 +137,13 @@ class _AppState extends State<App> {
 
   @override
   void initState() {
-    App.checkIsIncomplete();
-    App.getCartProductsFromStorage();
     initializeFlutterFire();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    App.getCartProductsFromStorage();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Zshop',

@@ -64,7 +64,9 @@ Widget createTitle(isIncomplete) {
     child: Text(
       isIncomplete ? 'Complete Account' : 'Login',
       style: TextStyle(
-          fontSize: isIncomplete ? 35 : 50.0, fontWeight: FontWeight.w200, color: accentColor),
+          fontSize: isIncomplete ? 35 : 50.0,
+          fontWeight: FontWeight.w200,
+          color: accentColor),
     ),
   );
 }
@@ -111,7 +113,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                   ? 600
                   : 500,
               child: TextFormField(
-                keyboardType: TextInputType.emailAddress,
+                keyboardType: widget.isIncomplete!
+                    ? TextInputType.phone
+                    : TextInputType.emailAddress,
                 controller: emailC,
                 onChanged: (value) {
                   userNotFound = false;
@@ -164,7 +168,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                   passwordIsWrong = false;
                 },
                 controller: passC,
-                keyboardType: TextInputType.visiblePassword,
+                keyboardType: widget.isIncomplete!
+                    ? TextInputType.streetAddress
+                    : TextInputType.visiblePassword,
                 cursorColor: Colors.grey[800],
                 decoration: InputDecoration(
                     filled: true,
