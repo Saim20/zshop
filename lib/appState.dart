@@ -20,6 +20,7 @@ import 'package:z_shop/uiPages/searchItemList.dart';
 import 'package:z_shop/uiPages/signup.dart';
 import 'package:z_shop/uiPages/signupOptions.dart';
 import 'package:z_shop/uiPages/splash.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 
 class App extends StatefulWidget {
   static bool isIncompleteSignIn = true;
@@ -123,6 +124,7 @@ class _AppState extends State<App> {
     try {
       // Wait for Firebase to initialize and set `_initialized` state to true
       await Firebase.initializeApp();
+      await FirebaseAppCheck.instance.activate();
     } catch (e) {
       // Set `_error` state to true if Firebase initialization fails
       print(e);

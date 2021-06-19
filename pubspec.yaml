@@ -36,7 +36,7 @@ dependencies:
   material_floating_search_bar: ^0.3.4
   flutter_rating_bar: ^4.0.0
   webviewx: ^0.0.2
-  # webview_flutter: ^2.0.8
+  firebase_app_check: ^0.0.1+2
 
 dev_dependencies:
   flutter_launcher_icons: "^0.8.0"  

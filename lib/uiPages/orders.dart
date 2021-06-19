@@ -43,10 +43,13 @@ class _OrdersPageState extends State<OrdersPage> {
           Container(
             margin: EdgeInsets.all(30.0),
             child: Center(
-              child: Icon(
-                orderIcon,
-                size: 200.0,
-                color: orderColor,
+              child: Hero(
+                tag: 'orderHero',
+                child: Icon(
+                  orderIcon,
+                  size: 200.0,
+                  color: orderColor,
+                ),
               ),
             ),
           ),

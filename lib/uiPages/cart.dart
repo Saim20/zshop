@@ -136,6 +136,7 @@ class _CartPageState extends State<CartPage> {
           ? null
           : FloatingActionButton.extended(
               onPressed: () async {
+                print(FirebaseAuth.instance.currentUser!.displayName);
                 print(App.isIncompleteSignIn);
                 if (FirebaseAuth.instance.currentUser != null &&
                     !App.isIncompleteSignIn) {
@@ -145,8 +146,8 @@ class _CartPageState extends State<CartPage> {
                       .doc(user!.uid)
                       .get()
                       .then((value) => value);
-                  var phone = doc.data()!['phone'];
-                  var address = doc.data()!['address'];
+                  var phone = doc.data() == null ? '' : doc.data()!['phone'];
+                  var address = doc.data() == null ? '' :doc.data()!['address'] ;
                   Order order = Order(
                       userName: user.displayName!,
                       userEmail: user.email!,

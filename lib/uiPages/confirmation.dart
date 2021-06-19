@@ -12,6 +12,9 @@ class ConfirmationPage extends StatefulWidget {
 class _ConfirmationPageState extends State<ConfirmationPage> {
   List<String> paymentMethods = ['cod', 'bkash'];
   String selectedMethod = 'cod';
+  bool takeFromAccount = true;
+  TextEditingController addressC = TextEditingController();
+  TextEditingController phoneC = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -89,35 +92,124 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
 
                 Column(
                   children: [
-                    Text('Payment Method'),
-                    Form(
-                      child: Column(
-                        children: [
-                          ListTile(
-                            title: Text('Cash On Delivery'),
-                            leading: Radio(
-                              value: paymentMethods.elementAt(0),
-                              groupValue: selectedMethod,
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedMethod = value.toString();
-                                });
-                              },
-                            ),
-                          ),
-                          ListTile(
-                            title: Text('Bkash Payment'),
-                            leading: Radio(
-                              value: paymentMethods.elementAt(1),
-                              groupValue: selectedMethod,
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedMethod = value.toString();
-                                });
-                              },
-                            ),
-                          ),
-                        ],
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                      child: Container(
+                        width: MediaQuery.of(context).orientation ==
+                                Orientation.landscape
+                            ? 600
+                            : 500,
+                        child: TextFormField(
+                          keyboardType: TextInputType.streetAddress,
+                          controller: addressC,
+                          enabled: !takeFromAccount,
+                          cursorColor: Colors.grey[800],
+                          decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelStyle: TextStyle(color: Colors.grey[600]),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(40.0),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                                borderRadius: BorderRadius.circular(40.0),
+                              ),
+                              labelText: 'Shipping address'),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                      child: Container(
+                        width: MediaQuery.of(context).orientation ==
+                                Orientation.landscape
+                            ? 600
+                            : 500,
+                        child: TextFormField(
+                          keyboardType: TextInputType.phone,
+                          controller: phoneC,
+                          enabled: !takeFromAccount,
+                          cursorColor: Colors.grey[800],
+                          decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelStyle: TextStyle(color: Colors.grey[600]),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(40.0),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                                borderRadius: BorderRadius.circular(40.0),
+                              ),
+                              labelText: 'Phone number'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                Row(
+                  children: [
+                    Checkbox(
+                        value: takeFromAccount,
+                        onChanged: (value) {
+                          setState(() {
+                            takeFromAccount = value!;
+                          });
+                        }),
+                    Text('Take address and phone from account'),
+                  ],
+                ),
+
+                SizedBox(
+                  height: 20.0,
+                ),
+
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Payment Method',
+                        style: TextStyle(
+                          color: accentColor,
+                          fontSize: 20.0,
+                        ),
+                      ),
+                    ),
+                    ListTile(
+                      title: Text('Cash On Delivery'),
+                      leading: Radio(
+                        value: paymentMethods.elementAt(0),
+                        groupValue: selectedMethod,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedMethod = value.toString();
+                          });
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: Text('Bkash Payment'),
+                      leading: Radio(
+                        value: paymentMethods.elementAt(1),
+                        groupValue: selectedMethod,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedMethod = value.toString();
+                          });
+                        },
                       ),
                     ),
                   ],
@@ -129,6 +221,10 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
 
                 ElevatedButton(
                     onPressed: () async {
+                      if (!takeFromAccount) {
+                        order.userAddress = addressC.text;
+                        order.userPhone = phoneC.text;
+                      }
                       if (selectedMethod == 'cod') {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text('Placing order')));
@@ -158,7 +254,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                           '/payment',
                           arguments: {
                             'order': order,
-                            'clearCart':clearCart,
+                            'clearCart': clearCart,
                           },
                         );
                       }

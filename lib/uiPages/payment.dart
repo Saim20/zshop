@@ -28,7 +28,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
     PaymentRequest paymentRequest =
         PaymentRequest(amount: totalCost, intent: 'sale');
-    String encodedRequest = paymentRequest.toString();
+    // String encodedRequest = paymentRequest.toString();
 
     //TODO Uncomment for web build
 

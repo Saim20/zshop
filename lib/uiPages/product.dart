@@ -76,6 +76,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   Navigator.of(context).pushNamed('/cart');
                 },
               ),
+              if(FirebaseAuth.instance.currentUser != null)
               IconButton(
                 tooltip: 'Orders',
                 icon: Hero(

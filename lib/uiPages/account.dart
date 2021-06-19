@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:z_shop/appState.dart';
 import 'package:z_shop/data/data.dart';
 import 'package:z_shop/services/user.dart';
@@ -20,11 +19,10 @@ class _AccountPageState extends State<AccountPage> {
   ZshopUser zuser = ZshopUser();
   DocumentSnapshot? userSnap;
 
-  void signOut(bool signOut) {
-    setState(() {
-      FirebaseAuth.instance.signOut();
-      signedIn = !signOut;
-    });
+  void signOut() {
+    FirebaseAuth.instance.signOut();
+    signedIn = false;
+    Navigator.of(context).pop();
   }
 
   void completeSignIn(really) {
@@ -97,10 +95,10 @@ class _AccountPageState extends State<AccountPage> {
 }
 
 class Account extends StatelessWidget {
-  Account({this.signOut, this.user, this.fromCart: false});
+  Account({required this.signOut, required this.user, this.fromCart: false});
 
-  final ZshopUser? user;
-  final ValueChanged<bool>? signOut;
+  final ZshopUser user;
+  final Function signOut;
   final bool fromCart;
 
   @override
@@ -177,14 +175,14 @@ class Account extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 10.0),
             child: Text(
-              user!.name,
+              user.name,
               style: TextStyle(fontSize: 35.0, fontWeight: FontWeight.w300),
             ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 10.0),
             child: Text(
-              user!.email,
+              user.email,
               style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.w300,
@@ -194,7 +192,7 @@ class Account extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 10.0),
             child: Text(
-              user!.phone,
+              user.phone,
               style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.w300,
@@ -204,7 +202,7 @@ class Account extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 10.0),
             child: Text(
-              user!.address,
+              user.address,
               style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.w300,
@@ -218,7 +216,7 @@ class Account extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 10.0),
             child: ElevatedButton.icon(
                 onPressed: () {
-                  signOut!(true);
+                  signOut();
                 },
                 icon: Icon(Icons.logout),
                 label: Text('Logout')),

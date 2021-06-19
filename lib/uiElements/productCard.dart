@@ -153,13 +153,29 @@ class ProductCard extends StatelessWidget {
                               width: 70.0,
                             ),
                             if (confirmation)
-                              Column(
-                                children: [
-                                  Text(
-                                      'Setup: ${product.setupTaken ? 'Yes' : 'No'}'),
-                                  Text(
-                                      'Delivery: ${product.deliveryTaken ? 'Yes' : 'No'}')
-                                ],
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                    0.0, 0.0, 10.0, 10.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Setup: ${product.setupTaken ? 'Yes' : 'No'}',
+                                      style: TextStyle(
+                                          color: product.setupTaken
+                                              ? Colors.green
+                                              : Colors.red),
+                                    ),
+                                    SizedBox(height: 10.0),
+                                    Text(
+                                      'Delivery: ${product.deliveryTaken ? 'Yes' : 'No'}',
+                                      style: TextStyle(
+                                          color: product.deliveryTaken
+                                              ? Colors.green
+                                              : Colors.red),
+                                    )
+                                  ],
+                                ),
                               ),
                             if (!confirmation)
                               Row(

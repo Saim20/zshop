@@ -99,6 +99,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                   : 500,
               child: TextFormField(
                 controller: nameC,
+                keyboardType: TextInputType.text,
                 cursorColor: Colors.grey[800],
                 decoration: InputDecoration(
                     filled: true,
@@ -134,6 +135,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                   : 500,
               child: TextFormField(
                 controller: emailC,
+                keyboardType: TextInputType.emailAddress,
                 onChanged: (value) {
                   isEmailAlreadySignedUp = false;
                   emailIsInvalid = false;
@@ -180,6 +182,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                   : 500,
               child: TextFormField(
                 controller: addressC,
+                keyboardType: TextInputType.streetAddress,
                 cursorColor: Colors.grey[800],
                 decoration: InputDecoration(
                     filled: true,
@@ -249,6 +252,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                   ? 600
                   : 500,
               child: TextFormField(
+                keyboardType: TextInputType.visiblePassword,
                 obscureText: !showPassword,
                 enableSuggestions: showPassword,
                 controller: passC,
@@ -325,6 +329,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                   ? 600
                   : 500,
               child: TextFormField(
+                keyboardType: TextInputType.visiblePassword,
                 obscureText: !showPassword,
                 enableSuggestions: showPassword,
                 controller: confirmC,
