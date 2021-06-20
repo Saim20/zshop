@@ -57,7 +57,7 @@ class _AccountPageState extends State<AccountPage> {
         setState(() {
           signedIn = false;
         });
-      } else if (user.displayName != null) {
+      } else {
         await setUser(user);
         setState(() {
           if (incompleteGoogleSignin) {

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:z_shop/appState.dart';
 import 'package:z_shop/data/data.dart';
 import 'package:z_shop/uiElements/categoryCard.dart';
 import 'package:z_shop/uiElements/dummyGridCard.dart';
@@ -25,6 +26,7 @@ class _HomePageState extends State<HomePage> {
         this.user = user;
       });
     });
+    App.checkIsIncomplete();
     super.initState();
   }
 

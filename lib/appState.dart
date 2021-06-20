@@ -10,6 +10,7 @@ import 'package:z_shop/uiPages/cart.dart';
 import 'package:z_shop/uiPages/confirmation.dart';
 import 'package:z_shop/uiPages/error.dart';
 import 'package:z_shop/uiPages/home.dart';
+import 'package:z_shop/uiPages/init.dart';
 import 'package:z_shop/uiPages/itemList.dart';
 import 'package:z_shop/uiPages/login.dart';
 import 'package:z_shop/uiPages/orderPage.dart';
@@ -122,15 +123,23 @@ class App extends StatefulWidget {
   _AppState createState() => _AppState();
 }
 
+bool isInitialized = false;
+bool hasError = false;
+
 class _AppState extends State<App> {
   void initializeFlutterFire() async {
     try {
       // Wait for Firebase to initialize and set `_initialized` state to true
       await Firebase.initializeApp();
       await FirebaseAppCheck.instance.activate();
-      App.checkIsIncomplete();
+      setState(() {
+        isInitialized = true;
+      });
     } catch (e) {
       // Set `_error` state to true if Firebase initialization fails
+      setState(() {
+        hasError = true;
+      });
       print(e);
     }
   }
@@ -143,12 +152,13 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    App.getCartProductsFromStorage();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Zshop',
       routes: {
-        '/': (context) => SplashPage(),
+        '/': (context) => isInitialized
+            ? SplashPage()
+            : (hasError ? ErrorPage() : InitPage()),
         '/home': (context) => HomePage(),
         '/account': (context) => AccountPage(),
         '/accountedit': (context) => AccountEditPage(),
@@ -156,7 +166,6 @@ class _AppState extends State<App> {
         '/products': (context) => ItemListPage(),
         '/search': (context) => SearchItemListPage(),
         '/login': (context) => LoginPage(),
-        '/error': (context) => ErrorPage(),
         '/cart': (context) => CartPage(),
         '/orders': (context) => OrdersPage(),
         '/orderpage': (context) => OrderPage(),
