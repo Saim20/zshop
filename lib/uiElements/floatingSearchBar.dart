@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:z_shop/data/data.dart';
 
 class MyFloationgSearchBar extends StatefulWidget {
   const MyFloationgSearchBar({Key? key}) : super(key: key);
@@ -29,7 +30,7 @@ class _MyFloationgSearchBarState extends State<MyFloationgSearchBar> {
   }
 
   void addSearchTerm(String term) {
-    if(term == ''){
+    if (term == '') {
       return;
     }
     if (searchHistory.contains(term)) {
@@ -59,7 +60,6 @@ class _MyFloationgSearchBarState extends State<MyFloationgSearchBar> {
   }
 
   void saveSearchHistory() async {
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setStringList('searchHistory', searchHistory);
   }
@@ -75,7 +75,7 @@ class _MyFloationgSearchBarState extends State<MyFloationgSearchBar> {
   @override
   void initState() {
     controller = FloatingSearchBarController();
-    if(searchHistory.isEmpty){
+    if (searchHistory.isEmpty) {
       setState(() {
         retrieveSearchHistory();
       });
@@ -97,8 +97,12 @@ class _MyFloationgSearchBarState extends State<MyFloationgSearchBar> {
         MediaQuery.of(context).orientation == Orientation.portrait;
 
     return FloatingSearchBar(
+      borderRadius: BorderRadius.circular(50.0),
       key: key,
-      hint: 'Search...',
+      elevation: 10.0,
+      hintStyle: TextStyle(color: accountColor),
+      iconColor: accountColor,
+      hint: 'Search',
       onSubmitted: (value) {
         setState(() {
           key.currentState!.deactivate();
@@ -129,8 +133,7 @@ class _MyFloationgSearchBarState extends State<MyFloationgSearchBar> {
             icon: const Icon(
               Icons.search,
             ),
-            onPressed: () {
-            },
+            onPressed: () {},
           ),
         ),
         FloatingSearchBarAction.searchToClear(
@@ -147,7 +150,7 @@ class _MyFloationgSearchBarState extends State<MyFloationgSearchBar> {
               mainAxisSize: MainAxisSize.min,
               children: filteredSearchHistory.map((term) {
                 return ListTile(
-                  onTap: (){
+                  onTap: () {
                     setState(() {
                       search(term);
                     });
@@ -171,11 +174,11 @@ class _MyFloationgSearchBarState extends State<MyFloationgSearchBar> {
     );
   }
 
-  void search(String value){
+  void search(String value) {
     addSearchTerm(value);
     controller!.clear();
-    Navigator.pushNamed(context, '/search',arguments: {
-      'term' : value,
+    Navigator.pushNamed(context, '/search', arguments: {
+      'term': value,
     });
   }
 }

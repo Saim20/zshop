@@ -158,31 +158,29 @@ class _SearchItemListPageState extends State<SearchItemListPage> {
                         docs = filterDocs(docs);
                       }
 
-                      return Container(
-                        child: ListView(
-                          children: [
-                            SortFilterStrip(
-                              sort: sort,
-                              descending: descending,
-                              setSortValue: setSortValue,
-                              setDescendingValue: setDescendingValue,
-                              filter: filter,
-                              range: range,
-                              setRangeValue: setRangeValue,
-                              setFilterValue: setFilterValue,
-                              min: min,
-                              max: max,
-                            ),
-                            Column(
-                              children: docs.map((e) {
-                                return ProductCard(
-                                  prod: e,
-                                );
-                              }).toList(),
-                            )
-                          ],
+                      return Column(children: [
+                        SortFilterStrip(
+                          sort: sort,
+                          descending: descending,
+                          setSortValue: setSortValue,
+                          setDescendingValue: setDescendingValue,
+                          filter: filter,
+                          range: range,
+                          setRangeValue: setRangeValue,
+                          setFilterValue: setFilterValue,
+                          min: min,
+                          max: max,
                         ),
-                      );
+                        Expanded(
+                          child: ListView(
+                            children: docs.map((e) {
+                              return ProductCard(
+                                prod: e,
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ]);
                     } else
                       return Center(
                         child: Column(

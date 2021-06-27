@@ -12,6 +12,12 @@ import 'package:z_shop/uiElements/reviewCard.dart';
 import 'package:z_shop/uiElements/reviewer.dart';
 
 class ProductDetailsPage extends StatefulWidget {
+  ProductDetailsPage({this.product, this.fromCart: false, this.reviews});
+
+  final Product? product;
+  final bool fromCart;
+  final List<QueryDocumentSnapshot>? reviews;
+
   @override
   _ProductDetailsPageState createState() => _ProductDetailsPageState();
 }
@@ -27,9 +33,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   @override
   void initState() {
     FirebaseAuth.instance.authStateChanges().listen((user) {
-      setState(() {
-        this.user = user;
-      });
+      if (mounted)
+        setState(() {
+          this.user = user;
+        });
     });
     super.initState();
   }
@@ -37,240 +44,196 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   @override
   Widget build(BuildContext context) {
     bool fromCart;
-    Map data = {};
-    data = ModalRoute.of(context)!.settings.arguments! as Map<String, dynamic>;
-    if (product == null) product = data['product'];
+    product = widget.product;
+    fromCart = widget.fromCart;
     bool outOfStock = product!.stock <= 0;
-    fromCart = data['cart'];
 
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70.0),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: AppBar(
-            iconTheme: IconThemeData(color: accentColor),
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-            title: Text(
-              'Details',
-              style: TextStyle(
-                fontSize: 35.0,
-                color: accentColor,
-                fontWeight: FontWeight.w300,
+    final BorderRadius myBorderRaidius = BorderRadius.circular(20.0);
+
+    makeDismissable({required Widget child}) {
+      return GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => Navigator.of(context).pop(),
+        child: GestureDetector(
+          onTap: () {},
+          child: child,
+        ),
+      );
+    }
+
+    return makeDismissable(
+      child: DraggableScrollableSheet(
+        initialChildSize: 0.8,
+        minChildSize: 0.5,
+        maxChildSize: 0.9,
+        builder: (_, controller) => Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.0),
+                topRight: Radius.circular(20.0)),
+            color: Colors.grey[200],
+          ),
+          child: ListView(
+            controller: controller,
+            children: [
+              SizedBox(
+                height: 15.0,
               ),
-            ),
-            actions: [
-              IconButton(
-                tooltip: 'Cart',
-                icon: Hero(
-                  tag: 'cartHero',
-                  child: Icon(
-                    cartIcon,
-                    color: cartColor,
-                    size: 30.0,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/cart');
-                },
+              CarouselWithIndicator(product: product!),
+              SizedBox(
+                height: 15.0,
               ),
-              if(FirebaseAuth.instance.currentUser != null)
-              IconButton(
-                tooltip: 'Orders',
-                icon: Hero(
-                  tag: 'orderHero',
-                  child: Icon(
-                    orderIcon,
-                    color: orderColor,
-                    size: 30.0,
-                  ),
+              Padding(
+                padding: const EdgeInsets.all(7.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        productName(),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 20.0, 20.0),
+                          child: TextButton.icon(
+                            onPressed: !outOfStock
+                                ? () {
+                                    App.addToCart(product);
+                                    Navigator.of(context).pushNamed('/cart');
+                                  }
+                                : null,
+                            label: Text(
+                              'Add to cart',
+                              style: TextStyle(color: accentColor),
+                            ),
+                            icon: Icon(
+                              Icons.add_shopping_cart,
+                              color: accentColor,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    Card(
+                      elevation: 10.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: myBorderRaidius,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                          roundRating(product!.rating, 1)
+                                              .toString()),
+                                    ),
+                                    RatingBarIndicator(
+                                      rating: roundRating(product!.rating, 1),
+                                      itemCount: 5,
+                                      itemSize: 20.0,
+                                      itemBuilder: (context, index) => Icon(
+                                        Icons.star,
+                                        color: Colors.amber,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      0, 10.0, 10.0, 0),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        '৳ ${product!.offerPrice.toString()}',
+                                        style: TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.red[400]),
+                                      ),
+                                      Text(
+                                        '৳ ${product!.price.toString()}',
+                                        style: TextStyle(
+                                            fontSize: 17.0,
+                                            fontWeight: FontWeight.w400,
+                                            decoration:
+                                                TextDecoration.lineThrough,
+                                            color: Colors.red[100]),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  0.0, 10.0, 0.0, 0.0),
+                              child: Text(
+                                'Description',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 20.0,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  0.0, 10.0, 0.0, 0.0),
+                              child: Text(
+                                product!.description,
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                            ),
+                            if (user != null && !fromCart)
+                              Reviewer(
+                                product: product!,
+                                updateState: updateState,
+                              ),
+                            if (!(user != null && !fromCart))
+                              SizedBox(
+                                height: 15.0,
+                              ),
+                            Column(
+                              children: widget.reviews!
+                                  .map((e) => ReviewCard(review: e))
+                                  .toList(),
+                            ),
+                            SizedBox(
+                              height: 50.0,
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/orders');
-                },
-              ),
-              IconButton(
-                tooltip: 'Account',
-                icon: Hero(
-                  tag: 'accountHero',
-                  child: Icon(
-                    accountIcon,
-                    color: accountColor,
-                    size: 30.0,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/account');
-                },
               ),
             ],
           ),
         ),
       ),
-      body: RefreshIndicator(
-        onRefresh: () {
-          setState(() {});
-          return Future.delayed(Duration(seconds: 1));
-        },
-        child: ListView(
-          children: [
-            CarouselWithIndicator(product: product!),
-            SizedBox(
-              height: 15.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(13.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
-                    child: Text(
-                      product!.name,
-                      style: TextStyle(
-                        fontSize: 25.0,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              children: [
-                                Text(
-                                  '৳ ${product!.offerPrice.toString()}',
-                                  style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.red[400]),
-                                ),
-                                Text(
-                                  '৳ ${product!.price.toString()}',
-                                  style: TextStyle(
-                                      fontSize: 17.0,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.red[100]),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(roundRating(product!.rating, 1)
-                                      .toString()),
-                                ),
-                                RatingBarIndicator(
-                                  rating: roundRating(product!.rating, 1),
-                                  itemCount: 5,
-                                  itemSize: 20.0,
-                                  itemBuilder: (context, index) => Icon(
-                                    Icons.star,
-                                    color: Colors.amber,
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                          child: Text(
-                            'Description',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 20.0,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                          child: Text(
-                            product!.description,
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          ),
-                        ),
-                        if (user != null && !fromCart)
-                          Reviewer(
-                            product: product!,
-                            updateState: updateState,
-                          ),
-                        if (!(user != null && !fromCart))
-                          SizedBox(
-                            height: 15.0,
-                          ),
-                        FutureBuilder<QuerySnapshot>(
-                          future: FirebaseFirestore.instance
-                              .collection('products')
-                              .doc(product!.id)
-                              .collection('reviews')
-                              .get(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<QuerySnapshot> snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.done) {
-                              if (snapshot.hasData) {
-                                return Column(
-                                  children: snapshot.data!.docs
-                                      .map((e) => ReviewCard(review: e))
-                                      .toList(),
-                                );
-                              } else {
-                                return Container(
-                                    height: 320.0,
-                                    child:
-                                        Center(child: Text('Nothing found')));
-                              }
-                            }
-                            return Text('Nothing');
-                          },
-                        ),
-                        SizedBox(
-                          height: 50.0,
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ],
+    );
+  }
+
+  Padding productName() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 20.0),
+      child: Text(
+        product!.name,
+        style: TextStyle(
+          fontSize: 25.0,
+          fontWeight: FontWeight.w400,
         ),
       ),
-      floatingActionButton: fromCart
-          ? null
-          : FloatingActionButton.extended(
-              onPressed: !outOfStock
-                  ? () {
-                      if (App.addToCart(product)) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Product added to cart')));
-                      } else
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text('Product already added to cart')));
-                    }
-                  : null,
-              label: Text(outOfStock ? 'Out of stock ' : 'Add to cart'),
-              icon: Icon(
-                  outOfStock ? Icons.not_interested : Icons.add_shopping_cart),
-              tooltip: 'Add to cart',
-              splashColor: accentColor,
-              hoverColor: accentColor.withAlpha(1),
-              focusColor: accentColor.withAlpha(2),
-            ),
     );
   }
 }

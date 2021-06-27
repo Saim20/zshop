@@ -24,17 +24,15 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     isIncomplete = widget.isIncomplete ?? false;
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.grey[200],
       body: SafeArea(
           child: Container(
         decoration: BoxDecoration(
+          // color: Colors.blue[300],
           gradient: LinearGradient(
             colors: [
-              Colors.white,
-              Colors.blue[100]!,
-              Colors.blue[200]!,
-              Colors.blue[300]!,
               Colors.blue[400]!,
+              Colors.purple,
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -66,7 +64,7 @@ Widget createTitle(isIncomplete) {
       style: TextStyle(
           fontSize: isIncomplete ? 35 : 50.0,
           fontWeight: FontWeight.w200,
-          color: accentColor),
+          color: Colors.white),
     ),
   );
 }
@@ -100,6 +98,8 @@ class MyCustomFormState extends State<MyCustomForm> {
     super.dispose();
   }
 
+  final BorderRadius myBorderRadius = BorderRadius.circular(40.0);
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -112,20 +112,29 @@ class MyCustomFormState extends State<MyCustomForm> {
               width: MediaQuery.of(context).orientation == Orientation.landscape
                   ? 600
                   : 500,
-              child: TextFormField(
-                keyboardType: widget.isIncomplete!
-                    ? TextInputType.phone
-                    : TextInputType.emailAddress,
-                controller: emailC,
-                onChanged: (value) {
-                  userNotFound = false;
-                  emailIsInvalid = false;
-                },
-                cursorColor: Colors.grey[800],
-                decoration: InputDecoration(
+              child: Material(
+                borderRadius: myBorderRadius,
+                elevation: 30.0,
+                child: TextFormField(
+                  keyboardType: widget.isIncomplete!
+                      ? TextInputType.phone
+                      : TextInputType.emailAddress,
+                  controller: emailC,
+                  onChanged: (value) {
+                    userNotFound = false;
+                    emailIsInvalid = false;
+                  },
+                  cursorColor: Colors.grey[800],
+                  decoration: InputDecoration(
+                    icon: Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 0, 0, 0),
+                      child: Icon(
+                        Icons.alternate_email,
+                        color: Colors.grey,
+                      ),
+                    ),
                     filled: true,
                     fillColor: Colors.white,
-                    labelStyle: TextStyle(color: Colors.grey[600]),
                     border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(40.0),
@@ -138,19 +147,23 @@ class MyCustomFormState extends State<MyCustomForm> {
                       borderSide: BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(40.0),
                     ),
-                    labelText: widget.isIncomplete! ? 'Phone' : 'E-mail'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return widget.isIncomplete!
-                        ? 'Please enter your phone number'
-                        : 'Please enter your email';
-                  } else if (userNotFound) {
-                    return 'No user found with this e-mail';
-                  } else if (emailIsInvalid) {
-                    return 'Please enter a valid e-mail';
-                  }
-                  return null;
-                },
+                    // labelStyle: TextStyle(color: Colors.grey[600]),
+                    // labelText: widget.isIncomplete! ? 'Phone' : 'E-mail',
+                    hintText: 'E-mail',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return widget.isIncomplete!
+                          ? 'Please enter your phone number'
+                          : 'Please enter your email';
+                    } else if (userNotFound) {
+                      return 'No user found with this e-mail';
+                    } else if (emailIsInvalid) {
+                      return 'Please enter a valid e-mail';
+                    }
+                    return null;
+                  },
+                ),
               ),
             ),
           ),
@@ -160,22 +173,31 @@ class MyCustomFormState extends State<MyCustomForm> {
               width: MediaQuery.of(context).orientation == Orientation.landscape
                   ? 600
                   : 500,
-              child: TextFormField(
-                obscureText: widget.isIncomplete! ? false : true,
-                enableSuggestions: widget.isIncomplete! ? true : false,
-                autocorrect: widget.isIncomplete! ? true : false,
-                onChanged: (value) {
-                  passwordIsWrong = false;
-                },
-                controller: passC,
-                keyboardType: widget.isIncomplete!
-                    ? TextInputType.streetAddress
-                    : TextInputType.visiblePassword,
-                cursorColor: Colors.grey[800],
-                decoration: InputDecoration(
+              child: Material(
+                borderRadius: myBorderRadius,
+                elevation: 30.0,
+                child: TextFormField(
+                  obscureText: widget.isIncomplete! ? false : true,
+                  enableSuggestions: widget.isIncomplete! ? true : false,
+                  autocorrect: widget.isIncomplete! ? true : false,
+                  onChanged: (value) {
+                    passwordIsWrong = false;
+                  },
+                  controller: passC,
+                  keyboardType: widget.isIncomplete!
+                      ? TextInputType.streetAddress
+                      : TextInputType.visiblePassword,
+                  cursorColor: Colors.grey[800],
+                  decoration: InputDecoration(
+                    icon: Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 0, 0, 0),
+                      child: Icon(
+                        Icons.password,
+                        color: Colors.grey,
+                      ),
+                    ),
                     filled: true,
                     fillColor: Colors.white,
-                    labelStyle: TextStyle(color: Colors.grey[600]),
                     border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(40.0),
@@ -188,18 +210,22 @@ class MyCustomFormState extends State<MyCustomForm> {
                       borderSide: BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(40.0),
                     ),
-                    labelText:
-                        widget.isIncomplete! ? 'Shipping Address' : 'Password'),
-                validator: (value) {
-                  if (value == null || value.isEmpty)
-                    return widget.isIncomplete!
-                        ? 'Please enter your shipping address'
-                        : 'Please enter you password';
-                  else if (passwordIsWrong) {
-                    return 'Wrong password';
-                  }
-                  return null;
-                },
+                    // labelStyle: TextStyle(color: Colors.grey[600]),
+                    // labelText:
+                    // widget.isIncomplete! ? 'Shipping Address' : 'Password',
+                    hintText: 'Password',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty)
+                      return widget.isIncomplete!
+                          ? 'Please enter your shipping address'
+                          : 'Please enter you password';
+                    else if (passwordIsWrong) {
+                      return 'Wrong password';
+                    }
+                    return null;
+                  },
+                ),
               ),
             ),
           ),
@@ -209,6 +235,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                 padding: const EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 0.0),
                 child: ElevatedButton(
                   style: ButtonStyle(
+                    elevation: MaterialStateProperty.all(20.0),
                     backgroundColor: MaterialStateProperty.all(accentColor),
                   ),
                   onPressed: () async {
@@ -257,6 +284,10 @@ class MyCustomFormState extends State<MyCustomForm> {
                     onPressed: () async {
                       await signInWithGoogle();
                     },
+                    elevation: 20.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(3.0),
+                    ),
                     text: 'Sign in with Google',
                   ),
                 ),

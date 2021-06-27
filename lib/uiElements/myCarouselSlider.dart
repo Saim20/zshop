@@ -15,6 +15,7 @@ class CarouselWithIndicator extends StatefulWidget {
 
 class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
   int _current = 0;
+  final BorderRadius myBorderRaidius = BorderRadius.circular(20.0);
 
   @override
   Widget build(BuildContext context) {
@@ -22,25 +23,36 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
       CarouselSlider(
         items: widget.product.images!
             .map((item) => Padding(
-                  padding: const EdgeInsets.all(5.0),
+                  padding: const EdgeInsets.all(0.0),
                   child: Container(
                     child: Center(
                       child: widget.product.images![0] == item
-                          ? Hero(
-                              tag: item,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10.0),
-                                child: Image.network(
-                                  item,
+                          ? Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: myBorderRaidius,
+                              ),
+                              // elevation: 30.0,
+                              child: Hero(
+                                tag: item,
+                                child: ClipRRect(
+                                  borderRadius: myBorderRaidius,
+                                  child: Image.network(
+                                    item,
+                                  ),
                                 ),
                               ),
                             )
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(10.0),
-                              child: Image.network(
-                                item,
-                                // width: 500.0,
-                                fit: BoxFit.cover,
+                          : Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: myBorderRaidius,
+                              ),
+                              // elevation: 30.0,
+                              child: ClipRRect(
+                                borderRadius: myBorderRaidius,
+                                child: Image.network(
+                                  item,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                     ),
@@ -48,9 +60,10 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                 ))
             .toList(),
         options: CarouselOptions(
+            viewportFraction: 0.9,
             enableInfiniteScroll:
                 widget.product.images!.length <= 1 ? false : true,
-            height: 300.0,
+            height: 250.0,
             autoPlay: true,
             enlargeCenterPage: true,
             onPageChanged: (index, reason) {

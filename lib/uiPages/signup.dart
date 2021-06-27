@@ -18,11 +18,8 @@ class _SignupPageState extends State<SignupPage> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Colors.white,
-              Colors.blue[100]!,
-              Colors.blue[200]!,
-              Colors.blue[300]!,
               Colors.blue[400]!,
+              Colors.purple,
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -38,7 +35,7 @@ class _SignupPageState extends State<SignupPage> {
                   style: TextStyle(
                       fontSize: 50.0,
                       fontWeight: FontWeight.w200,
-                      color: accentColor),
+                      color: Colors.white),
                 ),
               ),
             ),
@@ -59,6 +56,8 @@ class MyCustomForm extends StatefulWidget {
 
 class MyCustomFormState extends State<MyCustomForm> {
   final _formKey = GlobalKey<FormState>();
+
+  final BorderRadius myBorderRadius = BorderRadius.circular(40.0);
 
   bool isEmailAlreadySignedUp = false;
   bool emailIsInvalid = false;
@@ -97,14 +96,16 @@ class MyCustomFormState extends State<MyCustomForm> {
               width: MediaQuery.of(context).orientation == Orientation.landscape
                   ? 600
                   : 500,
-              child: TextFormField(
-                controller: nameC,
-                keyboardType: TextInputType.text,
-                cursorColor: Colors.grey[800],
-                decoration: InputDecoration(
+              child: Material(
+                borderRadius: myBorderRadius,
+                elevation: 30.0,
+                child: TextFormField(
+                  controller: nameC,
+                  keyboardType: TextInputType.text,
+                  cursorColor: Colors.grey[800],
+                  decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
-                    labelStyle: TextStyle(color: Colors.grey[600]),
                     border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(40.0),
@@ -117,13 +118,24 @@ class MyCustomFormState extends State<MyCustomForm> {
                       borderSide: BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(40.0),
                     ),
-                    labelText: 'Name *'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
+                    // labelStyle: TextStyle(color: Colors.grey[600]),
+                    // labelText: 'Name *',
+                    hintText: 'Name *',
+                    icon: Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 0, 0, 0),
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your name';
+                    }
+                    return null;
+                  },
+                ),
               ),
             ),
           ),
@@ -133,19 +145,21 @@ class MyCustomFormState extends State<MyCustomForm> {
               width: MediaQuery.of(context).orientation == Orientation.landscape
                   ? 600
                   : 500,
-              child: TextFormField(
-                controller: emailC,
-                keyboardType: TextInputType.emailAddress,
-                onChanged: (value) {
-                  isEmailAlreadySignedUp = false;
-                  emailIsInvalid = false;
-                  emailAlreadyInUse = false;
-                },
-                cursorColor: Colors.grey[800],
-                decoration: InputDecoration(
+              child: Material(
+                borderRadius: myBorderRadius,
+                elevation: 30.0,
+                child: TextFormField(
+                  controller: emailC,
+                  keyboardType: TextInputType.emailAddress,
+                  onChanged: (value) {
+                    isEmailAlreadySignedUp = false;
+                    emailIsInvalid = false;
+                    emailAlreadyInUse = false;
+                  },
+                  cursorColor: Colors.grey[800],
+                  decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
-                    labelStyle: TextStyle(color: Colors.grey[600]),
                     border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(40.0),
@@ -158,19 +172,30 @@ class MyCustomFormState extends State<MyCustomForm> {
                       borderSide: BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(40.0),
                     ),
-                    labelText: 'E-mail *'),
-                validator: (value) {
-                  if (value == null || value.isEmpty)
-                    return 'Please enter an e-mail';
-                  else if (isEmailAlreadySignedUp) {
-                    return 'E-mail is already user for an account';
-                  } else if (emailIsInvalid) {
-                    return 'Please enter a valid e-mail';
-                  } else if (emailAlreadyInUse) {
-                    return 'This email is already used';
-                  }
-                  return null;
-                },
+                    // labelStyle: TextStyle(color: Colors.grey[600]),
+                    // labelText: 'E-mail *',
+                    hintText: 'E-mail *',
+                    icon: Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 0, 0, 0),
+                      child: Icon(
+                        Icons.alternate_email,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty)
+                      return 'Please enter an e-mail';
+                    else if (isEmailAlreadySignedUp) {
+                      return 'E-mail is already user for an account';
+                    } else if (emailIsInvalid) {
+                      return 'Please enter a valid e-mail';
+                    } else if (emailAlreadyInUse) {
+                      return 'This email is already used';
+                    }
+                    return null;
+                  },
+                ),
               ),
             ),
           ),
@@ -180,14 +205,16 @@ class MyCustomFormState extends State<MyCustomForm> {
               width: MediaQuery.of(context).orientation == Orientation.landscape
                   ? 600
                   : 500,
-              child: TextFormField(
-                controller: addressC,
-                keyboardType: TextInputType.streetAddress,
-                cursorColor: Colors.grey[800],
-                decoration: InputDecoration(
+              child: Material(
+                borderRadius: myBorderRadius,
+                elevation: 30.0,
+                child: TextFormField(
+                  controller: addressC,
+                  keyboardType: TextInputType.streetAddress,
+                  cursorColor: Colors.grey[800],
+                  decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
-                    labelStyle: TextStyle(color: Colors.grey[600]),
                     border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(40.0),
@@ -200,12 +227,23 @@ class MyCustomFormState extends State<MyCustomForm> {
                       borderSide: BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(40.0),
                     ),
-                    labelText: 'Shipping Address *'),
-                validator: (value) {
-                  if (value == null || value.isEmpty)
-                    return 'Please enter your shipping address';
-                  return null;
-                },
+                    // labelStyle: TextStyle(color: Colors.grey[600]),
+                    // labelText: 'Shipping Address *',
+                    hintText: 'Shipping Address *',
+                    icon: Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 0, 0, 0),
+                      child: Icon(
+                        Icons.location_on,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty)
+                      return 'Please enter your shipping address';
+                    return null;
+                  },
+                ),
               ),
             ),
           ),
@@ -215,14 +253,16 @@ class MyCustomFormState extends State<MyCustomForm> {
               width: MediaQuery.of(context).orientation == Orientation.landscape
                   ? 600
                   : 500,
-              child: TextFormField(
-                keyboardType: TextInputType.phone,
-                controller: phoneC,
-                cursorColor: Colors.grey[800],
-                decoration: InputDecoration(
+              child: Material(
+                borderRadius: myBorderRadius,
+                elevation: 30.0,
+                child: TextFormField(
+                  keyboardType: TextInputType.phone,
+                  controller: phoneC,
+                  cursorColor: Colors.grey[800],
+                  decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
-                    labelStyle: TextStyle(color: Colors.grey[600]),
                     border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(40.0),
@@ -235,13 +275,24 @@ class MyCustomFormState extends State<MyCustomForm> {
                       borderSide: BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(40.0),
                     ),
-                    labelText: 'Phone'),
-                validator: (value) {
-                  if (value == null) {
-                    return 'Please enter a phone number';
-                  }
-                  return null;
-                },
+                    // labelStyle: TextStyle(color: Colors.grey[600]),
+                    // labelText: 'Phone',
+                    hintText: 'Phone',
+                    icon: Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 0, 0, 0),
+                      child: Icon(
+                        Icons.phone,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please enter a phone number';
+                    }
+                    return null;
+                  },
+                ),
               ),
             ),
           ),
@@ -251,21 +302,21 @@ class MyCustomFormState extends State<MyCustomForm> {
               width: MediaQuery.of(context).orientation == Orientation.landscape
                   ? 600
                   : 500,
-              child: TextFormField(
-                keyboardType: TextInputType.visiblePassword,
-                obscureText: !showPassword,
-                enableSuggestions: showPassword,
-                controller: passC,
-                onChanged: (value) {
-                  weakPassword = false;
-                },
-                cursorColor: Colors.grey[800],
-                decoration: InputDecoration(
+              child: Material(
+                borderRadius: myBorderRadius,
+                elevation: 30.0,
+                child: TextFormField(
+                  keyboardType: TextInputType.visiblePassword,
+                  obscureText: !showPassword,
+                  enableSuggestions: showPassword,
+                  controller: passC,
+                  onChanged: (value) {
+                    weakPassword = false;
+                  },
+                  cursorColor: Colors.grey[800],
+                  decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
-                    labelStyle: TextStyle(
-                      color: Colors.grey[600],
-                    ),
                     border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(40.0),
@@ -278,13 +329,26 @@ class MyCustomFormState extends State<MyCustomForm> {
                       borderSide: BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(40.0),
                     ),
-                    labelText: 'Password *'),
-                validator: (value) {
-                  if (value == null || value.isEmpty)
-                    return 'Please enter a password';
-                  if (weakPassword) return 'Password is too weak';
-                  return null;
-                },
+                    // labelStyle: TextStyle(
+                    //   color: Colors.grey[600],
+                    // ),
+                    // labelText: 'Password *',
+                    hintText: 'Password *',
+                    icon: Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 0, 0, 0),
+                      child: Icon(
+                        Icons.password,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty)
+                      return 'Please enter a password';
+                    if (weakPassword) return 'Password is too weak';
+                    return null;
+                  },
+                ),
               ),
             ),
           ),
@@ -328,16 +392,18 @@ class MyCustomFormState extends State<MyCustomForm> {
               width: MediaQuery.of(context).orientation == Orientation.landscape
                   ? 600
                   : 500,
-              child: TextFormField(
-                keyboardType: TextInputType.visiblePassword,
-                obscureText: !showPassword,
-                enableSuggestions: showPassword,
-                controller: confirmC,
-                cursorColor: Colors.grey[800],
-                decoration: InputDecoration(
+              child: Material(
+                borderRadius: myBorderRadius,
+                elevation: 30.0,
+                child: TextFormField(
+                  keyboardType: TextInputType.visiblePassword,
+                  obscureText: !showPassword,
+                  enableSuggestions: showPassword,
+                  controller: confirmC,
+                  cursorColor: Colors.grey[800],
+                  decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
-                    labelStyle: TextStyle(color: Colors.grey[600]),
                     border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(40.0),
@@ -350,11 +416,22 @@ class MyCustomFormState extends State<MyCustomForm> {
                       borderSide: BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(40.0),
                     ),
-                    labelText: 'Confirm Password *'),
-                validator: (value) {
-                  if (passC.text != value) return 'Passwords do not match';
-                  return null;
-                },
+                    // labelStyle: TextStyle(color: Colors.grey[600]),
+                    // labelText: 'Confirm Password *',
+                    hintText: 'Confirm Password *',
+                    icon: Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 0, 0, 0),
+                      child: Icon(
+                        Icons.password,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (passC.text != value) return 'Passwords do not match';
+                    return null;
+                  },
+                ),
               ),
             ),
           ),
@@ -364,6 +441,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                 padding: const EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 0.0),
                 child: ElevatedButton(
                   style: ButtonStyle(
+                    elevation: MaterialStateProperty.all(20.0),
                     backgroundColor: MaterialStateProperty.all(accentColor),
                   ),
                   onPressed: () {

@@ -5,6 +5,7 @@ import 'package:z_shop/appState.dart';
 import 'package:z_shop/data/data.dart';
 import 'package:z_shop/services/product.dart';
 import 'package:z_shop/services/roundDouble.dart';
+import 'package:z_shop/uiPages/product.dart';
 
 class ProductGridCard extends StatelessWidget {
   ProductGridCard({
@@ -36,22 +37,37 @@ class ProductGridCard extends StatelessWidget {
     bool outOfStock = product.stock <= 0;
 
     return InkWell(
-      borderRadius: BorderRadius.circular(20.0),
-      onTap: () {
-        Navigator.of(context).pushNamed('/details',
-            arguments: {'product': product, 'cart': false});
+      borderRadius: BorderRadius.circular(30.0),
+      onTap: () async {
+        QuerySnapshot reviewSnapshot = await FirebaseFirestore.instance
+            .collection('products')
+            .doc(product.id)
+            .collection('reviews')
+            .get();
+        List<QueryDocumentSnapshot> reviews = reviewSnapshot.docs;
+        showModalBottomSheet(
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            context: context,
+            builder: (context) {
+              return ProductDetailsPage(
+                product: product,
+                fromCart: false,
+                reviews: reviews,
+              );
+            });
       },
       splashColor: accentColor,
       hoverColor: Colors.transparent,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 34.0),
+        padding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 60.0),
         child: Card(
           color: Colors.grey[100],
-          elevation: 15.0,
-          shadowColor: Colors.grey[50],
+          elevation: 30.0,
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Center(
                 child: Container(
@@ -59,7 +75,7 @@ class ProductGridCard extends StatelessWidget {
                   child: Hero(
                     tag: product.images![0],
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20.0),
+                      borderRadius: BorderRadius.circular(25.0),
                       child: Image.network(
                         product.images![0],
                         height: 150,
@@ -74,7 +90,7 @@ class ProductGridCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 10.0),
+                padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                 child: Column(
                   children: [
                     Text(
@@ -144,16 +160,8 @@ class ProductGridCard extends StatelessWidget {
                               tooltip: 'Add to cart',
                               onPressed: !outOfStock
                                   ? () {
-                                      if (App.addToCart(product)) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                content: Text(
-                                                    'Product added to cart')));
-                                      } else
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                content: Text(
-                                                    'Product already added to cart')));
+                                      App.addToCart(product);
+                                      Navigator.of(context).pushNamed('/cart');
                                     }
                                   : null)
                         ],

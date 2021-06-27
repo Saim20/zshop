@@ -54,11 +54,13 @@ class _AccountPageState extends State<AccountPage> {
   void initState() {
     authInstance.authStateChanges().listen((user) async {
       if (user == null) {
+        if(mounted)
         setState(() {
           signedIn = false;
         });
       } else {
         await setUser(user);
+        if(mounted)
         setState(() {
           if (incompleteGoogleSignin) {
             signedIn = false;
@@ -155,6 +157,7 @@ class Account extends StatelessWidget {
           ),
         ),
       ),
+      backgroundColor: Colors.grey[200],
       body: ListView(
         children: [
           SizedBox(

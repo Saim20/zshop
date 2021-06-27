@@ -150,29 +150,29 @@ class _ItemListPageState extends State<ItemListPage> {
                         docs = filterDocs(docs);
                       }
 
-                      return Container(
-                        child: ListView(children: [
-                          SortFilterStrip(
-                            sort: sort,
-                            descending: descending,
-                            setSortValue: setSortValue,
-                            setDescendingValue: setDescendingValue,
-                            filter: filter,
-                            range: range,
-                            setFilterValue: setFilterValue,
-                            setRangeValue: setRangeValue,
-                            min: min,
-                            max: max,
-                          ),
-                          Column(
+                      return Column(children: [
+                        SortFilterStrip(
+                          sort: sort,
+                          descending: descending,
+                          setSortValue: setSortValue,
+                          setDescendingValue: setDescendingValue,
+                          filter: filter,
+                          range: range,
+                          setFilterValue: setFilterValue,
+                          setRangeValue: setRangeValue,
+                          min: min,
+                          max: max,
+                        ),
+                        Expanded(
+                          child: ListView(
                             children: docs.map((e) {
                               return ProductCard(
                                 prod: e,
                               );
                             }).toList(),
-                          )
-                        ]),
-                      );
+                          ),
+                        ),
+                      ]);
                     } else
                       return Center(
                         child: Column(

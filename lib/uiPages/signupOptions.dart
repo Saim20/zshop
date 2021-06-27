@@ -14,11 +14,8 @@ class SignupOptionsPage extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Colors.white,
-              Colors.grey[200]!,
-              Colors.grey[400]!,
-              Colors.grey[500]!,
-              Colors.grey[500]!,
+              Colors.grey,
+              Colors.grey[800]!,
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -39,7 +36,7 @@ class SignupOptionsPage extends StatelessWidget {
             ),
             googleSignupButton(),
             SizedBox(
-              height: 10,
+              height: 50,
             ),
             loginButton(context),
           ],
@@ -71,7 +68,7 @@ class SignupOptionsPage extends StatelessWidget {
       child: Text(
         'Signup Options',
         style: TextStyle(
-            fontSize: 50.0, fontWeight: FontWeight.w200, color: Colors.grey),
+            fontSize: 50.0, fontWeight: FontWeight.w200, color: Colors.white),
       ),
     );
   }
@@ -89,6 +86,7 @@ class SignupOptionsPage extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).pushReplacementNamed('/signup');
             },
+            elevation: 20.0,
             text: 'Sign up with E-mail',
           ),
         ),
@@ -111,6 +109,7 @@ class SignupOptionsPage extends StatelessWidget {
               await signInWithGoogle();
             },
             text: 'Sign up with Google',
+            elevation: 20.0,
           ),
         ),
         SizedBox(),

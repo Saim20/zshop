@@ -5,6 +5,7 @@ import 'package:z_shop/appState.dart';
 import 'package:z_shop/data/data.dart';
 import 'package:z_shop/services/product.dart';
 import 'package:z_shop/services/roundDouble.dart';
+import 'package:z_shop/uiPages/product.dart';
 
 class ProductCard extends StatelessWidget {
   ProductCard({this.prod, this.productObject});
@@ -46,9 +47,24 @@ class ProductCard extends StatelessWidget {
 
     return InkWell(
       borderRadius: BorderRadius.circular(20.0),
-      onTap: () {
-        Navigator.of(context).pushNamed('/details',
-            arguments: {'product': product, 'cart': false});
+      onTap: () async {
+        QuerySnapshot reviewSnapshot = await FirebaseFirestore.instance
+            .collection('products')
+            .doc(product.id)
+            .collection('reviews')
+            .get();
+        List<QueryDocumentSnapshot> reviews = reviewSnapshot.docs;
+        showModalBottomSheet(
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            context: context,
+            builder: (context) {
+              return ProductDetailsPage(
+                product: product,
+                fromCart: false,
+                reviews: reviews,
+              );
+            });
       },
       splashColor: accentColor,
       focusColor: accentColor,
@@ -205,16 +221,9 @@ class ProductCard extends StatelessWidget {
                                   tooltip: 'Add to cart',
                                   onPressed: !outOfStock
                                       ? () {
-                                          if (App.addToCart(product)) {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    content: Text(
-                                                        'Product added to cart')));
-                                          } else
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    content: Text(
-                                                        'Product already added to cart')));
+                                          App.addToCart(product);
+                                          Navigator.of(context)
+                                              .pushNamed('/cart');
                                         }
                                       : null)
                           ],

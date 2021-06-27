@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:z_shop/appState.dart';
 import 'package:z_shop/data/data.dart';
 import 'package:z_shop/services/product.dart';
+import 'package:z_shop/uiPages/product.dart';
 
 class CartProductCard extends StatefulWidget {
   CartProductCard(
@@ -27,9 +29,24 @@ class _CartProductCardState extends State<CartProductCard> {
         TextEditingController(text: product.quantity.toString());
 
     return InkWell(
-      onTap: () {
-        Navigator.of(context).pushNamed('/details',
-            arguments: {'product': product, 'cart': true});
+      onTap: () async {
+        QuerySnapshot reviewSnapshot = await FirebaseFirestore.instance
+            .collection('products')
+            .doc(product.id)
+            .collection('reviews')
+            .get();
+        List<QueryDocumentSnapshot> reviews = reviewSnapshot.docs;
+        showModalBottomSheet(
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            context: context,
+            builder: (context) {
+              return ProductDetailsPage(
+                product: product,
+                fromCart: false,
+                reviews: reviews,
+              );
+            });
       },
       splashColor: accentColor,
       focusColor: accentColor,
@@ -261,11 +278,12 @@ class _CartProductCardState extends State<CartProductCard> {
                                       fontWeight: FontWeight.w300),
                                 ),
                                 Switch(
-                                    value: widget.product!.setupTaken,
-                                    onChanged: product.setupCost == 0
-                                        ? null
-                                        : (value) {
-                                            setState(() {
+                                  value: widget.product!.setupTaken,
+                                  onChanged: product.setupCost == 0
+                                      ? null
+                                      : (value) {
+                                          setState(
+                                            () {
                                               widget.costCalculator!(true);
                                               App.cartProducts
                                                       .elementAt(
@@ -279,8 +297,10 @@ class _CartProductCardState extends State<CartProductCard> {
                                                           .indexOf(
                                                               widget.product!))
                                                       .setupTaken;
-                                            });
-                                          }),
+                                            },
+                                          );
+                                        },
+                                ),
                               ],
                             ),
                           ),

@@ -22,9 +22,10 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     user = FirebaseAuth.instance.currentUser;
     FirebaseAuth.instance.authStateChanges().listen((user) async {
-      setState(() {
-        this.user = user;
-      });
+      if (mounted)
+        setState(() {
+          this.user = user;
+        });
     });
     App.checkIsIncomplete();
     super.initState();
@@ -103,7 +104,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.grey[200],
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -155,7 +156,7 @@ class _HomePageState extends State<HomePage> {
                   }
 
                   return Container(
-                    height: 320,
+                    height: 340,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: featured
@@ -176,14 +177,14 @@ class _HomePageState extends State<HomePage> {
                 dummies.add(new DummyGridCard());
               }
               return Container(
-                height: 320,
+                height: 340,
                 child: ListView(
                     scrollDirection: Axis.horizontal, children: dummies),
               );
             },
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(35.0, 20.0, 35.0, 20.0),
+            padding: const EdgeInsets.fromLTRB(35.0, 0.0, 35.0, 20.0),
             child: Text(
               'Categories',
               style: TextStyle(fontSize: 25.0),

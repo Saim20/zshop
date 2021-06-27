@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:z_shop/services/product.dart';
@@ -131,7 +132,7 @@ class _AppState extends State<App> {
     try {
       // Wait for Firebase to initialize and set `_initialized` state to true
       await Firebase.initializeApp();
-      await FirebaseAppCheck.instance.activate();
+      if (!kIsWeb) await FirebaseAppCheck.instance.activate();
       setState(() {
         isInitialized = true;
       });
@@ -162,7 +163,7 @@ class _AppState extends State<App> {
         '/home': (context) => HomePage(),
         '/account': (context) => AccountPage(),
         '/accountedit': (context) => AccountEditPage(),
-        '/details': (context) => ProductDetailsPage(),
+        // '/details': (context) => ProductDetailsPage(),
         '/products': (context) => ItemListPage(),
         '/search': (context) => SearchItemListPage(),
         '/login': (context) => LoginPage(),

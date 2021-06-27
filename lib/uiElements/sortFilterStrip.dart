@@ -28,17 +28,15 @@ class SortFilterStrip extends StatelessWidget {
   final int min;
   final int max;
 
-
   @override
   Widget build(BuildContext context) {
-
     RangeValues? aRange = RangeValues(0.0, 0.0);
 
-    void setRangeLocal(mrange){
+    void setRangeLocal(mrange) {
       aRange = mrange;
     }
+
     return Container(
-      color: Colors.grey[300],
       padding: EdgeInsets.fromLTRB(15.0, 50.0, 15.0, 0.0),
       height: 100,
       child: Row(
@@ -54,8 +52,7 @@ class SortFilterStrip extends StatelessWidget {
                   actions: [
                     TextButton(
                         onPressed: () {
-                          if(aRange != null)
-                            setRangeValue(aRange!);
+                          if (aRange != null) setRangeValue(aRange!);
                           Navigator.of(context).pop();
                         },
                         child: Text('Ok')),

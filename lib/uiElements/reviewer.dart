@@ -29,7 +29,7 @@ class _ReviewerState extends State<Reviewer> {
   String? userReview;
   bool? hasChanged;
   bool? isNotRated;
-  double rating = 0.0;
+  double rating = 5.0;
 
   TextEditingController reviewC = TextEditingController();
 
@@ -88,7 +88,7 @@ class _ReviewerState extends State<Reviewer> {
               height: 20.0,
             ),
             RatingBar.builder(
-              initialRating: (isNotRated ?? true) ? 5 : userRating!,
+              initialRating: (isNotRated ?? true) ? rating : userRating!,
               minRating: 1,
               direction: Axis.horizontal,
               allowHalfRating: false,
