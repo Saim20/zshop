@@ -11,6 +11,10 @@ class ReviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        elevation: 10,
         child: Padding(
           padding: EdgeInsets.all(15.0),
           child: Column(
