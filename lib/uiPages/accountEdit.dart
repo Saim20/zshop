@@ -20,30 +20,40 @@ class _AccountEditPageState extends State<AccountEditPage> {
 
     return Container(
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(70.0),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: AppBar(
-              iconTheme: IconThemeData(color: accentColor),
-              elevation: 0.0,
-              backgroundColor: Colors.transparent,
-              title: Text(
-                'Edit',
-                style: TextStyle(
-                    color: accentColor,
-                    fontWeight: FontWeight.w300,
-                    fontSize: 35.0),
-              ),
+        body: Container(
+          decoration: BoxDecoration(
+            // color: Colors.blue[300],
+            gradient: LinearGradient(
+              colors: [
+                Colors.blue[400]!,
+                Colors.purple,
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
-        ),
-        body: ListView(
-          children: [
-            MyAccountForm(
-              user: user!,
-            ),
-          ],
+          child: ListView(
+            children: [
+              SizedBox(
+                height: 70,
+              ),
+              Center(
+                child: Text(
+                  'Edit Account',
+                  style: TextStyle(
+                      fontSize: 50.0,
+                      fontWeight: FontWeight.w200,
+                      color: Colors.white),
+                ),
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              MyAccountForm(
+                user: user!,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -83,6 +93,8 @@ class _MyAccountFormState extends State<MyAccountForm> {
   TextEditingController newPassC = TextEditingController();
   TextEditingController oldPassC = TextEditingController();
 
+  final BorderRadius myBorderRadius = BorderRadius.circular(40.0);
+
   @override
   void dispose() {
     nameC.dispose();
@@ -113,7 +125,9 @@ class _MyAccountFormState extends State<MyAccountForm> {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-              child: Container(
+              child: Material(
+                borderRadius: myBorderRadius,
+                elevation: 30.0,
                 child: TextFormField(
                   onChanged: (value) {
                     setState(() {
@@ -122,7 +136,29 @@ class _MyAccountFormState extends State<MyAccountForm> {
                   },
                   controller: nameC,
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(), labelText: 'Name'),
+                    icon: Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 0, 0, 0),
+                      child: Icon(
+                        Icons.account_circle,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    hintText: 'Name',
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your name';
@@ -134,7 +170,9 @@ class _MyAccountFormState extends State<MyAccountForm> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-              child: Container(
+              child: Material(
+                borderRadius: myBorderRadius,
+                elevation: 30.0,
                 child: TextFormField(
                   controller: emailC,
                   onChanged: (value) {
@@ -145,7 +183,29 @@ class _MyAccountFormState extends State<MyAccountForm> {
                     });
                   },
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(), labelText: 'E-mail'),
+                    icon: Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 0, 0, 0),
+                      child: Icon(
+                        Icons.alternate_email,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    hintText: 'E-mail',
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty)
                       return 'Please enter an e-mail';
@@ -161,7 +221,9 @@ class _MyAccountFormState extends State<MyAccountForm> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-              child: Container(
+              child: Material(
+                borderRadius: myBorderRadius,
+                elevation: 30.0,
                 child: TextFormField(
                   onChanged: (value) {
                     setState(() {
@@ -170,8 +232,29 @@ class _MyAccountFormState extends State<MyAccountForm> {
                   },
                   controller: addressC,
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Shipping Address'),
+                    icon: Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 0, 0, 0),
+                      child: Icon(
+                        Icons.location_on,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    hintText: 'Shipping Address',
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty)
                       return 'Please enter your shipping address';
@@ -182,7 +265,9 @@ class _MyAccountFormState extends State<MyAccountForm> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-              child: Container(
+              child: Material(
+                borderRadius: myBorderRadius,
+                elevation: 30.0,
                 child: TextFormField(
                   onChanged: (value) {
                     setState(() {
@@ -192,7 +277,29 @@ class _MyAccountFormState extends State<MyAccountForm> {
                   keyboardType: TextInputType.phone,
                   controller: phoneC,
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(), labelText: 'Phone'),
+                    icon: Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 0, 0, 0),
+                      child: Icon(
+                        Icons.phone,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    hintText: 'Phone',
+                  ),
                   validator: (value) {
                     if (value == null) {
                       return 'Please enter a phone number';
@@ -207,11 +314,16 @@ class _MyAccountFormState extends State<MyAccountForm> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(30.0, 10.0, 10.0, 0.0),
-              child: Text('Only enter if you want to change password'),
+              child: Text(
+                'Only enter if you want to change password',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-              child: Container(
+              child: Material(
+                borderRadius: myBorderRadius,
+                elevation: 30.0,
                 child: TextFormField(
                   enableSuggestions: false,
                   onChanged: (value) {
@@ -224,8 +336,29 @@ class _MyAccountFormState extends State<MyAccountForm> {
                   controller: oldPassC,
                   obscureText: true,
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Previous password'),
+                    icon: Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 0, 0, 0),
+                      child: Icon(
+                        Icons.password,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    hintText: 'Previous password',
+                  ),
                   validator: (value) {
                     if (wrongPasswordEntered) {
                       return 'Wrong password';
@@ -237,7 +370,9 @@ class _MyAccountFormState extends State<MyAccountForm> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-              child: Container(
+              child: Material(
+                borderRadius: myBorderRadius,
+                elevation: 30.0,
                 child: TextFormField(
                   enableSuggestions: false,
                   onChanged: (value) {
@@ -247,8 +382,29 @@ class _MyAccountFormState extends State<MyAccountForm> {
                   },
                   controller: newPassC,
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Change password'),
+                    icon: Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 0, 0, 0),
+                      child: Icon(
+                        Icons.password,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    hintText: 'Change password',
+                  ),
                   validator: (value) {
                     return null;
                   },
@@ -258,6 +414,9 @@ class _MyAccountFormState extends State<MyAccountForm> {
             Padding(
               padding: const EdgeInsets.fromLTRB(30.0, 30.0, 0.0, 0.0),
               child: ElevatedButton(
+                style: ButtonStyle(
+                  overlayColor: MaterialStateProperty.all(Colors.white),
+                ),
                 onPressed: hasChanged
                     ? () async {
                         // Validate returns true if the form is valid, or false otherwise.

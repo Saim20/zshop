@@ -110,13 +110,14 @@ class _CartPageState extends State<CartPage> {
       ),
       body: SafeArea(
         child: Center(
-            child: App.cartProducts.isEmpty
-                ? Icon(
-                    Icons.remove_shopping_cart_outlined,
-                    color: accentColor,
-                    size: 100.0,
-                  )
-                : ListView(children: [
+          child: App.cartProducts.isEmpty
+              ? Icon(
+                  Icons.remove_shopping_cart_outlined,
+                  color: accentColor,
+                  size: 100.0,
+                )
+              : ListView(
+                  children: [
                     Column(
                       children: App.cartProducts
                           .map((e) => CartProductCard(
@@ -127,52 +128,63 @@ class _CartPageState extends State<CartPage> {
                               ))
                           .toList(),
                     ),
-                    SizedBox(
+                    Container(
+                      margin: EdgeInsets.all(70.0),
                       height: 50.0,
-                    )
-                  ])),
+                      child: ElevatedButton.icon(
+                        label: Text('Place Order'),
+                        icon: Icon(Icons.subdirectory_arrow_right),
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(30.0)))),
+                        onPressed: () async {
+                          print(FirebaseAuth.instance.currentUser == null);
+                          print(App.isIncompleteSignIn);
+                          if (FirebaseAuth.instance.currentUser != null &&
+                              !App.isIncompleteSignIn) {
+                            var user = FirebaseAuth.instance.currentUser;
+                            var doc = await FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(user!.uid)
+                                .get()
+                                .then((value) => value);
+                            var phone =
+                                doc.data() == null ? '' : doc.data()!['phone'];
+                            var address = doc.data() == null
+                                ? ''
+                                : doc.data()!['address'];
+                            Order order = Order(
+                                userName: user.displayName!,
+                                userEmail: user.email!,
+                                userId: user.uid,
+                                userPhone: phone,
+                                userAddress: address,
+                                paymentStatus: 'Unpaid',
+                                paymentMethod: 'COD',
+                                totalCost: totalCost,
+                                cartProducts: App.cartProducts);
+                            Navigator.of(context).pushNamed('/confirmation',
+                                arguments: {
+                                  'order': order,
+                                  'clearcart': clearCart
+                                });
+                          } else {
+                            if (FirebaseAuth.instance.currentUser == null &&
+                                App.isIncompleteSignIn) {
+                              Navigator.of(context).pushNamed('/login');
+                            } else {
+                              Navigator.of(context).pushNamed('/account');
+                            }
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+        ),
       ),
-      floatingActionButton: App.cartProducts.isEmpty
-          ? null
-          : FloatingActionButton.extended(
-              onPressed: () async {
-                print(FirebaseAuth.instance.currentUser == null);
-                print(App.isIncompleteSignIn);
-                if (FirebaseAuth.instance.currentUser != null &&
-                    !App.isIncompleteSignIn) {
-                  var user = FirebaseAuth.instance.currentUser;
-                  var doc = await FirebaseFirestore.instance
-                      .collection('users')
-                      .doc(user!.uid)
-                      .get()
-                      .then((value) => value);
-                  var phone = doc.data() == null ? '' : doc.data()!['phone'];
-                  var address =
-                      doc.data() == null ? '' : doc.data()!['address'];
-                  Order order = Order(
-                      userName: user.displayName!,
-                      userEmail: user.email!,
-                      userId: user.uid,
-                      userPhone: phone,
-                      userAddress: address,
-                      paymentStatus: 'Unpaid',
-                      paymentMethod: 'COD',
-                      totalCost: totalCost,
-                      cartProducts: App.cartProducts);
-                  Navigator.of(context).pushNamed('/confirmation',
-                      arguments: {'order': order, 'clearcart': clearCart});
-                } else {
-                  if (FirebaseAuth.instance.currentUser == null &&
-                      App.isIncompleteSignIn) {
-                    Navigator.of(context).pushNamed('/login');
-                  } else {
-                    Navigator.of(context).pushNamed('/account');
-                  }
-                }
-              },
-              label: Text('Place Order (৳$totalCost)'),
-              icon: Icon(Icons.subdirectory_arrow_right),
-            ),
     );
   }
 }

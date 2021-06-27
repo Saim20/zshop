@@ -54,8 +54,7 @@ class _CartProductCardState extends State<CartProductCard> {
         padding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
         child: Card(
           color: Colors.grey[100],
-          elevation: 15.0,
-          shadowColor: Colors.grey[50],
+          elevation: 30.0,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
           child: Column(

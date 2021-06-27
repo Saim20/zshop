@@ -13,45 +13,33 @@ class _OrdersPageState extends State<OrdersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60.0),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: AppBar(
-            iconTheme: IconThemeData(
-              color: accentColor,
-            ),
-            elevation: 0.0,
-            backgroundColor: Colors.transparent,
-            title: Container(
-              margin: const EdgeInsets.fromLTRB(0.0, 30.0, 30.0, 30.0),
-              child: Text(
-                'Orders',
-                style: TextStyle(
-                  color: accentColor,
-                  fontWeight: FontWeight.w300,
-                  fontSize: 35.0,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-      backgroundColor: Colors.grey[100],
+      backgroundColor: accentColor,
       body: ListView(
         children: [
           Container(
-            margin: EdgeInsets.all(30.0),
+            margin: EdgeInsets.fromLTRB(0.0, 50.0, 0.0, 0.0),
             child: Center(
               child: Hero(
                 tag: 'orderHero',
                 child: Icon(
                   orderIcon,
                   size: 200.0,
-                  color: orderColor,
+                  color: Colors.white,
                 ),
               ),
             ),
+          ),
+          Center(
+            child: Text(
+              'Orders',
+              style: TextStyle(
+                  fontSize: 50.0,
+                  fontWeight: FontWeight.w200,
+                  color: Colors.white),
+            ),
+          ),
+          SizedBox(
+            height: 50.0,
           ),
           StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
@@ -70,64 +58,72 @@ class _OrdersPageState extends State<OrdersPage> {
                     return Column(
                       children:
                           snapshot.data!.docs.map((DocumentSnapshot order) {
-                        return InkWell(
-                          borderRadius: BorderRadius.circular(10.0),
-                          onTap: () {
-                            Navigator.of(context).pushNamed('/orderpage',
-                                arguments: {'order': order});
-                          },
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        order.data()!['name'],
-                                        style: TextStyle(fontSize: 18.0),
-                                      ),
-                                      if (order.data()!['status'] ==
-                                          'confirmed')
+                        return Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 15.0),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(10.0),
+                            onTap: () {
+                              Navigator.of(context).pushNamed('/orderpage',
+                                  arguments: {'order': order});
+                            },
+                            child: Card(
+                              elevation: 30.0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50.0),
+                              ),
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
                                         Text(
-                                          ' - Confirmed',
-                                          style: TextStyle(
-                                              fontSize: 18.0,
-                                              color: Colors.redAccent),
+                                          order.data()!['name'],
+                                          style: TextStyle(fontSize: 18.0),
                                         ),
-                                      if (order.data()!['status'] == 'placed')
-                                        Text(
-                                          ' - Placed',
-                                          style: TextStyle(
-                                              fontSize: 18.0,
-                                              color: Colors.orange),
-                                        ),
-                                      if (order.data()!['status'] == 'shipped')
-                                        Text(
-                                          ' - Shipped',
-                                          style: TextStyle(
-                                              fontSize: 18.0,
-                                              color: Colors.blueAccent),
-                                        ),
-                                      if (order.data()!['status'] == 'complete')
-                                        Text(
-                                          ' - Complete',
-                                          style: TextStyle(
-                                              fontSize: 18.0,
-                                              color: Colors.green),
-                                        ),
-                                    ],
+                                        if (order.data()!['status'] ==
+                                            'confirmed')
+                                          Text(
+                                            ' - Confirmed',
+                                            style: TextStyle(
+                                                fontSize: 18.0,
+                                                color: Colors.redAccent),
+                                          ),
+                                        if (order.data()!['status'] == 'placed')
+                                          Text(
+                                            ' - Placed',
+                                            style: TextStyle(
+                                                fontSize: 18.0,
+                                                color: Colors.orange),
+                                          ),
+                                        if (order.data()!['status'] ==
+                                            'shipped')
+                                          Text(
+                                            ' - Shipped',
+                                            style: TextStyle(
+                                                fontSize: 18.0,
+                                                color: Colors.blueAccent),
+                                          ),
+                                        if (order.data()!['status'] ==
+                                            'complete')
+                                          Text(
+                                            ' - Complete',
+                                            style: TextStyle(
+                                                fontSize: 18.0,
+                                                color: Colors.green),
+                                          ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Text(order.data()!['phone']),
-                                ),
-                              ],
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Text(order.data()!['phone']),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         );
