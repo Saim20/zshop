@@ -132,13 +132,15 @@ class _CartPageState extends State<CartPage> {
                       margin: EdgeInsets.all(70.0),
                       height: 50.0,
                       child: ElevatedButton.icon(
-                        label: Text('Place Order'),
+                        label: Text('(৳$totalCost) Place Order'),
                         icon: Icon(Icons.subdirectory_arrow_right),
                         style: ButtonStyle(
-                            shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(30.0)))),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                          ),
+                        ),
                         onPressed: () async {
                           print(FirebaseAuth.instance.currentUser == null);
                           print(App.isIncompleteSignIn);
@@ -171,12 +173,7 @@ class _CartPageState extends State<CartPage> {
                                   'clearcart': clearCart
                                 });
                           } else {
-                            if (FirebaseAuth.instance.currentUser == null &&
-                                App.isIncompleteSignIn) {
-                              Navigator.of(context).pushNamed('/login');
-                            } else {
-                              Navigator.of(context).pushNamed('/account');
-                            }
+                            Navigator.of(context).pushNamed('/account');
                           }
                         },
                       ),

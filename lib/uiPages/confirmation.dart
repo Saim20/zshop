@@ -106,10 +106,12 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                           cursorColor: Colors.grey[800],
                           decoration: InputDecoration(
                               filled: true,
-                              fillColor: Colors.white,
+                              fillColor: takeFromAccount
+                                  ? Colors.grey[300]
+                                  : Colors.white,
                               labelStyle: TextStyle(color: Colors.grey[600]),
                               border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                                borderSide: BorderSide(color: Colors.grey),
                                 borderRadius: BorderRadius.circular(20.0),
                               ),
                               enabledBorder: OutlineInputBorder(
@@ -117,7 +119,8 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                 borderRadius: BorderRadius.circular(40.0),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                                borderSide:
+                                    BorderSide(color: Colors.grey[300]!),
                                 borderRadius: BorderRadius.circular(40.0),
                               ),
                               labelText: 'Shipping address'),
@@ -138,10 +141,12 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                           cursorColor: Colors.grey[800],
                           decoration: InputDecoration(
                               filled: true,
-                              fillColor: Colors.white,
+                              fillColor: takeFromAccount
+                                  ? Colors.grey[300]
+                                  : Colors.white,
                               labelStyle: TextStyle(color: Colors.grey[600]),
                               border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                                borderSide: BorderSide(color: Colors.grey),
                                 borderRadius: BorderRadius.circular(20.0),
                               ),
                               enabledBorder: OutlineInputBorder(
@@ -149,7 +154,8 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                 borderRadius: BorderRadius.circular(40.0),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                                borderSide:
+                                    BorderSide(color: Colors.grey[300]!),
                                 borderRadius: BorderRadius.circular(40.0),
                               ),
                               labelText: 'Phone number'),
